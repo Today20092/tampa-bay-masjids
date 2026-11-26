@@ -104,61 +104,37 @@ export function SolarClock() {
       <h2 id="solar-heading" className="sr-only">
         Sun and prayer times
       </h2>
-      <CollapsibleTrigger className="group/sun flex min-h-11 w-full cursor-pointer items-center gap-3 rounded-lg p-2 text-left hover:bg-white/10">
-        <SunIcon aria-hidden="true" className="size-5 shrink-0 text-sky-sun" />
-        <span className="min-w-0 flex-1">
-          <span className="block font-semibold text-sky-sun tabular-nums">
-            {!data
-              ? "Calculating prayer starts…"
-              : next
-                ? `${next.label} starts in ${countdown}`
-                : "Next prayer start unavailable"}
+      <CollapsibleTrigger className="group/sun w-full cursor-pointer rounded-lg p-2 text-left hover:bg-white/10">
+        <span className="flex items-center gap-3">
+          <SunIcon
+            aria-hidden="true"
+            className="size-5 shrink-0 text-sky-sun"
+          />
+          <span className="min-w-0 flex-1">
+            <span className="block font-semibold text-sky-sun tabular-nums">
+              {!data
+                ? "Calculating prayer starts…"
+                : next
+                  ? `${next.label} starts in ${countdown}`
+                  : "Next prayer start unavailable"}
+            </span>
+            <span className="block text-xs text-sky-muted">
+              {started}Calculated for{" "}
+              {locationState === "local" ? "your location" : "Tampa"}
+            </span>
           </span>
-          <span className="block text-xs text-sky-muted">
-            {started}Calculated for{" "}
-            {locationState === "local" ? "your location" : "Tampa"}
-          </span>
+          <ChevronDownIcon
+            aria-hidden="true"
+            className="size-4 shrink-0 group-aria-expanded/sun:rotate-180"
+          />
         </span>
-        <ChevronDownIcon
+        <svg
+          viewBox="0 -20 480 160"
+          className="max-h-44 w-full overflow-visible"
           aria-hidden="true"
-          className="size-4 shrink-0 group-aria-expanded/sun:rotate-180"
-        />
-      </CollapsibleTrigger>
-      <CollapsibleContent className="mt-1 border-t border-sky-muted/25 px-2 pt-2 pb-2 sm:px-4">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-xs text-sky-muted">
-            {locationState === "local"
-              ? "Your location · device time zone"
-              : "Tampa, Florida"}
-            {data && ` · ${formatDate(data.date)}`}
-          </p>
-          <Button
-            variant="ghost"
-            size="touch"
-            onClick={useLocation}
-            disabled={locationState === "loading"}
-            className="text-white hover:bg-white/10 hover:text-white"
-          >
-            <LocateFixedIcon aria-hidden="true" />
-            {locationState === "local"
-              ? "Use Tampa"
-              : locationState === "loading"
-                ? "Locating…"
-                : "Use my location"}
-          </Button>
-        </div>
-        {locationState === "error" && (
-          <p role="status" className="text-xs text-sky-muted">
-            Location unavailable. Showing Tampa.
-          </p>
-        )}
-        {data && (
-          <>
-            <svg
-              viewBox="0 0 480 184"
-              className="mt-1 max-h-72 w-full overflow-visible"
-              aria-hidden="true"
-            >
+        >
+          {data && (
+            <>
               <path
                 d="M16 86H464"
                 stroke="currentColor"
@@ -234,7 +210,40 @@ export function SolarClock() {
                   </g>
                 );
               })}
-            </svg>
+            </>
+          )}
+        </svg>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="mt-1 border-t border-sky-muted/25 px-2 pt-2 pb-2 sm:px-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="text-xs text-sky-muted">
+            {locationState === "local"
+              ? "Your location · device time zone"
+              : "Tampa, Florida"}
+            {data && ` · ${formatDate(data.date)}`}
+          </p>
+          <Button
+            variant="ghost"
+            size="touch"
+            onClick={useLocation}
+            disabled={locationState === "loading"}
+            className="text-white hover:bg-white/10 hover:text-white"
+          >
+            <LocateFixedIcon aria-hidden="true" />
+            {locationState === "local"
+              ? "Use Tampa"
+              : locationState === "loading"
+                ? "Locating…"
+                : "Use my location"}
+          </Button>
+        </div>
+        {locationState === "error" && (
+          <p role="status" className="text-xs text-sky-muted">
+            Location unavailable. Showing Tampa.
+          </p>
+        )}
+        {data && (
+          <>
             <dl className="divide-y divide-sky-muted/20 border-t border-sky-muted/25 text-sm tabular-nums">
               {data.events.map(({ key, label, time }) => {
                 const Icon = eventIcons[key];
