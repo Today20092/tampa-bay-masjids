@@ -5,5 +5,13 @@
   "area": "Temple Terrace area",
   "address": "8080 N 56th St, Tampa, FL 33617",
   "nameSource": "https://tmcflorida.org/",
-  "website": "https://tmcflorida.org/"
+  "website": "https://tmcflorida.org/",
+  "jumuah": {
+    "times": ["12:35", "13:35", "15:25"],
+    "source": {
+      "label": "TMC Friday schedule (khutbah start)",
+      "url": "https://tmcflorida.org/jummah-time"
+    },
+    "checked": "2026-11-26"
+  }
 }
