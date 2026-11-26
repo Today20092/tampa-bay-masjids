@@ -26,21 +26,25 @@ colors:
   sky-muted: "#d5e0ee"
 typography:
   title:
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: "Manrope Variable, system-ui, sans-serif"
     fontSize: "1.5rem"
     fontWeight: 700
   masjid-name:
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: "Manrope Variable, system-ui, sans-serif"
     fontSize: "1.125rem"
     fontWeight: 700
   body:
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: "Manrope Variable, system-ui, sans-serif"
     fontSize: "0.875rem"
     lineHeight: 1.35
   label:
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: "Manrope Variable, system-ui, sans-serif"
     fontSize: "0.8125rem"
     lineHeight: 1.35
+  arabic-name:
+    fontFamily: "Noto Naskh Arabic, serif"
+    fontSize: "1.0625rem"
+    lineHeight: 1.6
 rounded:
   md: "8px"
   lg: "10px"
@@ -134,7 +138,7 @@ quiet so nine masjids and five times can be compared at a glance. Light theme on
 
 ## Typography
 
-**Body and headings:** the system UI font. Arabic uses the system's Arabic face.
+**Body and headings:** Manrope, with the system UI font as fallback. Arabic names use Noto Naskh Arabic, with a serif fallback. Both fonts are self-hosted.
 
 ### Hierarchy
 
@@ -179,7 +183,7 @@ shadcn on Base UI lives in `src/components/ui/`.
 - Do keep every control at 44px and every text at 0.8125rem or larger.
 - Do show "Check with the masjid" wherever a confirmed, fresh time is missing.
 - Don't use gold for anything that competes with the group link.
-- Don't add dark mode, shadows or a web font without a new design decision.
+- Don't add dark mode or shadows without a new design decision.
 
 ## Masjid logos
 

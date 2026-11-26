@@ -1,13 +1,16 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "@fontsource-variable/manrope/wght.css";
+@import "@fontsource/noto-naskh-arabic/arabic-400.css";
+@import "@fontsource/noto-naskh-arabic/arabic-700.css";
 
 /* Light only: keep the components’ dark: classes from following the system theme. */
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: system-ui, sans-serif;
-  --font-heading: system-ui, sans-serif;
+  --font-sans: "Manrope Variable", system-ui, sans-serif;
+  --font-heading: "Manrope Variable", system-ui, sans-serif;
   /* Nothing on the site is smaller than 13px at the default text size. */
   --text-xs: 0.8125rem;
   --text-xs--line-height: 1.35;
@@ -82,8 +85,14 @@
   }
   body {
     @apply bg-background text-sm text-foreground antialiased;
+    font-size-adjust: from-font;
     caret-color: var(--primary);
     scrollbar-color: var(--input) transparent;
+  }
+  :lang(ar) {
+    font-family: "Noto Naskh Arabic", serif;
+    font-size-adjust: none;
+    line-height: 1.6;
   }
   h1,
   h2 {

@@ -114,14 +114,11 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
     clearTimeout(announceTimer.current);
     const name = masjids.find((m) => m.id === id)?.name;
     setStatus(`${wasPinned ? "Unpinned" : "Pinned"} ${name}`);
-    if (wasPinned) {
-      setOpenId(id);
-      focusKey.current = `row-${id}`;
-    } else {
+    setOpenId(null);
+    focusKey.current = `pin-${id}`;
+    if (!wasPinned) {
       setQuery("");
       setSearchOpen(false);
-      setOpenId(null);
-      focusKey.current = `card-${id}`;
     }
   }
 

@@ -114,21 +114,38 @@ function Sources({ schedule }: { schedule: Schedule }) {
   );
 }
 
-function Actions({
+export function PinButton({
   masjid,
   pinned,
   onPin,
+  compact = false,
 }: {
   masjid: Masjid;
   pinned: boolean;
   onPin: () => void;
+  compact?: boolean;
 }) {
-  const action = (variant: "default" | "outline") =>
-    cn(
-      buttonVariants({ variant, size: "touch" }),
-      "min-w-fit flex-[1_1_3.5rem] font-semibold",
-      variant === "outline" && "border-input bg-card",
-    );
+  const label = pinned ? "Unpin" : "Pin";
+  const Icon = pinned ? PinOffIcon : PinIcon;
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="touch"
+      className={cn("rounded-full text-primary", compact && "px-0")}
+      onClick={onPin}
+      data-key={`pin-${masjid.id}`}
+    >
+      {!compact && <Icon aria-hidden="true" />}
+      <span>
+        {label}
+        <span className="sr-only"> {masjid.name}</span>
+      </span>
+    </Button>
+  );
+}
+
+function Actions({ masjid }: { masjid: Masjid }) {
   const external = [
     { label: "WhatsApp", href: masjid.whatsapp?.url, Icon: MessageCircleIcon },
     { label: "Website", href: masjid.website, Icon: GlobeIcon },
@@ -141,7 +158,10 @@ function Actions({
             href && (
               <a
                 key={label}
-                className={action("outline")}
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "touch" }),
+                  "min-w-fit flex-[1_1_3.5rem] border-input bg-card font-semibold",
+                )}
                 href={href}
                 target="_blank"
                 rel="noopener"
@@ -154,23 +174,6 @@ function Actions({
               </a>
             ),
         )}
-        <Button
-          variant="outline"
-          size="touch"
-          className={action("outline")}
-          onClick={onPin}
-          data-key={`pin-${masjid.id}`}
-        >
-          {pinned ? (
-            <PinOffIcon aria-hidden="true" />
-          ) : (
-            <PinIcon aria-hidden="true" />
-          )}
-          <span>
-            {pinned ? "Unpin" : "Pin"}
-            <span className="sr-only"> {masjid.name}</span>
-          </span>
-        </Button>
       </div>
       <a className={cn(textLink, "underline")} href={reportUrl(masjid)}>
         Report a wrong time
@@ -183,17 +186,15 @@ function Actions({
 /** What follows a masjid's times: source, checked date and actions. */
 export function SourceAndActions({
   schedule,
-  ...actions
+  masjid,
 }: {
   masjid: Masjid;
   schedule: Schedule;
-  pinned: boolean;
-  onPin: () => void;
 }) {
   return (
     <>
       <Sources schedule={schedule} />
-      <Actions {...actions} />
+      <Actions masjid={masjid} />
     </>
   );
 }

@@ -19,10 +19,10 @@ export function Check({ children = CHECK }: { children?: React.ReactNode }) {
 
 export function DailyGrid({
   daily,
-  flat = false,
+  pinned = false,
 }: {
   daily: Schedule["daily"];
-  flat?: boolean;
+  pinned?: boolean;
 }) {
   return (
     <dl className="grid grid-cols-[repeat(auto-fit,minmax(3.15rem,1fr))] gap-1 text-center tabular-nums">
@@ -30,17 +30,18 @@ export function DailyGrid({
         <div
           key={PRAYERS[k]}
           className={cn(
-            "py-1.5 text-xs",
-            flat ? "border-b-2 border-transparent" : "rounded-md bg-muted",
-            state === "next" &&
-              (flat
-                ? "border-primary font-bold text-primary"
-                : "bg-primary font-bold text-primary-foreground"),
+            "rounded-md bg-muted py-1.5 text-xs",
+            state === "next" && "bg-primary font-bold text-primary-foreground",
             state === "past" && "text-past",
           )}
         >
           <dt>{PRAYERS[k]}</dt>
-          <dd className={cn("text-sm", state !== "past" && "font-bold")}>
+          <dd
+            className={cn(
+              pinned ? "text-base" : "text-sm",
+              state !== "past" && "font-bold",
+            )}
+          >
             {time ? formatTime(time) : <Replaced />}
             {state === "next" && <span className="sr-only"> next</span>}
           </dd>
