@@ -3,6 +3,18 @@
   "name": "An-Noor",
   "area": "Wesley Chapel",
   "address": "2250 Ashley Oaks Circle, Wesley Chapel, FL 33544",
+  "iqama": {
+    "fajr": "06:20",
+    "dhuhr": "13:05",
+    "asr": "16:00",
+    "maghrib": "17:44",
+    "isha": "20:00",
+    "source": {
+      "label": "Masjid An-Noor website prayer times",
+      "url": "https://www.wesleychapelmasjid.org/"
+    },
+    "checked": "2026-11-26"
+  },
   "jumuah": {
     "times": ["13:00", "13:30", "14:00", "14:30"],
     "source": {
