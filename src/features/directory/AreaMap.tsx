@@ -19,23 +19,35 @@ class MapError extends Component<{ children: ReactNode }, { failed: boolean }> {
   }
 }
 
-export function AreaMap({ masjids, children, showSearch }: { masjids: Masjid[]; children: ReactNode; showSearch: boolean }) {
+export function AreaMap({
+  masjids,
+  children,
+  showSearch,
+}: {
+  masjids: Masjid[];
+  children: ReactNode;
+  showSearch: boolean;
+}) {
   const [open, setOpen] = useState(false);
   return (
     <div className="space-y-2">
-      <div className={showSearch ? "flex flex-col items-start gap-3" : "flex gap-3"}>
-        {children}
-      <Button
-        className={showSearch ? "" : "min-w-0 flex-1"}
-        variant="outline"
-        size="touch"
-        aria-expanded={open}
-        aria-controls="area-map"
-        onClick={() => setOpen(!open)}
+      <div
+        className={
+          showSearch ? "flex flex-col items-start gap-3" : "flex gap-3"
+        }
       >
-        <MapIcon aria-hidden="true" />
-        {open ? "Hide map" : "Show map"}
-      </Button>
+        {children}
+        <Button
+          className={showSearch ? "" : "min-w-0 flex-1"}
+          variant="outline"
+          size="touch"
+          aria-expanded={open}
+          aria-controls="area-map"
+          onClick={() => setOpen(!open)}
+        >
+          <MapIcon aria-hidden="true" />
+          {open ? "Hide map" : "Show map"}
+        </Button>
       </div>
       <div id="area-map" hidden={!open}>
         {open && (

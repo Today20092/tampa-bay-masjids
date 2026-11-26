@@ -12,5 +12,25 @@
   "address": "15830 Morris Bridge Road, Thonotosassa, FL 33592",
   "mapsUrl": "https://maps.app.goo.gl/FgEgfaYgupRAdQ9k7",
   "nameSource": "https://www.newtampamasjid.org/",
-  "website": "https://www.newtampamasjid.org/"
+  "website": "https://www.newtampamasjid.org/",
+  "iqama": {
+    "fajr": "06:15",
+    "dhuhr": "13:00",
+    "asr": "16:15",
+    "maghrib": "17:39",
+    "isha": "20:00",
+    "source": {
+      "label": "ISONET prayer widget",
+      "url": "https://themasjidapp.org/492/prayers"
+    },
+    "checked": "2026-11-26"
+  },
+  "jumuah": {
+    "times": ["12:50", "14:00"],
+    "source": {
+      "label": "ISONET prayer schedule (service starts)",
+      "url": "https://www.newtampamasjid.org/prayer-schedule"
+    },
+    "checked": "2026-11-26"
+  }
 }
