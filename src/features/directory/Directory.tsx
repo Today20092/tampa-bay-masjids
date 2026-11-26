@@ -247,6 +247,8 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
         {status}
       </p>
 
+      <AreaMap masjids={masjids} />
+
       {rows.length === 0 && !searching ? (
         <p className="text-xs text-muted-foreground">Every masjid is pinned.</p>
       ) : (
@@ -298,7 +300,6 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
           )}
         </>
       )}
-      <AreaMap masjids={masjids} />
       <SolarClock />
     </div>
   );

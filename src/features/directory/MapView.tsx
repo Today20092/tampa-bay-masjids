@@ -64,17 +64,18 @@ export default function MapView({ masjids }: { masjids: Masjid[] }) {
   return (
     <div className="space-y-3">
       <p className="text-sm text-muted-foreground">
-        Choose a marker or a masjid below. Map locations are approximate; use
-        directions for the destination.
+        Choose a marker or a masjid below. Use two fingers to move the map on a
+        phone. Map locations are approximate; use directions for the
+        destination.
       </p>
-      <div className="h-80 overflow-hidden rounded-lg border">
+      <div className="relative h-80 overflow-hidden rounded-lg border">
         <Map
           ref={mapRef}
           center={[-82.38, 28.1]}
           zoom={9.7}
           theme="light"
           styles={{ light: "https://tiles.openfreemap.org/styles/positron" }}
-          scrollZoom={false}
+          cooperativeGestures
         >
           <MapControls position="top-right" className="[&_button]:size-11" />
           {located.map((masjid) => {
@@ -107,35 +108,44 @@ export default function MapView({ masjids }: { masjids: Masjid[] }) {
             );
           })}
         </Map>
-      </div>
-      {active && (
-        <div aria-live="polite" className="rounded-lg bg-muted p-3">
-          <p className="font-semibold">{active.name}</p>
-          <p className="text-sm">{active.address}</p>
-          <a
-            className="inline-flex min-h-11 items-center font-semibold text-primary underline"
-            href={directionsUrl(active)}
-            target="_blank"
-            rel="noreferrer"
+        {active && (
+          <div
+            aria-live="polite"
+            className="absolute bottom-10 left-2 z-10 max-w-[calc(100%-1rem)] rounded-lg border bg-card p-3 shadow-md"
           >
-            Get directions to {active.name}
-          </a>
-        </div>
-      )}
-      <ul className="flex flex-wrap gap-2" role="list">
-        {located.map((m) => (
-          <li key={m.id}>
-            <button
-              type="button"
-              aria-pressed={selected === m.id}
-              onClick={() => select(m.id)}
-              className="min-h-11 rounded-lg border px-3 text-sm font-semibold aria-pressed:border-primary aria-pressed:bg-muted"
+            <p className="font-semibold">{active.name}</p>
+            <p className="text-sm">{active.address}</p>
+            <a
+              className="inline-flex min-h-11 items-center font-semibold text-primary underline"
+              href={directionsUrl(active)}
+              target="_blank"
+              rel="noreferrer"
             >
+              Get directions to {active.name}
+            </a>
+          </div>
+        )}
+      </div>
+      <div className="flex flex-col gap-1">
+        <label htmlFor="map-masjid" className="text-sm font-semibold">
+          Choose a masjid
+        </label>
+        <select
+          id="map-masjid"
+          value={selected ?? ""}
+          onChange={(event) => {
+            if (event.target.value) select(event.target.value);
+          }}
+          className="min-h-11 w-full rounded-lg border border-input bg-card px-3 text-base sm:max-w-sm"
+        >
+          <option value="">Select a masjid</option>
+          {located.map((m) => (
+            <option key={m.id} value={m.id}>
               {m.name}
-            </button>
-          </li>
-        ))}
-      </ul>
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }
