@@ -17,22 +17,30 @@ export function Check({ children = CHECK }: { children?: React.ReactNode }) {
   return <span className="font-semibold text-attention">{children}</span>;
 }
 
-export function DailyGrid({ daily }: { daily: Schedule["daily"] }) {
+export function DailyGrid({
+  daily,
+  flat = false,
+}: {
+  daily: Schedule["daily"];
+  flat?: boolean;
+}) {
   return (
     <dl className="grid grid-cols-[repeat(auto-fit,minmax(3.15rem,1fr))] gap-1 text-center tabular-nums">
       {daily.map(({ time, state }, k) => (
         <div
           key={PRAYERS[k]}
           className={cn(
-            "rounded-md bg-muted py-1.5 text-xs",
-            state === "next" && "bg-primary font-bold text-primary-foreground",
+            "py-1.5 text-xs",
+            flat ? "border-b-2 border-transparent" : "rounded-md bg-muted",
+            state === "next" &&
+              (flat
+                ? "border-primary font-bold text-primary"
+                : "bg-primary font-bold text-primary-foreground"),
             state === "past" && "text-past",
           )}
         >
           <dt>{PRAYERS[k]}</dt>
-          <dd
-            className={cn("text-[0.9375rem]", state !== "past" && "font-bold")}
-          >
+          <dd className={cn("text-sm", state !== "past" && "font-bold")}>
             {time ? formatTime(time) : <Replaced />}
             {state === "next" && <span className="sr-only"> next</span>}
           </dd>

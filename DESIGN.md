@@ -20,6 +20,10 @@ colors:
   destructive: "#a52a1a"
   sample: "#fde2b8"
   sample-foreground: "#5b3200"
+  friday: "#41466f"
+  sky: "#192d47"
+  sky-sun: "#ffd88d"
+  sky-muted: "#d5e0ee"
 typography:
   title:
     fontFamily: "system-ui, sans-serif"
@@ -88,7 +92,7 @@ quiet so nine masjids and five times can be compared at a glance. Light theme on
 **Key Characteristics:**
 
 - A shared content width of up to 64rem.
-- A table for comparison, bordered cards for pinned masjids.
+- A table for comparison, with pinned masjids separated by a rule.
 - State is shown by fill and weight as well as colour.
 
 ## Brand assets
@@ -103,11 +107,11 @@ quiet so nine masjids and five times can be compared at a glance. Light theme on
 
 ### Primary
 
-- **Masjid green** (`primary`): header, primary action, pinned border, the next time, links.
+- **Masjid green** (`primary`): community footer, the next time, links.
 
 ### Secondary
 
-- **Lamp gold** (`gold`): the Facebook group button, text selection, focus outline on green.
+- **Lamp gold** (`gold`): text selection and focus outline on green.
 
 ### Neutral
 
@@ -119,6 +123,8 @@ quiet so nine masjids and five times can be compared at a glance. Light theme on
 ### Signals
 
 - **Amber** (`attention`): "Check with the masjid" and "Checked Nov 15" markers.
+- **Indigo** (`friday`): selected Jumu‘ah schedule.
+- **Night blue and sunlight** (`sky`, `sky-sun`, `sky-muted`): the solar chart and its text.
 - **Focus orange** (`ring`): 3px outline, 2px offset.
 - `sample` colours appear only in the dev preview banner. `destructive` is unused by pages.
 
@@ -132,7 +138,7 @@ quiet so nine masjids and five times can be compared at a glance. Light theme on
 
 ### Hierarchy
 
-- **Title** (600, 1.5rem on mobile and 2.25rem on desktop): site name.
+- **Title** (600, 1.25rem on mobile and 1.5rem on desktop): site name.
 - **Masjid name** (700, 1.125rem): pinned card heading and Arabic name.
 - **Body** (400, 0.875rem): general text; the search field is 1rem.
 - **Label** (0.8125rem): table, tiles, sources. This is the smallest size on the site.
@@ -141,9 +147,11 @@ Times use tabular numerals. Passed times drop to regular weight.
 
 ## Layout
 
-Header, directory and footer share a fluid 64rem shell. Search and the schedule selector stack
-on phones and sit side by side on wider screens. Pinned masjids use two columns from 48rem. The table scrolls inside its own region when text is large; the masjid column
-and the opened row stay in view. Time tiles wrap with `auto-fit` from 3.15rem.
+Header, directory and footer share a fluid 64rem shell. The schedule selector applies to pinned
+masjids and the directory. Pinned masjids use two columns from 48rem. The directory switches to
+a labeled list below 42rem of available width. Time tiles wrap with `auto-fit` from 3.15rem.
+Directions are visible in every row. The area map loads on request after the timetable.
+The solar chart has a jump link beside the schedule selector. Its live sun uses a ray symbol, and the complete list of calculated starts opens on demand. The header pairs the site mark with a quiet Facebook link; the footer carries the community call to action.
 
 ## Elevation & Depth
 
@@ -159,9 +167,9 @@ shadcn on Base UI lives in `src/components/ui/`.
 
 - **Button** `size="touch"`: at least 44px both ways, label may wrap. Links use `buttonVariants`
   on an `<a>`.
-- **ToggleGroup** `size="touch"`: Daily / Jumu‘ah; the pressed side is solid green.
+- **ToggleGroup** `size="touch"`: Daily uses green and Jumu‘ah uses indigo when selected.
 - **Input**: search, 44px, 16px text.
-- **Card** + **Collapsible**: pinned masjid with a Details toggle.
+- **Collapsible**: pinned masjid with an inline Details disclosure.
 - **Table**: row header is a disclosure button; `containerProps` names the scrolling region.
 - **Empty**: no search results.
 
@@ -172,3 +180,18 @@ shadcn on Base UI lives in `src/components/ui/`.
 - Do show "Check with the masjid" wherever a confirmed, fresh time is missing.
 - Don't use gold for anything that competes with the group link.
 - Don't add dark mode, shadows or a web font without a new design decision.
+
+## Masjid logos
+
+Use the marks published by the organizations below. Keep the visible masjid name beside each mark.
+Use the event organizer’s mark for USF Jumu‘ah. Omar and Abu Bakr show their names while a
+logo is unavailable.
+
+| Listing | Source |
+| --- | --- |
+| Al-Qassam | [Islamic Community of Tampa](https://ictampa.org/) |
+| ISTABA | [Islamic Society of Tampa Bay Area](https://istaba.org/) |
+| TMC and USF Jumu‘ah | [The Muslim Connection](https://tmcflorida.org/) · [USF schedule organizer](https://tmcflorida.org/jummah-time) |
+| Daarusalam | [Islamic Society of New Tampa](https://www.newtampamasjid.org/) |
+| IC of Wesley Chapel | [Islamic Community of Wesley Chapel](https://icwc.us/) |
+| An-Noor | [Masjid An-Noor](https://www.wesleychapelmasjid.org/) |

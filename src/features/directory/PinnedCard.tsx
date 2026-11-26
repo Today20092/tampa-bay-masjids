@@ -1,6 +1,5 @@
-import { ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon, Clock3Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Collapsible,
   CollapsibleContent,
@@ -10,83 +9,99 @@ import { needsDateMarker } from "@/lib/freshness";
 import type { Masjid } from "@/lib/masjid-schema";
 import type { Schedule } from "@/lib/schedule";
 import { formatDate, type Now } from "@/lib/time";
-import { ArabicName, JumuahLine, SourceAndActions } from "./MasjidDetail";
+import {
+  ArabicName,
+  Directions,
+  JumuahLine,
+  SourceAndActions,
+} from "./MasjidDetail";
+import { MasjidMark } from "./MasjidMark";
 import { Check, DailyGrid } from "./Times";
-import { nextLine } from "./text";
+import { nextLine, type View } from "./text";
 
 export function PinnedCard({
   masjid,
   schedule,
   now,
+  view,
   onPin,
 }: {
   masjid: Masjid;
   schedule: Schedule;
   now: Now;
+  view: View;
   onPin: () => void;
 }) {
   const { iqama, jumuah } = schedule;
-  const oldest = [iqama?.checked, jumuah?.checked]
-    .filter((d): d is string => Boolean(d))
-    .sort()[0];
-  const line = nextLine(schedule);
-  const nothing = !iqama && !jumuah;
+  const isFridayView = view === "jumuah" || masjid.jumuahOnly;
+  const checked = (isFridayView ? jumuah : iqama)?.checked;
+  const line = isFridayView ? null : nextLine(schedule);
   const headingId = `pinned-${masjid.id}`;
 
   return (
     <section aria-labelledby={headingId}>
       <Collapsible>
-        <Card size="sm" className="h-full gap-3 border border-border ring-0">
-          {/* Wraps rather than the component's two columns, so large text never clips the toggle. */}
-          <CardHeader className="flex flex-wrap items-start justify-between gap-2">
-            <CardTitle className="flex flex-col items-start font-bold">
-              <h2 id={headingId} className="text-lg">
+        <div className="border-t pt-4">
+          <div className="flex items-center gap-3">
+            <MasjidMark masjid={masjid} />
+            <div className="flex flex-col items-start font-bold">
+              <h3 id={headingId} className="text-lg">
                 {masjid.name}
-              </h2>
+              </h3>
+              {masjid.area && (
+                <span className="text-xs font-normal text-muted-foreground">
+                  {masjid.area}
+                </span>
+              )}
               <ArabicName masjid={masjid} />
-            </CardTitle>
-            <CollapsibleTrigger
-              render={<Button variant="outline" size="touch" />}
-              className="group/details border-input bg-card font-semibold"
-              data-key={`card-${masjid.id}`}
-            >
-              <span>
-                Details<span className="sr-only"> for {masjid.name}</span>
-              </span>
-              <ChevronDownIcon
-                data-icon="inline-end"
-                aria-hidden="true"
-                className="group-aria-expanded/details:rotate-180"
-              />
-            </CollapsibleTrigger>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-2">
-            {oldest && needsDateMarker(oldest, now.date) && (
+            </div>
+          </div>
+          <div className="flex flex-col gap-2.5 pt-3">
+            {checked && needsDateMarker(checked, now.date) && (
               <p className="text-xs text-attention">
-                Checked {formatDate(oldest)}
+                Checked {formatDate(checked)}
               </p>
             )}
-            {line && <p className="font-bold">{line}</p>}
-            {iqama && <DailyGrid daily={schedule.daily} />}
-            {nothing ? (
+            {line && (
+              <p className="flex items-center gap-2 font-bold text-primary">
+                <Clock3Icon aria-hidden="true" className="size-4 shrink-0" />
+                {line}
+              </p>
+            )}
+            {isFridayView ? (
+              jumuah ? (
+                <JumuahLine masjid={masjid} schedule={schedule} />
+              ) : (
+                <p>
+                  <Check />
+                </p>
+              )
+            ) : iqama ? (
+              <DailyGrid daily={schedule.daily} flat />
+            ) : (
               <p>
-                {masjid.jumuahOnly && "Jumu‘ah only: "}
                 <Check />
               </p>
-            ) : (
-              <>
-                {!iqama && !masjid.jumuahOnly && (
-                  <p>
-                    Daily times: <Check />
-                  </p>
-                )}
-                <JumuahLine masjid={masjid} schedule={schedule} />
-              </>
             )}
+            <div className="flex flex-wrap gap-2">
+              <Directions masjid={masjid} prominent />
+              <CollapsibleTrigger
+                render={<Button variant="ghost" size="touch" />}
+                className="group/details rounded-full text-muted-foreground font-semibold"
+                data-key={`card-${masjid.id}`}
+              >
+                <span>
+                  Details<span className="sr-only"> for {masjid.name}</span>
+                </span>
+                <ChevronDownIcon
+                  data-icon="inline-end"
+                  aria-hidden="true"
+                  className="group-aria-expanded/details:rotate-180"
+                />
+              </CollapsibleTrigger>
+            </div>
             <CollapsibleContent className="flex flex-col gap-2 border-t pt-2">
-              <p className="text-xs text-muted-foreground">
-                Pinned{masjid.area && ` · ${masjid.area}`}
-              </p>
+              <p className="text-xs text-muted-foreground">{masjid.address}</p>
               <SourceAndActions
                 masjid={masjid}
                 schedule={schedule}
@@ -94,8 +109,8 @@ export function PinnedCard({
                 onPin={onPin}
               />
             </CollapsibleContent>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </Collapsible>
     </section>
   );
