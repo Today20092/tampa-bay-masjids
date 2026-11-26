@@ -1,2 +1,2 @@
-# Prettier expects LF; without this, Git for Windows checks out CRLF and `pnpm verify` fails.
+# Windows checkouts must keep LF, or the format check fails on every file.
 * text=auto eol=lf
