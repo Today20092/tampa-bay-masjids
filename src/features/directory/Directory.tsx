@@ -165,6 +165,8 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
         </section>
       )}
 
+      <SolarClock />
+
       <AreaMap
         rows={all}
         view={view}
@@ -288,7 +290,6 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
         </>
       )}
       <ShareButton />
-      <SolarClock />
     </div>
   );
 }

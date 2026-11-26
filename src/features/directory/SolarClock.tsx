@@ -1,6 +1,5 @@
 import {
   ChevronDownIcon,
-  Clock3Icon,
   LocateFixedIcon,
   MoonIcon,
   SunIcon,
@@ -9,6 +8,11 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { solarDay, TAMPA_SKY } from "@/lib/solar-day";
 import { formatDate } from "@/lib/time";
 
@@ -41,8 +45,15 @@ export function SolarClock() {
     minutesLeft === null
       ? null
       : hoursLeft > 0
-        ? `${hoursLeft}h ${minutesLeft % 60}m left`
-        : `${minutesLeft} min left`;
+        ? `${hoursLeft}h ${minutesLeft % 60}m`
+        : `${minutesLeft} min`;
+  // Naming the start that just passed keeps this line from reading as a rival to
+  // a masjid's next iqama, which is still the earlier prayer until it is held.
+  const previous = data?.previousEvent;
+  const started =
+    data &&
+    previous &&
+    `${previous.label} ${previous.key === "sunrise" ? "was" : "started"} ${data.clock.format(previous.time)} · `;
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -86,150 +97,154 @@ export function SolarClock() {
   }
 
   return (
-    <section
-      aria-labelledby="solar-heading"
-      className="sky-panel rounded-xl p-4 sm:p-6"
+    <Collapsible
+      render={<section aria-labelledby="solar-heading" />}
+      className="sky-panel rounded-xl p-1"
     >
-      <div className="flex flex-wrap items-start justify-between gap-2">
-        <div>
-          <h2
-            id="solar-heading"
-            className="flex items-center gap-2 text-xl font-semibold"
-          >
-            <SunIcon aria-hidden="true" className="size-5 text-sky-sun" />
-            Sun and prayer times
-          </h2>
+      <h2 id="solar-heading" className="sr-only">
+        Sun and prayer times
+      </h2>
+      <CollapsibleTrigger className="group/sun w-full cursor-pointer rounded-lg p-2 text-left hover:bg-white/10">
+        <span className="flex items-center gap-3">
+          <SunIcon
+            aria-hidden="true"
+            className="size-5 shrink-0 text-sky-sun"
+          />
+          <span className="min-w-0 flex-1">
+            <span className="block font-semibold text-sky-sun tabular-nums">
+              {!data
+                ? "Calculating prayer starts…"
+                : next
+                  ? `${next.label} starts in ${countdown}`
+                  : "Next prayer start unavailable"}
+            </span>
+            <span className="block text-xs text-sky-muted">
+              {started}Calculated for{" "}
+              {locationState === "local" ? "your location" : "Tampa"}
+            </span>
+          </span>
+          <ChevronDownIcon
+            aria-hidden="true"
+            className="size-4 shrink-0 group-aria-expanded/sun:rotate-180"
+          />
+        </span>
+        <svg
+          viewBox="0 -20 480 160"
+          className="max-h-44 w-full overflow-visible"
+          aria-hidden="true"
+        >
+          {data && (
+            <>
+              <path
+                d="M16 86H464"
+                stroke="currentColor"
+                className="text-sky-muted"
+                strokeDasharray="3 4"
+                opacity=".55"
+              />
+              <polyline
+                points={data.path}
+                fill="none"
+                stroke="currentColor"
+                className="text-sky-sun"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              {data.sun && (
+                <g
+                  key={`${data.date}/${place.latitude}/${place.longitude}`}
+                  className="sky-marker text-sky-sun"
+                  style={{
+                    transform: `translate(${data.sun.x}px, ${data.sun.y}px)`,
+                  }}
+                >
+                  <g transform="scale(.72)">
+                    <path
+                      d="M0-27 6-18 16-22 18-12 27-8 22 0 27 8 18 12 16 22 6 18 0 27-6 18-16 22-18 12-27 8-22 0-27-8-18-12-16-22-6-18Z"
+                      fill="#e89140"
+                    />
+                    <circle r="15" fill="#ffdf87" />
+                    <circle r="11" fill="none" stroke="#ffbb5d" />
+                  </g>
+                </g>
+              )}
+              {data.events.map(({ key, label, x, y }) => {
+                const isNext = key === data.nextOnChart;
+                const below =
+                  y < 143 &&
+                  (key === "fajr" || key === "asr" || key === "isha");
+                const labelY = y + (below ? 35 : -25);
+                return (
+                  <g
+                    key={key}
+                    className={isNext ? "text-sky-sun" : "text-sky-muted"}
+                  >
+                    <line
+                      x1={x}
+                      x2={x}
+                      y1={y}
+                      y2={labelY + (below ? -16 : 6)}
+                      stroke="currentColor"
+                      strokeWidth="1.2"
+                      opacity={isNext ? 1 : 0.65}
+                    />
+                    <circle
+                      cx={x}
+                      cy={y}
+                      r={isNext ? 4 : 2.75}
+                      fill="var(--sky)"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                    />
+                    <text
+                      x={Math.max(40, Math.min(440, x))}
+                      y={labelY}
+                      textAnchor="middle"
+                      fill="currentColor"
+                      fontSize="16"
+                      fontWeight={isNext ? 700 : 500}
+                    >
+                      {label}
+                    </text>
+                  </g>
+                );
+              })}
+            </>
+          )}
+        </svg>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="mt-1 border-t border-sky-muted/25 px-2 pt-2 pb-2 sm:px-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-xs text-sky-muted">
             {locationState === "local"
               ? "Your location · device time zone"
               : "Tampa, Florida"}
             {data && ` · ${formatDate(data.date)}`}
           </p>
-        </div>
-        <Button
-          variant="ghost"
-          size="touch"
-          onClick={useLocation}
-          disabled={locationState === "loading"}
-          className="text-white hover:bg-white/10 hover:text-white"
-        >
-          <LocateFixedIcon aria-hidden="true" />
-          {locationState === "local"
-            ? "Use Tampa"
-            : locationState === "loading"
-              ? "Locating…"
-              : "Use my location"}
-        </Button>
-      </div>
-      {locationState === "error" && (
-        <p role="status" className="text-xs text-sky-muted">
-          Location unavailable. Showing Tampa.
-        </p>
-      )}
-      {data ? (
-        <>
-          <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <p className="text-sm font-semibold text-sky-muted">
-              {next
-                ? `${next.label} at ${data.clock.format(next.time)} (calculated)`
-                : "Next prayer start unavailable"}
-            </p>
-            {countdown && (
-              <p className="text-xl font-semibold text-sky-sun tabular-nums">
-                {countdown}
-              </p>
-            )}
-          </div>
-          <svg
-            viewBox="0 0 480 184"
-            className="mt-1 max-h-72 w-full overflow-visible"
-            aria-hidden="true"
+          <Button
+            variant="ghost"
+            size="touch"
+            onClick={useLocation}
+            disabled={locationState === "loading"}
+            className="text-white hover:bg-white/10 hover:text-white"
           >
-            <path
-              d="M16 86H464"
-              stroke="currentColor"
-              className="text-sky-muted"
-              strokeDasharray="3 4"
-              opacity=".55"
-            />
-            <polyline
-              points={data.path}
-              fill="none"
-              stroke="currentColor"
-              className="text-sky-sun"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            {data.sun && (
-              <g
-                key={`${data.date}/${place.latitude}/${place.longitude}`}
-                className="sky-marker text-sky-sun"
-                style={{
-                  transform: `translate(${data.sun.x}px, ${data.sun.y}px)`,
-                }}
-              >
-                <g transform="scale(.72)">
-                  <path
-                    d="M0-27 6-18 16-22 18-12 27-8 22 0 27 8 18 12 16 22 6 18 0 27-6 18-16 22-18 12-27 8-22 0-27-8-18-12-16-22-6-18Z"
-                    fill="#e89140"
-                  />
-                  <circle r="15" fill="#ffdf87" />
-                  <circle r="11" fill="none" stroke="#ffbb5d" />
-                </g>
-              </g>
-            )}
-            {data.events.map(({ key, label, x, y }) => {
-              const isNext = key === data.nextOnChart;
-              const below =
-                y < 143 && (key === "fajr" || key === "asr" || key === "isha");
-              const labelY = y + (below ? 35 : -25);
-              return (
-                <g
-                  key={key}
-                  className={isNext ? "text-sky-sun" : "text-sky-muted"}
-                >
-                  <line
-                    x1={x}
-                    x2={x}
-                    y1={y}
-                    y2={labelY + (below ? -16 : 6)}
-                    stroke="currentColor"
-                    strokeWidth="1.2"
-                    opacity={isNext ? 1 : 0.65}
-                  />
-                  <circle
-                    cx={x}
-                    cy={y}
-                    r={isNext ? 4 : 2.75}
-                    fill="var(--sky)"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                  />
-                  <text
-                    x={Math.max(40, Math.min(440, x))}
-                    y={labelY}
-                    textAnchor="middle"
-                    fill="currentColor"
-                    fontSize="16"
-                    fontWeight={isNext ? 700 : 500}
-                  >
-                    {label}
-                  </text>
-                </g>
-              );
-            })}
-          </svg>
-          <details className="group border-t border-sky-muted/25">
-            <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-md font-semibold [&::-webkit-details-marker]:hidden">
-              <Clock3Icon aria-hidden="true" className="size-4 text-sky-sun" />
-              All prayer starts
-              <ChevronDownIcon
-                aria-hidden="true"
-                className="ml-auto size-4 group-open:rotate-180"
-              />
-            </summary>
-            <dl className="divide-y divide-sky-muted/20 text-sm tabular-nums">
+            <LocateFixedIcon aria-hidden="true" />
+            {locationState === "local"
+              ? "Use Tampa"
+              : locationState === "loading"
+                ? "Locating…"
+                : "Use my location"}
+          </Button>
+        </div>
+        {locationState === "error" && (
+          <p role="status" className="text-xs text-sky-muted">
+            Location unavailable. Showing Tampa.
+          </p>
+        )}
+        {data && (
+          <>
+            <dl className="divide-y divide-sky-muted/20 border-t border-sky-muted/25 text-sm tabular-nums">
               {data.events.map(({ key, label, time }) => {
                 const Icon = eventIcons[key];
                 return (
@@ -253,13 +268,9 @@ export function SolarClock() {
               North America method, standard Asr. See the directory for masjid
               iqama times.
             </p>
-          </details>
-        </>
-      ) : (
-        <p className="mt-3 text-sky-muted">
-          Calculating today’s solar position…
-        </p>
-      )}
-    </section>
+          </>
+        )}
+      </CollapsibleContent>
+    </Collapsible>
   );
 }
