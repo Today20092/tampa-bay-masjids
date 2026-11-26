@@ -96,6 +96,5 @@ It is available only there. Use it to read official masjid announcement groups.
 - For branch, worktree, PR, merge, and deployment steps, follow [docs/branch-workflow.md](docs/branch-workflow.md).
 - Read [docs/site-structure.md](docs/site-structure.md) before adding or moving components; lint enforces its import boundaries.
 - Follow [DESIGN.md](DESIGN.md) for visual work.
-- For directory interaction changes, use `ux-intent` and consider first visits and returning visits with saved pins.
-- For visual refinements, use `refactoring-ui`; for accessibility work, use `web-ui-accessibility`.
+- For directory interaction changes, consider first visits and returning visits with saved pins.
 - Use `frontend-quality` when asked to add or maintain browser checks or screenshot baselines; review the project setup before changing test infrastructure.
