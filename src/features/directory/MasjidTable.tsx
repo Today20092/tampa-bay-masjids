@@ -18,6 +18,7 @@ import {
   ArabicName,
   Directions,
   JumuahLine,
+  PinButton,
   SourceAndActions,
 } from "./MasjidDetail";
 import { MasjidMark } from "./MasjidMark";
@@ -70,13 +71,7 @@ function Cells({ masjid, schedule, view }: Row & { view: View }) {
   );
 }
 
-function RowDetail({
-  masjid,
-  schedule,
-  view,
-  pinned,
-  onPin,
-}: Row & { view: View; pinned: boolean; onPin: () => void }) {
+function RowDetail({ masjid, schedule, view }: Row & { view: View }) {
   return (
     <div className="flex flex-col gap-2 text-sm">
       <div>
@@ -93,12 +88,7 @@ function RowDetail({
       {view === "daily" && !masjid.jumuahOnly && (
         <JumuahLine masjid={masjid} schedule={schedule} />
       )}
-      <SourceAndActions
-        masjid={masjid}
-        schedule={schedule}
-        pinned={pinned}
-        onPin={onPin}
-      />
+      <SourceAndActions masjid={masjid} schedule={schedule} />
     </div>
   );
 }
@@ -160,7 +150,15 @@ export function MasjidTable({
                   </span>
                   <Chevron aria-hidden="true" className="size-4 shrink-0" />
                 </button>
-                <Directions masjid={masjid} />
+                <div className="flex items-center">
+                  <Directions masjid={masjid} />
+                  <PinButton
+                    masjid={masjid}
+                    pinned={pinned}
+                    onPin={() => onPin(masjid.id)}
+                    compact
+                  />
+                </div>
               </div>
               {view === "daily" && schedule.iqama ? (
                 <DailyGrid daily={schedule.daily} />
@@ -188,12 +186,7 @@ export function MasjidTable({
                   id={`detail-mobile-${masjid.id}`}
                   className="rounded-lg bg-detail p-3"
                 >
-                  <RowDetail
-                    {...row}
-                    view={view}
-                    pinned={pinned}
-                    onPin={() => onPin(masjid.id)}
-                  />
+                  <RowDetail {...row} view={view} />
                 </div>
               )}
             </li>
@@ -235,7 +228,7 @@ export function MasjidTable({
               </TableHead>
             ))}
             <TableHead scope="col" className="pr-3 text-right">
-              <span className="sr-only">Directions</span>
+              <span className="sr-only">Actions</span>
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -282,7 +275,15 @@ export function MasjidTable({
                   </TableHead>
                   <Cells {...row} view={view} />
                   <TableCell className="pr-3 text-right">
-                    <Directions masjid={masjid} />
+                    <div className="flex justify-end">
+                      <Directions masjid={masjid} />
+                      <PinButton
+                        masjid={masjid}
+                        pinned={pinned}
+                        onPin={() => onPin(masjid.id)}
+                        compact
+                      />
+                    </div>
                   </TableCell>
                 </TableRow>
                 {open && (
@@ -295,12 +296,7 @@ export function MasjidTable({
                       className="bg-detail p-0 whitespace-normal"
                     >
                       <div className="sticky left-0 w-[100cqw] p-5">
-                        <RowDetail
-                          {...row}
-                          view={view}
-                          pinned={pinned}
-                          onPin={() => onPin(masjid.id)}
-                        />
+                        <RowDetail {...row} view={view} />
                       </div>
                     </TableCell>
                   </TableRow>
