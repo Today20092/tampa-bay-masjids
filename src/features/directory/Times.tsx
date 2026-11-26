@@ -59,20 +59,18 @@ export function JumuahTimes({
   states: State[];
 }) {
   return (
-    <span className="inline-flex flex-wrap items-center justify-center gap-x-1.5 tabular-nums">
+    <span className="inline-flex flex-wrap justify-center gap-1 text-center tabular-nums">
       {times.map((time, k) => (
-        <span key={time} className="inline-flex items-center gap-1.5">
-          {k > 0 && <span aria-hidden="true">·</span>}
-          <span
-            className={cn(
-              states[k] === "past" ? "font-normal text-past" : "font-bold",
-              states[k] === "next" &&
-                "rounded-md bg-primary px-2 py-1 text-primary-foreground",
-            )}
-          >
-            {formatTime(time)}
-            {states[k] === "next" && <span className="sr-only"> next</span>}
-          </span>
+        <span
+          key={time}
+          className={cn(
+            "w-16 rounded-md bg-muted py-1.5",
+            states[k] === "past" ? "font-normal text-past" : "font-bold",
+            states[k] === "next" && "bg-primary text-primary-foreground",
+          )}
+        >
+          {formatTime(time)}
+          {states[k] === "next" && <span className="sr-only"> next</span>}
         </span>
       ))}
     </span>

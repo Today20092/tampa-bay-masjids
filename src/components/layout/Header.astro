@@ -3,14 +3,19 @@ import FacebookLink from "./FacebookLink.astro";
 import { SITE } from "@/data/site";
 ---
 
-<header class="border-b bg-card">
-  <div class="site-shell flex items-center justify-between gap-x-3 py-2 sm:gap-x-5 sm:py-3">
-    <div class="flex min-w-0 items-center gap-3">
-      <img src="/favicon.svg" alt="" width="36" height="36" class="shrink-0" />
-      <h1 class="text-base font-semibold tracking-tight min-[22.5rem]:text-lg sm:text-2xl">
-        {SITE.name}
-      </h1>
-    </div>
-    <FacebookLink />
+<header class="site-shell pt-4 text-center sm:pt-8">
+  <div class="flex items-center justify-center gap-2.5 sm:flex-col sm:gap-2">
+    <img
+      src="/favicon.svg"
+      alt=""
+      width="34"
+      height="34"
+      class="shrink-0 sm:size-14"
+    />
+    <h1 class="font-[Georgia,serif] text-xl font-bold text-primary min-[22.5rem]:text-2xl sm:text-[2.5rem] sm:leading-tight">
+      {SITE.name}
+    </h1>
   </div>
+  <FacebookLink />
+  <div class="border-b-4 border-double border-primary/50"></div>
 </header>
