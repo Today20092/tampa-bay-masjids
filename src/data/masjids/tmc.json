@@ -16,5 +16,16 @@
       "label": "TMC Announcements WhatsApp group schedule"
     },
     "checked": "2026-11-26"
+  },
+  "jumuah": {
+    "times": ["12:35", "13:35", "14:50"],
+    "venue": {
+      "name": "Rose Court Ballroom",
+      "address": "4934 E Busch Blvd, Tampa, FL 33617"
+    },
+    "source": {
+      "label": "TMC Announcements WhatsApp group schedule"
+    },
+    "checked": "2026-11-26"
   }
 }

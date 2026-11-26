@@ -1,3 +1,4 @@
+import { directionsUrl } from "@/lib/links";
 import type { Masjid } from "@/lib/masjid-schema";
 import { PRAYERS, type Schedule, type State } from "@/lib/schedule";
 import { formatTime } from "@/lib/time";
@@ -65,25 +66,36 @@ export function DailyGrid({
 export function JumuahTimes({
   times,
   states,
-}: {
-  times: string[];
-  states: State[];
-}) {
+  venue,
+}: NonNullable<Masjid["jumuah"]> & { states: State[] }) {
   return (
-    <span className="inline-flex flex-wrap justify-center gap-1 text-center tabular-nums">
-      {times.map((time, k) => (
-        <span
-          key={time}
-          className={cn(
-            "w-16 rounded-md bg-muted py-1.5",
-            states[k] === "past" ? "font-normal text-past" : "font-bold",
-            states[k] === "next" && "bg-primary text-primary-foreground",
-          )}
+    <>
+      <span className="inline-flex flex-wrap justify-center gap-1 text-center tabular-nums">
+        {times.map((time, k) => (
+          <span
+            key={time}
+            className={cn(
+              "w-16 rounded-md bg-muted py-1.5",
+              states[k] === "past" ? "font-normal text-past" : "font-bold",
+              states[k] === "next" && "bg-primary text-primary-foreground",
+            )}
+          >
+            {formatTime(time)}
+            {states[k] === "next" && <span className="sr-only"> next</span>}
+          </span>
+        ))}
+      </span>
+      {venue && (
+        <a
+          className="block py-2 text-sm font-normal text-primary underline"
+          href={directionsUrl(venue)}
+          target="_blank"
+          rel="noopener"
         >
-          {formatTime(time)}
-          {states[k] === "next" && <span className="sr-only"> next</span>}
-        </span>
-      ))}
-    </span>
+          <span className="block font-semibold">At {venue.name}</span>
+          {venue.address}
+        </a>
+      )}
+    </>
   );
 }

@@ -39,7 +39,7 @@ export function shownSet({ masjid, schedule }: Row, view: View) {
 function Cells({ masjid, schedule, view }: Row & { view: View }) {
   const wide = "h-12 px-1 text-center whitespace-normal sm:h-14 sm:text-sm";
   const jumuah = schedule.jumuah && (
-    <JumuahTimes times={schedule.jumuah.times} states={schedule.jumuahStates} />
+    <JumuahTimes {...schedule.jumuah} states={schedule.jumuahStates} />
   );
   if (view === "jumuah")
     return (
@@ -174,7 +174,7 @@ export function MasjidTable({
                   {(view === "jumuah" || masjid.jumuahOnly) &&
                   schedule.jumuah ? (
                     <JumuahTimes
-                      times={schedule.jumuah.times}
+                      {...schedule.jumuah}
                       states={schedule.jumuahStates}
                     />
                   ) : (
