@@ -76,7 +76,7 @@ function MapTimes({
   if (!set)
     return (
       <p className="text-sm">
-        <Check />
+        <Check masjid={masjid} />
       </p>
     );
   return (

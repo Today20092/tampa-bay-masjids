@@ -8,7 +8,7 @@ const FRESHNESS_RULE =
   `Times are ${TIME_ZONE} wall-clock times in 24-hour HH:MM. Never present a time after its ` +
   `validThrough date: the last day that is under ${STALE_AFTER_DAYS} days after it was checked and before the next ` +
   `US clock change. Show the checked date when it is more than ${MARK_AFTER_DAYS} days old. ` +
-  `Where there is no usable time, say "Check with the masjid". ` +
+  `Where there is no usable time, say "Check with the masjid", except a masjid with comingSoon true, which has not started formal prayers yet and should be described as "Prayers coming soon". ` +
   `Maghrib may be "sunset" (shortly after the sunset adhan) or "sunset+N" (N minutes after it).`;
 
 const dated = <T extends { checked: string }>(set: T | undefined) =>
@@ -30,6 +30,7 @@ export function publicData(masjids: Masjid[]) {
       website: m.website ?? null,
       whatsapp: m.whatsapp?.url ?? null,
       jumuahOnly: m.jumuahOnly,
+      comingSoon: m.comingSoon ?? false,
       iqama: dated(m.iqama),
       jumuah: dated(m.jumuah),
     })),
@@ -55,18 +56,20 @@ export function llmsText(masjids: Masjid[]): string {
     ];
     if (m.website) lines.push(`- Website: ${m.website}`);
     if (m.whatsapp) lines.push(`- WhatsApp: ${m.whatsapp}`);
-    if (m.jumuahOnly) lines.push("- Jumu‘ah only");
+    if (m.comingSoon) lines.push("- Prayers coming soon");
+    else if (m.jumuahOnly) lines.push("- Jumu‘ah only");
     else if (m.iqama) {
       const { fajr, dhuhr, asr, maghrib, isha } = m.iqama;
       lines.push(
         `- Iqama: Fajr ${fajr}, Dhuhr ${dhuhr}, Asr ${asr}, Maghrib ${maghrib}, Isha ${isha} (${from(m.iqama)})`,
       );
     } else lines.push("- Iqama: check with the masjid");
-    lines.push(
-      m.jumuah
-        ? `- Jumu‘ah: ${m.jumuah.times.join(", ")} (${from(m.jumuah)})`
-        : "- Jumu‘ah: check with the masjid",
-    );
+    if (!m.comingSoon)
+      lines.push(
+        m.jumuah
+          ? `- Jumu‘ah: ${m.jumuah.times.join(", ")} (${from(m.jumuah)})`
+          : "- Jumu‘ah: check with the masjid",
+      );
     return lines.join("\n");
   });
   return [

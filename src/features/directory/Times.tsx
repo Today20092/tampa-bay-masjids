@@ -1,7 +1,8 @@
+import type { Masjid } from "@/lib/masjid-schema";
 import { PRAYERS, type Schedule, type State } from "@/lib/schedule";
 import { formatTime } from "@/lib/time";
 import { cn } from "@/lib/utils";
-import { CHECK } from "./text";
+import { CHECK, COMING_SOON } from "./text";
 
 /** A dash with a spoken explanation, for Friday's Dhuhr. */
 export function Replaced() {
@@ -13,7 +14,17 @@ export function Replaced() {
   );
 }
 
-export function Check({ children = CHECK }: { children?: React.ReactNode }) {
+export function Check({
+  masjid,
+  children = CHECK,
+}: {
+  masjid?: Pick<Masjid, "comingSoon">;
+  children?: React.ReactNode;
+}) {
+  if (masjid?.comingSoon)
+    return (
+      <span className="font-semibold text-muted-foreground">{COMING_SOON}</span>
+    );
   return <span className="font-semibold text-attention">{children}</span>;
 }
 

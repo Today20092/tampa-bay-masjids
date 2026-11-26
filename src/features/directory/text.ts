@@ -2,6 +2,7 @@ import type { Schedule } from "@/lib/schedule";
 import { formatDate, formatTime } from "@/lib/time";
 
 export const CHECK = "Check with the masjid";
+export const COMING_SOON = "Prayers coming soon";
 
 export type View = "daily" | "jumuah";
 
