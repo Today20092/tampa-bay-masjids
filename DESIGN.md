@@ -91,6 +91,14 @@ quiet so nine masjids and five times can be compared at a glance. Light theme on
 - A table for comparison, bordered cards for pinned masjids.
 - State is shown by fill and weight as well as colour.
 
+## Brand assets
+
+- Use the pointed arch in [the favicon](public/favicon.svg) as the brand mark. Keep the gold silhouette on masjid green and give it clear space. Pair it with the full name “Tampa Bay Masjids” where space allows.
+- Use masjid green and parchment as the main pair. Lamp gold can frame the mark and divide text on branded graphics. On the site, follow the control and status colors below.
+- Use Georgia bold for the name on branded graphics and system sans-serif for supporting text and the interface. Use “Iqama, Jumu‘ah, and directions” when a short description helps identify the directory.
+- The [share card source](docs/social-preview.svg) uses a quiet geometric border and serif title inspired by Islam with Ayoub. Keep ornament at the edges and leave the name and description in an open central area.
+- Edit the SVG and export it in VectorCraft at 1× as [the 1200 × 630 PNG](public/social-preview.png). The shared page head uses that PNG for Open Graph and X cards.
+
 ## Colors
 
 ### Primary
