@@ -1,4 +1,4 @@
-import { MapPin } from "lucide-react";
+import { MapPin, XIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import type { Map as MapLibreMap } from "maplibre-gl";
 import {
@@ -7,8 +7,13 @@ import {
   MapMarker,
   MarkerContent,
 } from "@/components/ui/map";
-import { directionsUrl } from "@/lib/links";
-import type { Masjid } from "@/lib/masjid-schema";
+import { Button } from "@/components/ui/button";
+import { needsDateMarker } from "@/lib/freshness";
+import { formatDate, type Now } from "@/lib/time";
+import { Directions, JumuahLine, PinButton } from "./MasjidDetail";
+import type { Row } from "./MasjidTable";
+import { Check } from "./Times";
+import { nextLine, type View } from "./text";
 
 // US Census Geocoder address matches, checked 2026-11-26. Address interpolation is approximate.
 // Keeping the matched address here prevents a stale pin if the listing moves.
@@ -48,16 +53,69 @@ const locations: Record<string, [string, number, number]> = {
   ],
 };
 
-export default function MapView({ masjids }: { masjids: Masjid[] }) {
+export type MapViewProps = {
+  rows: Row[];
+  view: View;
+  now: Now | null;
+  pins: string[];
+  onPin: (id: string) => void;
+};
+
+/** When can I pray there, in the schedule being viewed. */
+function MapTimes({
+  row: { masjid, schedule },
+  view,
+  now,
+}: {
+  row: Row;
+  view: View;
+  now: Now | null;
+}) {
+  const friday = view === "jumuah" || masjid.jumuahOnly;
+  const set = friday ? schedule.jumuah : schedule.iqama;
+  if (!set)
+    return (
+      <p className="text-sm">
+        <Check />
+      </p>
+    );
+  return (
+    <div>
+      {friday ? (
+        <JumuahLine masjid={masjid} schedule={schedule} />
+      ) : (
+        <p className="text-sm font-bold text-primary">{nextLine(schedule)}</p>
+      )}
+      {now && needsDateMarker(set.checked, now.date) && (
+        <p className="text-xs text-attention">
+          Checked {formatDate(set.checked)}
+        </p>
+      )}
+    </div>
+  );
+}
+
+export default function MapView({
+  rows,
+  view,
+  now,
+  pins,
+  onPin,
+}: MapViewProps) {
   const mapRef = useRef<MapLibreMap>(null);
   const [selected, setSelected] = useState<string | null>(null);
-  const located = masjids.filter((m) => locations[m.id]?.[0] === m.address);
-  const active = located.find((m) => m.id === selected);
+  const located = rows
+    .map((row) => row.masjid)
+    .filter((m) => locations[m.id]?.[0] === m.address);
+  const active = rows.find((row) => row.masjid.id === selected);
   function select(id: string) {
     setSelected(id);
     const [, lng, lat] = locations[id];
-    mapRef.current?.jumpTo({
+    mapRef.current?.easeTo({
       center: [lng, lat],
+      // Keep the marker above the card that covers the bottom of the map.
+      offset: [0, -90],
+      duration: 0,
       zoom: Math.max(mapRef.current.getZoom(), 12),
     });
   }
@@ -111,18 +169,35 @@ export default function MapView({ masjids }: { masjids: Masjid[] }) {
         {active && (
           <div
             aria-live="polite"
-            className="absolute bottom-10 left-2 z-10 max-w-[calc(100%-1rem)] rounded-lg border bg-card p-3 shadow-md"
+            className="absolute inset-x-2 bottom-10 z-10 flex max-w-sm flex-col gap-1 rounded-lg border bg-card p-3 shadow-md"
           >
-            <p className="font-semibold">{active.name}</p>
-            <p className="text-sm">{active.address}</p>
-            <a
-              className="inline-flex min-h-11 items-center font-semibold text-primary underline"
-              href={directionsUrl(active)}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Get directions to {active.name}
-            </a>
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <p className="font-semibold">{active.masjid.name}</p>
+                <p className="text-xs text-muted-foreground">
+                  {active.masjid.area ?? active.masjid.address}
+                </p>
+              </div>
+              <Button
+                variant="ghost"
+                size="touch"
+                className="-mt-2 -mr-2 size-11 px-0"
+                aria-label="Close masjid details"
+                onClick={() => setSelected(null)}
+              >
+                <XIcon aria-hidden="true" />
+              </Button>
+            </div>
+            <MapTimes row={active} view={view} now={now} />
+            <div className="flex flex-wrap gap-1">
+              <Directions masjid={active.masjid} prominent />
+              <PinButton
+                masjid={active.masjid}
+                pinned={pins.includes(active.masjid.id)}
+                onPin={() => onPin(active.masjid.id)}
+                focusKey={`map-pin-${active.masjid.id}`}
+              />
+            </div>
           </div>
         )}
       </div>
