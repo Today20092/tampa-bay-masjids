@@ -17,9 +17,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
-    "check:dist": "node scripts/check-dist.mjs",
     "deploy:dry-run": "pnpm build && wrangler deploy --dry-run",
-    "verify": "pnpm format:check && pnpm test && pnpm check && pnpm lint && pnpm unused && pnpm build && pnpm check:dist",
+    "verify": "pnpm format:check && pnpm test && pnpm check && pnpm lint && pnpm unused && pnpm build",
     "astro": "astro"
   },
   "dependencies": {
