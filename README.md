@@ -60,14 +60,13 @@ Node.js 22.23 or newer and pnpm 11.21 are required.
 
 ```sh
 pnpm install
-pnpm dev       # local site; add ?demo for labelled sample times
+pnpm dev       # local site
 pnpm test      # focused automated tests
-pnpm verify    # format, tests, types, lint, unused code, build, dist checks
+pnpm verify    # format, tests, types, lint, unused code, build
 pnpm preview   # serve the build
 ```
 
-Demo times are labelled and only appear in development. Run `pnpm verify` before opening a pull
-request.
+Run `pnpm verify` before opening a pull request.
 
 ## Contributing
 

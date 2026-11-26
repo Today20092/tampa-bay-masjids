@@ -1,5 +1,5 @@
 import { SearchIcon, XIcon } from "lucide-react";
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyContent, EmptyDescription } from "@/components/ui/empty";
 import { Input } from "@/components/ui/input";
@@ -9,18 +9,12 @@ import { readPins, togglePin, writePins } from "@/lib/pins";
 import { scheduleFor } from "@/lib/schedule";
 import { matches, normalize } from "@/lib/search";
 import { nowInTampa, type Now } from "@/lib/time";
-import type { Demo } from "./demo/sample";
 import { MasjidTable, shownSet, type Row } from "./MasjidTable";
 import { AreaMap } from "./AreaMap";
 import { SolarClock } from "./SolarClock";
 import { PinnedCard } from "./PinnedCard";
 import { ShareButton } from "./ShareButton";
 import { checkedRange, type View } from "./text";
-
-// Dev only: the production build drops this branch, so no sample times reach dist/.
-const DemoControls = import.meta.env.DEV
-  ? lazy(() => import("./demo/DemoControls"))
-  : null;
 
 /** Current Tampa time, updated while the page stays open; null during the static render. */
 function useNow() {
@@ -45,9 +39,7 @@ function useNow() {
 }
 
 export default function Directory({ masjids }: { masjids: Masjid[] }) {
-  const clock = useNow();
-  const [demo, setDemo] = useState<Demo | null>(null);
-  const [demoWanted, setDemoWanted] = useState(false);
+  const now = useNow();
   const [query, setQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
   const [pins, setPins] = useState<string[]>([]);
@@ -60,8 +52,6 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
 
   useEffect(() => {
     setPins(readPins(masjids.map((m) => m.id)));
-    if (import.meta.env.DEV)
-      setDemoWanted(new URLSearchParams(location.search).has("demo"));
   }, [masjids]);
 
   // Pinning moves a masjid between the cards and the table; focus follows it.
@@ -76,9 +66,8 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
     focusKey.current = null;
   });
 
-  const now = demo?.now ?? clock;
   const view: View = chosenView ?? (now?.friday ? "jumuah" : "daily");
-  const all: Row[] = (demo?.masjids ?? masjids).map((masjid) => ({
+  const all: Row[] = masjids.map((masjid) => ({
     masjid,
     schedule: scheduleFor(masjid, now),
   }));
@@ -131,12 +120,6 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
 
   return (
     <div className="flex flex-col gap-4">
-      {DemoControls && demoWanted && (
-        <Suspense>
-          <DemoControls masjids={masjids} onChange={setDemo} />
-        </Suspense>
-      )}
-
       <ToggleGroup
         aria-label="Prayer schedule"
         value={[view]}
