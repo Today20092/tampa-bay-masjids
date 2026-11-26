@@ -3,9 +3,17 @@ import FacebookLink from "./FacebookLink.astro";
 import { SITE } from "@/data/site";
 ---
 
-<footer class="site-shell pb-6">
-  <div class="on-primary flex flex-wrap items-center justify-between gap-4 rounded-xl bg-primary p-4 text-primary-foreground sm:p-6">
-    <p class="text-lg font-semibold">Tampa Bay Masjids community</p>
+<footer id="community" class="site-shell pb-6">
+  <div class="on-primary flex flex-wrap items-end justify-between gap-5 rounded-xl bg-primary p-5 text-primary-foreground sm:p-6">
+    <div class="max-w-lg">
+      <p class="text-sm font-semibold">Tampa Bay Muslims on Facebook</p>
+      <p class="mt-2 text-xl font-semibold sm:text-2xl">
+        Connect with your community
+      </p>
+      <p class="mt-2 text-sm leading-relaxed">
+        Join the group to connect with Muslims across Tampa Bay.
+      </p>
+    </div>
     <FacebookLink emphasized />
   </div>
   <a

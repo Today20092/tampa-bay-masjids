@@ -38,7 +38,7 @@ export function Directions({
     >
       <NavigationIcon aria-hidden="true" />
       <span>
-        {prominent ? "Get directions" : "Directions"}
+        Directions
         <span className="sr-only"> to {masjid.name}</span>
       </span>
     </a>
