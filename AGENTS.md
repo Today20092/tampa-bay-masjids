@@ -58,7 +58,7 @@ branch, merge their own PR, or deploy. A merge to `main` publishes the site; fol
 
 Each record requires `order`, `name`, and `address`; do not infer a city or ZIP. Arabic names need
 `nameSource`. `mapsUrl` must be owner-confirmed; `website` must be the masjid's own resolving HTTPS
-site. `jumuahOnly: true` cannot include `iqama`. Times use 24-hour Tampa wall-clock text, except
+site. `jumuahOnly: true` cannot include `iqama`. `comingSoon: true` (a masjid that has not started formal prayers) cannot include any times. Times use 24-hour Tampa wall-clock text, except
 Maghrib may use the masjid's stated sunset wording. Check `src/lib/masjid-schema.ts` before changing
 the record shape.
 

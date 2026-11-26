@@ -73,14 +73,14 @@ export function PinnedCard({
             <JumuahLine masjid={masjid} schedule={schedule} />
           ) : (
             <p>
-              <Check />
+              <Check masjid={masjid} />
             </p>
           )
         ) : iqama ? (
           <DailyGrid daily={schedule.daily} pinned />
         ) : (
           <p>
-            <Check />
+            <Check masjid={masjid} />
           </p>
         )}
         {checked && needsDateMarker(checked, now.date) && (

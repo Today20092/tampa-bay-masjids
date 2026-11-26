@@ -42,7 +42,11 @@ function Cells({ masjid, schedule, view }: Row & { view: View }) {
     <JumuahTimes times={schedule.jumuah.times} states={schedule.jumuahStates} />
   );
   if (view === "jumuah")
-    return <TableCell className={wide}>{jumuah ?? <Check />}</TableCell>;
+    return (
+      <TableCell className={wide}>
+        {jumuah ?? <Check masjid={masjid} />}
+      </TableCell>
+    );
   if (schedule.iqama)
     return schedule.daily.map(({ time, state }, k) => (
       <TableCell
@@ -66,7 +70,7 @@ function Cells({ masjid, schedule, view }: Row & { view: View }) {
   return (
     <TableCell colSpan={PRAYERS.length} className={wide}>
       {masjid.jumuahOnly && "Jumu‘ah only: "}
-      {(masjid.jumuahOnly && jumuah) || <Check />}
+      {(masjid.jumuahOnly && jumuah) || <Check masjid={masjid} />}
     </TableCell>
   );
 }
@@ -172,7 +176,7 @@ export function MasjidTable({
                       states={schedule.jumuahStates}
                     />
                   ) : (
-                    <Check />
+                    <Check masjid={masjid} />
                   )}
                 </p>
               )}

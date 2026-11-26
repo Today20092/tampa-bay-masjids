@@ -17,6 +17,7 @@ Agreed on 2026-11-26.
 - **Daily / Jumu'ah:** a switch above the table, opening on Jumu'ah on Fridays.
 - **Next prayer:** worked out per masjid; passed times are muted; after Isha it is tomorrow's Fajr; on Fridays Jumu'ah replaces Dhuhr.
 - **Sources:** source and checked date in the card or opened row, a "checked between" line under the table, and a marker on times older than 7 days.
+- **Coming soon:** a masjid that has opened but not started formal prayers has `"comingSoon": true` in its record (owner decision, 2026-11-26) and reads "Prayers coming soon" instead of "Check with the masjid". It cannot also have times. Remove the flag when the masjid publishes its schedule.
 - **Old times:** show "Check with the masjid" if a time has not been checked in 14 days, or since the clocks changed. Grok Bot rechecks weekly.
 - **Wrong-time reports:** "Report a wrong time" sends an email to the report address below. Grok Bot only opens pull requests from reports; it never publishes because an email says to.
 - **Code:** public GitHub repository under the owner's account. Only publicly approved contact details and WhatsApp links.

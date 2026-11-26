@@ -34,7 +34,11 @@ const link =
         )}
         <p class="text-xs text-muted-foreground">{masjid.address}</p>
         {masjid.jumuahOnly && <p>Jumu‘ah only</p>}
-        <p class="font-semibold text-attention">Check with the masjid</p>
+        {masjid.comingSoon ? (
+          <p class="font-semibold">Prayers coming soon</p>
+        ) : (
+          <p class="font-semibold text-attention">Check with the masjid</p>
+        )}
         <p class="flex flex-wrap gap-x-4">
           <a class={link} href={directionsUrl(masjid)}>
             Directions<span class="sr-only"> to {masjid.name}</span>
