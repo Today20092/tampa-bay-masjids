@@ -65,9 +65,9 @@ describe("links", () => {
   });
 
   it("names the masjid in the report subject", () => {
-    expect(reportUrl({ name: "Al-Qassam" })).toBe(
-      "mailto:clean.barn3748@fastmail.com?subject=Wrong%20time%3A%20Al-Qassam",
-    );
+    const url = new URL(reportUrl({ name: "Al-Qassam" }));
+    expect(url.searchParams.get("subject")).toBe("Wrong time: Al-Qassam");
+    expect(url.searchParams.get("body")).toContain("Al-Qassam");
   });
 });
 

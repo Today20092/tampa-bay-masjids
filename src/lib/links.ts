@@ -14,5 +14,4 @@ export function directionsUrl({
 export const reportUrl = ({ name }: Pick<Masjid, "name">) =>
   `mailto:${SITE.reportEmail}?subject=${encodeURIComponent(`Wrong time: ${name}`)}&body=${encodeURIComponent(`The prayer time shown for ${name} may be incorrect.\n\nPlease share the correct time and a link to the masjid's official source.`)}`;
 
-export const addMasjidUrl =
-  `mailto:${SITE.reportEmail}?subject=${encodeURIComponent("Add a masjid to Tampa Bay Masjids")}&body=${encodeURIComponent("Please share the masjid name, address, and its official website or public page.")}`;
+export const addMasjidUrl = `mailto:${SITE.reportEmail}?subject=${encodeURIComponent("Add a masjid to Tampa Bay Masjids")}&body=${encodeURIComponent("Please share the masjid name, address, and its official website or public page.")}`;
