@@ -5,9 +5,17 @@ colors:
   primary: "#174c40"
   primary-foreground: "#ffffff"
   gold: "#e9d6a2"
+  gold-foreground: "#182923"
   background: "#f7f8f5"
   card: "#ffffff"
+  card-foreground: "#182923"
+  popover: "#ffffff"
+  popover-foreground: "#182923"
   foreground: "#182923"
+  secondary: "#eaf1ed"
+  secondary-foreground: "#182923"
+  accent: "#eaf1ed"
+  accent-foreground: "#182923"
   muted: "#eaf1ed"
   muted-foreground: "#4a6056"
   past: "#53655d"
@@ -20,6 +28,7 @@ colors:
   destructive: "#a52a1a"
   friday: "#41466f"
   sky: "#192d47"
+  sky-foreground: "#ffffff"
   sky-sun: "#ffd88d"
   sky-muted: "#d5e0ee"
 typography:
@@ -63,12 +72,6 @@ components:
     textColor: "{colors.foreground}"
     rounded: "{rounded.lg}"
     height: "44px"
-  button-group-link:
-    backgroundColor: "{colors.gold}"
-    textColor: "{colors.foreground}"
-    typography: "{typography.label}"
-    rounded: "{rounded.lg}"
-    height: "44px"
   time-next:
     backgroundColor: "{colors.primary}"
     textColor: "{colors.primary-foreground}"
@@ -87,8 +90,7 @@ The directory palette and controls are defined in `src/styles/global.css` and th
 
 **Creative North Star: "The masjid notice board" (inferred)**
 
-A phone-first timetable with a wider comparison layout on desktop. Deep green carries identity and the next time; warm gold is
-kept for the Facebook group; amber marks anything the visitor should verify. Everything else is
+A phone-first timetable with a wider comparison layout on desktop. Deep green carries identity, the next time and the Facebook group link; amber marks anything the visitor should verify. Everything else is
 quiet so nine masjids and five times can be compared at a glance. Light theme only.
 
 **Key Characteristics:**
@@ -126,7 +128,7 @@ quiet so nine masjids and five times can be compared at a glance. Light theme on
 
 - **Amber** (`attention`): "Check with the masjid" and "Checked Nov 15" markers.
 - **Indigo** (`friday`): selected Jumu‘ah schedule.
-- **Night blue and sunlight** (`sky`, `sky-sun`, `sky-muted`): the sun panel and its text.
+- **Night blue and sunlight** (`sky`, `sky-foreground`, `sky-sun`, `sky-muted`): the sun panel and its text.
 - **Focus orange** (`ring`): 3px outline, 2px offset.
 - `destructive` is unused by pages.
 
@@ -193,7 +195,7 @@ shadcn on Base UI lives in `src/components/ui/`.
 - Do use the tokens; add a token before adding a colour.
 - Do keep every control at 44px and every text at 0.8125rem or larger.
 - Do show "Check with the masjid" wherever a confirmed, fresh time is missing.
-- Don't use gold for anything that competes with the group link.
+- Don't use gold for text or controls; it is only for text selection and focus on green.
 - Don't add dark mode or shadows without a new design decision.
 
 ## Masjid logos
