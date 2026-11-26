@@ -1,6 +1,6 @@
 import {
   GlobeIcon,
-  MapPinIcon,
+  NavigationIcon,
   MessageCircleIcon,
   PinIcon,
   PinOffIcon,
@@ -15,9 +15,39 @@ import { Check, JumuahTimes } from "./Times";
 
 const textLink = "inline-flex min-h-11 items-center font-semibold text-primary";
 
+export function Directions({
+  masjid,
+  prominent = false,
+}: {
+  masjid: Masjid;
+  prominent?: boolean;
+}) {
+  return (
+    <a
+      className={cn(
+        buttonVariants({
+          variant: prominent ? "default" : "ghost",
+          size: "touch",
+        }),
+        "w-fit rounded-full",
+        !prominent && "text-primary",
+      )}
+      href={directionsUrl(masjid)}
+      target="_blank"
+      rel="noopener"
+    >
+      <NavigationIcon aria-hidden="true" />
+      <span>
+        {prominent ? "Get directions" : "Directions"}
+        <span className="sr-only"> to {masjid.name}</span>
+      </span>
+    </a>
+  );
+}
+
 export function ArabicName({ masjid }: { masjid: Masjid }) {
   return masjid.arabicName ? (
-    <span lang="ar" dir="rtl" className="text-[1.0625rem] text-primary">
+    <span lang="ar" dir="rtl" className="text-base text-primary">
       {masjid.arabicName}
     </span>
   ) : null;
@@ -33,7 +63,7 @@ export function JumuahLine({
 }) {
   if (!schedule.jumuah && !masjid.jumuah) return null;
   return (
-    <p className="text-[0.9375rem]">
+    <p className="text-sm">
       Jumu‘ah{masjid.jumuahOnly && " only"}{" "}
       {schedule.jumuah ? (
         <JumuahTimes
@@ -106,17 +136,6 @@ function Actions({
   return (
     <div>
       <div className="flex flex-wrap gap-1.5">
-        <a
-          className={action("default")}
-          href={directionsUrl(masjid)}
-          target="_blank"
-          rel="noopener"
-        >
-          <MapPinIcon aria-hidden="true" />
-          <span>
-            Directions<span className="sr-only"> to {masjid.name}</span>
-          </span>
-        </a>
         {external.map(
           ({ label, href, Icon }) =>
             href && (

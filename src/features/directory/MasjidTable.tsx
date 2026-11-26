@@ -14,7 +14,13 @@ import type { Masjid } from "@/lib/masjid-schema";
 import { PRAYERS, type Schedule } from "@/lib/schedule";
 import { formatDate, formatTime, type Now } from "@/lib/time";
 import { cn } from "@/lib/utils";
-import { ArabicName, JumuahLine, SourceAndActions } from "./MasjidDetail";
+import {
+  ArabicName,
+  Directions,
+  JumuahLine,
+  SourceAndActions,
+} from "./MasjidDetail";
+import { MasjidMark } from "./MasjidMark";
 import { Check, DailyGrid, JumuahTimes, Replaced } from "./Times";
 import type { View } from "./text";
 
@@ -64,6 +70,39 @@ function Cells({ masjid, schedule, view }: Row & { view: View }) {
   );
 }
 
+function RowDetail({
+  masjid,
+  schedule,
+  view,
+  pinned,
+  onPin,
+}: Row & { view: View; pinned: boolean; onPin: () => void }) {
+  return (
+    <div className="flex flex-col gap-2 text-sm">
+      <div>
+        {masjid.arabicName && (
+          <p>
+            <ArabicName masjid={masjid} />
+          </p>
+        )}
+        <p className="text-muted-foreground">{masjid.address}</p>
+      </div>
+      {view === "jumuah" && schedule.iqama && (
+        <DailyGrid daily={schedule.daily} />
+      )}
+      {view === "daily" && !masjid.jumuahOnly && (
+        <JumuahLine masjid={masjid} schedule={schedule} />
+      )}
+      <SourceAndActions
+        masjid={masjid}
+        schedule={schedule}
+        pinned={pinned}
+        onPin={onPin}
+      />
+    </div>
+  );
+}
+
 export function MasjidTable({
   rows,
   view,
@@ -86,124 +125,191 @@ export function MasjidTable({
   const sticky = "sticky left-0 z-10";
 
   return (
-    <Table
-      className="text-xs"
-      containerProps={{
-        role: "region",
-        "aria-label": `${caption} table`,
-        tabIndex: 0,
-        className: "rounded-xl border bg-card [container-type:inline-size]",
-      }}
-    >
-      <TableCaption className="sr-only">{caption}</TableCaption>
-      <TableHeader className="bg-muted">
-        <TableRow className="border-row hover:bg-muted">
-          <TableHead
-            scope="col"
-            className={cn(
-              sticky,
-              "h-10 bg-muted pr-1 pl-3 font-semibold sm:h-11 sm:pl-5",
-            )}
-          >
-            Masjid
-          </TableHead>
-          {columns.map((name) => (
-            <TableHead
-              key={name}
-              scope="col"
-              className={cn(
-                "h-10 px-1 text-center font-semibold sm:h-11",
-                view === "daily" && "w-12 sm:w-[12%]",
-              )}
-            >
-              {name}
-            </TableHead>
-          ))}
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+    <div className="@container/directory">
+      <ul
+        aria-label={caption}
+        className="divide-y rounded-xl border bg-card @min-[42rem]/directory:hidden"
+      >
         {rows.map((row) => {
           const { masjid, schedule } = row;
           const open = openId === masjid.id;
           const set = shownSet(row, view);
-          const Chevron = open ? ChevronDownIcon : ChevronRightIcon;
           const pinned = pins.includes(masjid.id);
+          const Chevron = open ? ChevronDownIcon : ChevronRightIcon;
           return (
-            <Fragment key={masjid.id}>
-              <TableRow className="border-row hover:bg-transparent has-aria-expanded:bg-transparent">
-                <TableHead
-                  scope="row"
-                  className={cn(sticky, "bg-card p-0 whitespace-normal")}
+            <li key={masjid.id} className="space-y-2 p-3">
+              <div className="flex flex-wrap items-center justify-between gap-x-2">
+                <button
+                  type="button"
+                  className="flex min-h-11 min-w-0 flex-1 items-center gap-2 text-left font-semibold"
+                  aria-expanded={open}
+                  aria-controls={
+                    open ? `detail-mobile-${masjid.id}` : undefined
+                  }
+                  onClick={() => onToggle(masjid.id)}
+                  data-key={`row-${masjid.id}`}
                 >
-                  <button
-                    type="button"
-                    className="flex min-h-12 w-full min-w-22 cursor-pointer items-center gap-1 py-1.5 pr-2 pl-2 text-left text-xs font-semibold hover:bg-muted aria-expanded:bg-muted sm:min-h-14 sm:gap-2 sm:pl-4 sm:text-sm -outline-offset-3!"
-                    aria-expanded={open}
-                    aria-controls={open ? `detail-${masjid.id}` : undefined}
-                    onClick={() => onToggle(masjid.id)}
-                    data-key={`row-${masjid.id}`}
-                  >
-                    <Chevron aria-hidden="true" className="size-4 shrink-0" />
-                    <span>
-                      {masjid.name}
-                      {masjid.area && (
-                        <span className="block font-normal text-muted-foreground">
-                          {masjid.area}
-                        </span>
-                      )}
-                      {now && set && needsDateMarker(set.checked, now.date) && (
-                        <span className="block font-normal text-attention">
-                          Checked {formatDate(set.checked)}
-                        </span>
-                      )}
-                    </span>
-                  </button>
-                </TableHead>
-                <Cells {...row} view={view} />
-              </TableRow>
-              {open && (
-                <TableRow
-                  id={`detail-${masjid.id}`}
-                  className="border-row hover:bg-transparent"
-                >
-                  <TableCell
-                    colSpan={columns.length + 1}
-                    className="bg-detail p-0 whitespace-normal"
-                  >
-                    <div className="sticky left-0 flex w-[100cqw] flex-col gap-2 p-3 sm:p-5 text-sm">
-                      <div>
-                        {masjid.arabicName && (
-                          <p>
-                            <ArabicName masjid={masjid} />
-                          </p>
-                        )}
-                        <p className="text-muted-foreground">
-                          {masjid.address}
-                        </p>
-                      </div>
-                      {view === "jumuah" && schedule.iqama && (
-                        <DailyGrid daily={schedule.daily} />
-                      )}
-                      <JumuahLine masjid={masjid} schedule={schedule} />
-                      {!schedule.iqama && !schedule.jumuah && (
-                        <p>
-                          <Check />
-                        </p>
-                      )}
-                      <SourceAndActions
-                        masjid={masjid}
-                        schedule={schedule}
-                        pinned={pinned}
-                        onPin={() => onPin(masjid.id)}
-                      />
-                    </div>
-                  </TableCell>
-                </TableRow>
+                  <MasjidMark masjid={masjid} />
+                  <span>
+                    {masjid.name}
+                    {masjid.area && (
+                      <span className="block text-xs font-normal text-muted-foreground">
+                        {masjid.area}
+                      </span>
+                    )}
+                  </span>
+                  <Chevron aria-hidden="true" className="size-4 shrink-0" />
+                </button>
+                <Directions masjid={masjid} />
+              </div>
+              {view === "daily" && schedule.iqama ? (
+                <DailyGrid daily={schedule.daily} />
+              ) : (
+                <p className="text-sm">
+                  {view === "daily" && masjid.jumuahOnly && "Jumu‘ah only · "}
+                  {(view === "jumuah" || masjid.jumuahOnly) &&
+                  schedule.jumuah ? (
+                    <JumuahTimes
+                      times={schedule.jumuah.times}
+                      states={schedule.jumuahStates}
+                    />
+                  ) : (
+                    <Check />
+                  )}
+                </p>
               )}
-            </Fragment>
+              {now && set && needsDateMarker(set.checked, now.date) && (
+                <p className="text-xs text-attention">
+                  Checked {formatDate(set.checked)}
+                </p>
+              )}
+              {open && (
+                <div
+                  id={`detail-mobile-${masjid.id}`}
+                  className="rounded-lg bg-detail p-3"
+                >
+                  <RowDetail
+                    {...row}
+                    view={view}
+                    pinned={pinned}
+                    onPin={() => onPin(masjid.id)}
+                  />
+                </div>
+              )}
+            </li>
           );
         })}
-      </TableBody>
-    </Table>
+      </ul>
+      <Table
+        className="text-xs"
+        containerProps={{
+          role: "region",
+          "aria-label": `${caption} table`,
+          tabIndex: 0,
+          className:
+            "hidden rounded-xl border bg-card [container-type:inline-size] @min-[42rem]/directory:block",
+        }}
+      >
+        <TableCaption className="sr-only">{caption}</TableCaption>
+        <TableHeader className="bg-muted">
+          <TableRow className="border-row hover:bg-muted">
+            <TableHead
+              scope="col"
+              className={cn(
+                sticky,
+                "h-10 bg-muted pr-1 pl-3 font-semibold sm:h-11 sm:pl-5",
+              )}
+            >
+              Masjid
+            </TableHead>
+            {columns.map((name) => (
+              <TableHead
+                key={name}
+                scope="col"
+                className={cn(
+                  "h-10 px-1 text-center font-semibold sm:h-11",
+                  view === "daily" && "w-12 sm:w-[12%]",
+                )}
+              >
+                {name}
+              </TableHead>
+            ))}
+            <TableHead scope="col" className="pr-3 text-right">
+              <span className="sr-only">Directions</span>
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {rows.map((row) => {
+            const { masjid } = row;
+            const open = openId === masjid.id;
+            const set = shownSet(row, view);
+            const Chevron = open ? ChevronDownIcon : ChevronRightIcon;
+            const pinned = pins.includes(masjid.id);
+            return (
+              <Fragment key={masjid.id}>
+                <TableRow className="border-row hover:bg-transparent has-aria-expanded:bg-transparent">
+                  <TableHead
+                    scope="row"
+                    className={cn(sticky, "bg-card p-0 whitespace-normal")}
+                  >
+                    <button
+                      type="button"
+                      className="flex min-h-12 w-full min-w-22 cursor-pointer items-center gap-1 py-1.5 pr-2 pl-2 text-left text-xs font-semibold hover:bg-muted aria-expanded:bg-muted sm:min-h-14 sm:gap-2 sm:pl-4 sm:text-sm -outline-offset-3!"
+                      aria-expanded={open}
+                      aria-controls={open ? `detail-${masjid.id}` : undefined}
+                      onClick={() => onToggle(masjid.id)}
+                      data-key={`row-${masjid.id}`}
+                    >
+                      <Chevron aria-hidden="true" className="size-4 shrink-0" />
+                      <MasjidMark masjid={masjid} />
+                      <span>
+                        {masjid.name}
+                        {masjid.area && (
+                          <span className="block font-normal text-muted-foreground">
+                            {masjid.area}
+                          </span>
+                        )}
+                        {now &&
+                          set &&
+                          needsDateMarker(set.checked, now.date) && (
+                            <span className="block font-normal text-attention">
+                              Checked {formatDate(set.checked)}
+                            </span>
+                          )}
+                      </span>
+                    </button>
+                  </TableHead>
+                  <Cells {...row} view={view} />
+                  <TableCell className="pr-3 text-right">
+                    <Directions masjid={masjid} />
+                  </TableCell>
+                </TableRow>
+                {open && (
+                  <TableRow
+                    id={`detail-${masjid.id}`}
+                    className="border-row hover:bg-transparent"
+                  >
+                    <TableCell
+                      colSpan={columns.length + 2}
+                      className="bg-detail p-0 whitespace-normal"
+                    >
+                      <div className="sticky left-0 w-[100cqw] p-5">
+                        <RowDetail
+                          {...row}
+                          view={view}
+                          pinned={pinned}
+                          onPin={() => onPin(masjid.id)}
+                        />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </Fragment>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </div>
   );
 }

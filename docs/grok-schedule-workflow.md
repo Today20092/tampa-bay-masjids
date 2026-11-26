@@ -7,6 +7,18 @@ identifies a source to recheck.
 
 ## Review the evidence
 
+Open the exact schedule links in [the source inventory](official-schedule-sources.md)
+before searching for replacements. For Al-Qassam, fetch the AthanPlus monthly widget
+directly and record the selected month and date. Read the Iqamah columns separately
+from Athan and check the separate Jumu'ah section. If the fetch does not show the
+schedule, inspect the rendered calendar and any embedded frames. Report an
+unavailable source or a venue mismatch for review.
+
+For a mosque without a confirmed schedule link, check its official prayer page
+for calendars, embedded widgets, and linked PDFs or flyers. Record a candidate
+link with the official page that points to it and the venue it covers so it can
+be verified and reused on later runs.
+
 1. Read the matching `src/data/masjids/<id>.json` file and open the masjid's official schedule.
    Match the publisher and venue, including any separate campus, branch, or similarly named
    masjid. For an embedded schedule, verify the link from the official site during the same review.

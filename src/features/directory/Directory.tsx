@@ -11,6 +11,8 @@ import { matches, normalize } from "@/lib/search";
 import { nowInTampa, type Now } from "@/lib/time";
 import type { Demo } from "./demo/sample";
 import { MasjidTable, shownSet, type Row } from "./MasjidTable";
+import { AreaMap } from "./AreaMap";
+import { SolarClock } from "./SolarClock";
 import { PinnedCard } from "./PinnedCard";
 import { checkedRange, type View } from "./text";
 
@@ -64,8 +66,11 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
   // Pinning moves a masjid between the cards and the table; focus follows it.
   useEffect(() => {
     if (!focusKey.current) return;
-    document
-      .querySelector<HTMLElement>(`[data-key="${focusKey.current}"]`)
+    const targets = document.querySelectorAll<HTMLElement>(
+      `[data-key="${focusKey.current}"]`,
+    );
+    Array.from(targets)
+      .find((target) => target.getClientRects().length)
       ?.focus();
     focusKey.current = null;
   });
@@ -127,6 +132,40 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
           <DemoControls masjids={masjids} onChange={setDemo} />
         </Suspense>
       )}
+
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <ToggleGroup
+          aria-label="Prayer schedule"
+          value={[view]}
+          // Pressing the active choice again must not leave neither selected.
+          onValueChange={([value]) => value && setChosenView(value as View)}
+          variant="default"
+          size="touch"
+          spacing={1}
+          className="w-full gap-4 border-b sm:w-auto"
+        >
+          {(
+            [
+              ["daily", "Daily"],
+              ["jumuah", "Jumu‘ah"],
+            ] as const
+          ).map(([value, label]) => (
+            <ToggleGroupItem
+              key={value}
+              value={value}
+              className={`flex-1 rounded-none! border-b-2 border-transparent px-3 font-semibold text-muted-foreground hover:bg-transparent aria-pressed:bg-transparent ${value === "daily" ? "aria-pressed:border-primary aria-pressed:text-primary" : "aria-pressed:border-friday aria-pressed:text-friday"}`}
+            >
+              {label}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
+        <a
+          href="#solar-heading"
+          className="inline-flex min-h-11 items-center font-semibold text-primary underline"
+        >
+          Sun and prayer times
+        </a>
+      </div>
       {now && pinned.length > 0 && (
         <section aria-labelledby="pinned-heading" className="space-y-3">
           <h2 id="pinned-heading" className="text-base font-semibold">
@@ -139,6 +178,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
                 masjid={masjid}
                 schedule={schedule}
                 now={now}
+                view={view}
                 onPin={() => pin(masjid.id)}
               />
             ))}
@@ -202,33 +242,6 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
             Search
           </Button>
         )}
-        {(rows.length > 0 || searching) && (
-          <ToggleGroup
-            aria-label="Which times"
-            value={[view]}
-            // Pressing the active choice again must not leave neither selected.
-            onValueChange={([value]) => value && setChosenView(value as View)}
-            variant="default"
-            size="touch"
-            spacing={1}
-            className="w-full rounded-xl border border-input bg-muted p-1 sm:w-auto"
-          >
-            {(
-              [
-                ["daily", "Daily"],
-                ["jumuah", "Jumu‘ah"],
-              ] as const
-            ).map(([value, label]) => (
-              <ToggleGroupItem
-                key={value}
-                value={value}
-                className="flex-1 rounded-lg! px-4 font-semibold sm:px-6 aria-pressed:bg-primary aria-pressed:text-primary-foreground"
-              >
-                {label}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
-        )}
       </div>
       <p role="status" className="sr-only">
         {status}
@@ -244,7 +257,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
             </h2>
             {!pins.length && !searching && (
               <p className="text-xs text-muted-foreground">
-                Open a masjid to pin it.
+                Open a masjid for its source and pin options.
               </p>
             )}
           </div>
@@ -285,6 +298,8 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
           )}
         </>
       )}
+      <AreaMap />
+      <SolarClock />
     </div>
   );
 }

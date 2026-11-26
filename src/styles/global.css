@@ -107,3 +107,31 @@
 .on-primary :focus-visible {
   outline-color: var(--gold);
 }
+
+@theme inline {
+  --color-friday: var(--friday);
+  --color-sky-sun: var(--sky-sun);
+  --color-sky-muted: var(--sky-muted);
+}
+
+:root {
+  --friday: #41466f;
+  --sky: #192d47;
+  --sky-sun: #ffd88d;
+  --sky-muted: #d5e0ee;
+}
+
+.sky-panel {
+  background: var(--sky);
+  color: white;
+}
+
+.sky-panel :focus-visible {
+  outline-color: var(--sky-sun);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sky-marker {
+    transition: transform 350ms ease-out;
+  }
+}
