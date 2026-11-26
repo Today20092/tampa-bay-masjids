@@ -5,8 +5,8 @@
 @import "@fontsource/noto-naskh-arabic/arabic-400.css";
 @import "@fontsource/noto-naskh-arabic/arabic-700.css";
 
-/* Light only: keep the components’ dark: classes from following the system theme. */
-@custom-variant dark (&:is(.dark *));
+/* Dark mode follows the phone's setting; the tokens below carry both themes. */
+@custom-variant dark (@media (prefers-color-scheme: dark));
 
 /* Every token is defined once here: the palette in :root, its Tailwind names below. */
 @theme inline {
@@ -47,6 +47,12 @@
   --color-sky-foreground: var(--sky-foreground);
   --color-sky-sun: var(--sky-sun);
   --color-sky-muted: var(--sky-muted);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-logo-tile: var(--logo-tile);
+  --color-sun-core: var(--sun-core);
+  --color-sun-ring: var(--sun-ring);
+  --color-sun-ray: var(--sun-ray);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -56,7 +62,7 @@
 
 /* Light palette for the directory and its shared controls. */
 :root {
-  color-scheme: light;
+  color-scheme: light dark;
   --radius: 0.625rem;
 
   --background: #f7f8f5;
@@ -88,6 +94,42 @@
   --sky-foreground: #ffffff;
   --sky-sun: #ffd88d;
   --sky-muted: #d5e0ee;
+  --brand: #174c40;
+  --brand-foreground: #ffffff;
+  --logo-tile: transparent;
+  --sun-core: #ffdf87;
+  --sun-ring: #ffbb5d;
+  --sun-ray: #e89140;
+}
+
+/* Dark palette: the phone's setting. Brand, gold and sun tokens keep their light values. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0f1714;
+    --foreground: #e6eee9;
+    --card: #17221e;
+    --card-foreground: #e6eee9;
+    --popover: #17221e;
+    --popover-foreground: #e6eee9;
+    --primary: #7fc9b0;
+    --primary-foreground: #0c1f19;
+    --secondary: #1f2d28;
+    --secondary-foreground: #e6eee9;
+    --muted: #1f2d28;
+    --muted-foreground: #a9bfb4;
+    --accent: #24352f;
+    --accent-foreground: #e6eee9;
+    --destructive: #ff9a8a;
+    --border: #2c3f37;
+    --input: #6f877c;
+    --ring: #e6a964;
+    --past: #93a89d;
+    --attention: #f0b878;
+    --row: #22332c;
+    --detail: #1b2823;
+    --friday: #b4b9f0;
+    --logo-tile: #ffffff;
+  }
 }
 
 .site-shell {
@@ -147,7 +189,7 @@
   outline-offset: 2px;
   box-shadow: none;
 }
-.on-primary :focus-visible {
+.on-brand :focus-visible {
   outline-color: var(--gold);
 }
 

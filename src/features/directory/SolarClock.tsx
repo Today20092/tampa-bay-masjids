@@ -104,7 +104,7 @@ export function SolarClock() {
       <h2 id="solar-heading" className="sr-only">
         Sun and prayer times
       </h2>
-      <CollapsibleTrigger className="group/sun w-full cursor-pointer rounded-lg p-2 text-left hover:bg-white/10">
+      <CollapsibleTrigger className="group/sun w-full cursor-pointer rounded-lg p-2 text-left hover:bg-sky-foreground/10">
         <span className="flex items-center gap-3">
           <SunIcon
             aria-hidden="true"
@@ -162,10 +162,10 @@ export function SolarClock() {
                   <g transform="scale(.72)">
                     <path
                       d="M0-27 6-18 16-22 18-12 27-8 22 0 27 8 18 12 16 22 6 18 0 27-6 18-16 22-18 12-27 8-22 0-27-8-18-12-16-22-6-18Z"
-                      fill="#e89140"
+                      className="fill-sun-ray"
                     />
-                    <circle r="15" fill="#ffdf87" />
-                    <circle r="11" fill="none" stroke="#ffbb5d" />
+                    <circle r="15" className="fill-sun-core" />
+                    <circle r="11" fill="none" className="stroke-sun-ring" />
                   </g>
                 </g>
               )}
@@ -227,7 +227,7 @@ export function SolarClock() {
             size="touch"
             onClick={useLocation}
             disabled={locationState === "loading"}
-            className="text-white hover:bg-white/10 hover:text-white"
+            className="text-sky-foreground hover:bg-sky-foreground/10 hover:text-sky-foreground"
           >
             <LocateFixedIcon aria-hidden="true" />
             {locationState === "local"

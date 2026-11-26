@@ -150,14 +150,14 @@ export default function MapView({
                     aria-label={`Show ${masjid.name} on map`}
                     aria-pressed={selected === masjid.id}
                     onClick={() => select(masjid.id)}
-                    className="flex size-11 items-center justify-center text-primary focus-visible:outline-3 focus-visible:outline-ring"
+                    className="flex size-11 items-center justify-center text-brand focus-visible:outline-3 focus-visible:outline-ring"
                   >
                     <MapPin
                       aria-hidden="true"
                       className={
                         selected === masjid.id
-                          ? "size-8 fill-primary stroke-card stroke-[2.5]"
-                          : "size-8 fill-card stroke-[2.5]"
+                          ? "size-8 fill-brand stroke-brand-foreground stroke-[2.5]"
+                          : "size-8 fill-brand-foreground stroke-[2.5]"
                       }
                     />
                   </button>

@@ -13,15 +13,15 @@ const EXEMPT_FILES: Record<string, string> = {
   "src/styles/global.css": "token file",
   // Vendored shadcn/map library code; change it through the CLI, not by hand.
   "src/components/ui/map.tsx": "vendored library code",
-  // Temporary: the sun chart still uses raw fills and white utilities; remove once it uses tokens.
-  "src/features/directory/SolarClock.tsx":
-    "temporary: sun chart colours until it uses tokens",
 };
 
 // Single lines that may hold raw colours.
 const EXEMPT_LINES: { file: string; match: RegExp }[] = [
-  // A meta tag cannot read a CSS variable; the theme-color test below pins it to --primary.
-  { file: "src/components/layout/SeoHead.astro", match: /name="theme-color"/ },
+  // A meta tag cannot read a CSS variable; the theme-color test below pins both values.
+  {
+    file: "src/components/layout/SeoHead.astro",
+    match: /name="theme-color"|^\s*content="#[0-9a-f]{6}"$/,
+  },
 ];
 
 const RAW_PATTERNS: { name: string; re: RegExp }[] = [
@@ -41,8 +41,32 @@ const RAW_PATTERNS: { name: string; re: RegExp }[] = [
   },
 ];
 
-// Each theme names the CSS block that holds its token values.
-const THEMES = [{ name: "light", selector: ":root" }];
+function parseBlock(body: string): Record<string, string> {
+  return Object.fromEntries(
+    [...body.matchAll(/--([\w-]+):\s*([^;]+);/g)].map((m) => [
+      m[1],
+      m[2].trim(),
+    ]),
+  );
+}
+
+// The light palette: the one unindented :root block.
+const LIGHT = (() => {
+  const block = /^:root \{([^}]*)\}/m.exec(css);
+  if (!block) throw new Error("global.css has no :root block");
+  return parseBlock(block[1]);
+})();
+
+// The dark palette: only the values the dark block overrides.
+const DARK_OVERRIDES = (() => {
+  const block =
+    /@media \(prefers-color-scheme: dark\) \{\s*:root \{([^}]*)\}/.exec(css);
+  if (!block) throw new Error("global.css has no dark :root block");
+  return parseBlock(block[1]);
+})();
+
+// Dark tokens are the light tokens with the dark block applied over them.
+const DARK = { ...LIGHT, ...DARK_OVERRIDES };
 
 // Text pairs need 4.5:1; the friday pairs test the Jumu‘ah toggle, which is text on the page, not a fill.
 const TEXT_PAIRS: [string, string][] = [
@@ -51,12 +75,16 @@ const TEXT_PAIRS: [string, string][] = [
   ["primary-foreground", "primary"],
   ["primary", "background"],
   ["primary", "card"],
+  ["primary", "muted"],
+  ["primary", "detail"],
+  ["brand-foreground", "brand"],
   ["muted-foreground", "muted"],
   ["muted-foreground", "background"],
   ["muted-foreground", "card"],
   ["past", "row"],
   ["past", "muted"],
   ["past", "card"],
+  ["past", "detail"],
   ["attention", "card"],
   ["attention", "muted"],
   ["attention", "background"],
@@ -74,26 +102,12 @@ const TEXT_PAIRS: [string, string][] = [
 
 // Non-text pairs need 3:1.
 const NON_TEXT_PAIRS: [string, string][] = [
-  ["gold", "primary"],
+  ["gold", "brand"],
   ["ring", "background"],
   ["ring", "card"],
   ["input", "card"],
   ["input", "background"],
 ];
-
-function tokens(selector: string): Record<string, string> {
-  const block = new RegExp(
-    `^${selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} \\{([^}]*)\\}`,
-    "m",
-  ).exec(css);
-  if (!block) throw new Error(`global.css has no ${selector} block`);
-  return Object.fromEntries(
-    [...block[1].matchAll(/--([\w-]+):\s*([^;]+);/g)].map((m) => [
-      m[1],
-      m[2].trim(),
-    ]),
-  );
-}
 
 function hexValue(t: Record<string, string>, name: string): string {
   const value = t[name];
@@ -157,19 +171,38 @@ describe("raw colours", () => {
     expect(rawColourViolations(), "Raw colours found in source").toEqual([]);
   });
 
-  it("keeps the theme-color meta equal to the primary token", () => {
-    const meta = /name="theme-color" content="(#[0-9a-f]{6})"/i.exec(
-      readFileSync(join(ROOT, "src/components/layout/SeoHead.astro"), "utf8"),
+  it("pins the theme-color metas to the light primary and the dark background", () => {
+    const metas = [
+      ...readFileSync(
+        join(ROOT, "src/components/layout/SeoHead.astro"),
+        "utf8",
+      ).matchAll(
+        /name="theme-color"\s+media="\(prefers-color-scheme: (light|dark)\)"\s+content="(#[0-9a-f]{6})"/gi,
+      ),
+    ];
+    const byScheme = Object.fromEntries(
+      metas.map((m) => [m[1].toLowerCase(), m[2].toLowerCase()]),
     );
-    expect(meta?.[1].toLowerCase()).toBe(
-      hexValue(tokens(":root"), "primary").toLowerCase(),
+    expect(byScheme).toEqual({
+      light: hexValue(LIGHT, "primary").toLowerCase(),
+      dark: hexValue(DARK, "background").toLowerCase(),
+    });
+  });
+});
+
+describe("dark palette", () => {
+  it("overrides the light background, so the dark block is applied", () => {
+    expect(DARK_OVERRIDES.background).toBeDefined();
+    expect(hexValue(DARK, "background")).not.toBe(
+      hexValue(LIGHT, "background"),
     );
   });
 });
 
-describe.each(THEMES)("colour contrast ($name)", ({ selector }) => {
-  const t = tokens(selector);
-
+describe.each([
+  { name: "light", t: LIGHT },
+  { name: "dark", t: DARK },
+])("colour contrast ($name)", ({ t }) => {
   it.each(TEXT_PAIRS)("text %s on %s is at least 4.5:1", (fg, bg) => {
     expect(
       contrast(hexValue(t, fg), hexValue(t, bg)),
