@@ -114,14 +114,11 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
     clearTimeout(announceTimer.current);
     const name = masjids.find((m) => m.id === id)?.name;
     setStatus(`${wasPinned ? "Unpinned" : "Pinned"} ${name}`);
-    if (wasPinned) {
-      setOpenId(id);
-      focusKey.current = `row-${id}`;
-    } else {
+    setOpenId(null);
+    focusKey.current = `pin-${id}`;
+    if (!wasPinned) {
       setQuery("");
       setSearchOpen(false);
-      setOpenId(null);
-      focusKey.current = `card-${id}`;
     }
   }
 
@@ -186,11 +183,11 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
         </section>
       )}
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <AreaMap masjids={masjids} showSearch={showSearch}>
         <div
           id="directory-search"
           hidden={!showSearch}
-          className="min-w-0 sm:flex-1"
+          className="w-full min-w-0"
         >
           <div className="flex flex-wrap gap-2">
             <div className="relative min-w-40 flex-1">
@@ -233,6 +230,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
             aria-expanded={false}
             aria-controls="directory-search"
             data-key="open-search"
+            className="min-w-0 flex-1"
             onClick={() => {
               setSearchOpen(true);
               focusKey.current = "directory-search-input";
@@ -242,7 +240,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
             Search
           </Button>
         )}
-      </div>
+      </AreaMap>
       <p role="status" className="sr-only">
         {status}
       </p>
@@ -298,7 +296,6 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
           )}
         </>
       )}
-      <AreaMap />
       <SolarClock />
     </div>
   );
