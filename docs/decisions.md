@@ -46,4 +46,5 @@ The combined mockup (`prototype/home-combined.html`) is approved for a local bui
 - **Pins:** a visitor can pin several masjids. Nothing is pinned on the first visit, so every masjid is visible. This replaces the single pinned card.
 - **Pinned cards:** compact (name, next prayer, times), with actions behind a details toggle, so the others stay easy to reach.
 - Every masjid shows "Check with the masjid" until its times are confirmed.
+- **Share:** one "Share this page" button below the times table. It opens the device's share sheet with the site name, description and link; without one it copies the link. The preview card comes from the page's share tags. No bookmark or install button.
 - No commit, GitHub repository or deployment until the owner has seen the local site.
