@@ -1,4 +1,4 @@
-import { SearchIcon } from "lucide-react";
+import { SearchIcon, XIcon } from "lucide-react";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyContent, EmptyDescription } from "@/components/ui/empty";
@@ -194,8 +194,8 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
           hidden={!showSearch}
           className="w-full min-w-0"
         >
-          <div className="flex flex-wrap gap-2">
-            <div className="relative min-w-40 flex-1">
+          <div className="flex gap-2">
+            <div className="relative min-w-0 flex-1">
               <SearchIcon
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-y-0 left-4 my-auto size-4 text-muted-foreground"
@@ -217,13 +217,15 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
               <Button
                 variant="outline"
                 size="touch"
+                aria-label="Close search"
+                className="min-h-13"
                 onClick={() => {
                   search("");
                   setSearchOpen(false);
                   focusKey.current = "open-search";
                 }}
               >
-                Close search
+                <XIcon aria-hidden="true" />
               </Button>
             )}
           </div>
