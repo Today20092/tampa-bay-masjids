@@ -26,6 +26,7 @@
     "checked": "2026-11-26"
   },
   "jumuah": {
+    "timeIs": "start",
     "times": ["12:50", "14:00"],
     "source": {
       "label": "ISONET prayer schedule (service starts)",

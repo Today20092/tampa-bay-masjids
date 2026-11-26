@@ -2,6 +2,7 @@ import { SITE } from "@/data/site";
 import { MARK_AFTER_DAYS, STALE_AFTER_DAYS, validThrough } from "./freshness";
 import { directionsUrl } from "./links";
 import type { Masjid } from "./masjid-schema";
+import { jumuahTimeKind } from "./schedule";
 import { TIME_ZONE } from "./time";
 
 const FRESHNESS_RULE =
@@ -9,7 +10,8 @@ const FRESHNESS_RULE =
   `validThrough date: the last day that is under ${STALE_AFTER_DAYS} days after it was checked and before the next ` +
   `US clock change. Show the checked date when it is more than ${MARK_AFTER_DAYS} days old. ` +
   `Where there is no usable time, say "Check with the masjid", except a masjid with comingSoon true, which has not started formal prayers yet and should be described as "Prayers coming soon". ` +
-  `Maghrib may be "sunset" (shortly after the sunset adhan) or "sunset+N" (N minutes after it).`;
+  `Maghrib may be "sunset" (shortly after the sunset adhan) or "sunset+N" (N minutes after it). ` +
+  `jumuah.timeIs says what the Jumu‘ah times are: "khutbah", "start" (the service start) or "iqama". When it is absent the source did not say, so do not call them either khutbah or iqama.`;
 
 const dated = <T extends { checked: string }>(set: T | undefined) =>
   set ? { ...set, validThrough: validThrough(set.checked) } : null;
@@ -67,7 +69,7 @@ export function llmsText(masjids: Masjid[]): string {
     if (!m.comingSoon)
       lines.push(
         m.jumuah
-          ? `- Jumu‘ah: ${m.jumuah.times.join(", ")}${m.jumuah.venue ? ` at ${m.jumuah.venue.name}, ${m.jumuah.venue.address}` : ""} (${from(m.jumuah)})`
+          ? `- Jumu‘ah (${jumuahTimeKind(m.jumuah.timeIs).toLowerCase()}): ${m.jumuah.times.join(", ")}${m.jumuah.venue ? ` at ${m.jumuah.venue.name}, ${m.jumuah.venue.address}` : ""} (${from(m.jumuah)})`
           : "- Jumu‘ah: check with the masjid",
       );
     return lines.join("\n");

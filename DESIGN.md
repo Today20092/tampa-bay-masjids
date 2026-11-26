@@ -183,7 +183,8 @@ Times use tabular numerals. Passed times drop to regular weight.
 Header, directory and footer share a fluid 64rem shell. The schedule selector applies to pinned
 masjids and the directory. Pinned masjids use two columns from 48rem. The directory switches to
 a labeled list below 42rem of available width. Daily time tiles wrap with `auto-fit` from 3.15rem;
-Jumu‘ah times use unlabeled tiles at a fixed 4rem.
+Jumu‘ah times use tiles at a fixed 4rem, with one muted caption under each masjid's set saying
+whether they are khutbah starts, service starts, iqama or not stated. Never label each tile.
 Directions are visible in every row. The area map loads on request after the timetable.
 The sun panel sits under the pinned masjids and above search. It always shows the next calculated prayer start with its countdown, the start that just passed (so it never reads as a rival to a masjid's next iqama), and the solar chart, whose live sun uses a ray symbol. Tapping it opens the location button and the list of calculated starts in place. The header is a centered masthead on the page background, not a navigation bar: the arch mark and the name in Georgia bold (mark beside the name below 40rem, above it from 40rem), a quiet "Join our Facebook group" link, and a double rule. The footer carries the community call to action.
 

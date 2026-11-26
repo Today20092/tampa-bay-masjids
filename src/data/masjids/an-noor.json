@@ -16,6 +16,7 @@
     "checked": "2026-11-26"
   },
   "jumuah": {
+    "timeIs": "khutbah",
     "times": ["13:00", "13:30", "14:00", "14:30"],
     "source": {
       "label": "Masjid An Noor WhatsApp group schedule (khutbah start)"

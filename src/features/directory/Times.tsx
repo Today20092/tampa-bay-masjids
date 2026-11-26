@@ -1,6 +1,11 @@
 import { directionsUrl } from "@/lib/links";
 import type { Masjid } from "@/lib/masjid-schema";
-import { PRAYERS, type Schedule, type State } from "@/lib/schedule";
+import {
+  jumuahTimeKind,
+  PRAYERS,
+  type Schedule,
+  type State,
+} from "@/lib/schedule";
 import { formatTime } from "@/lib/time";
 import { cn } from "@/lib/utils";
 import { CHECK, COMING_SOON } from "./text";
@@ -67,6 +72,7 @@ export function JumuahTimes({
   times,
   states,
   venue,
+  timeIs,
 }: NonNullable<Masjid["jumuah"]> & { states: State[] }) {
   return (
     <>
@@ -84,6 +90,9 @@ export function JumuahTimes({
             {states[k] === "next" && <span className="sr-only"> next</span>}
           </span>
         ))}
+      </span>
+      <span className="block pt-1 text-xs font-normal text-muted-foreground">
+        {jumuahTimeKind(timeIs)}
       </span>
       {venue && (
         <a
