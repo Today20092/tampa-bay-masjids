@@ -62,6 +62,7 @@ pnpm verify     # format, tests, types, lint, unused code, build, no samples in 
 pnpm preview    # serve the built site
 ```
 
+- For branches, worktrees, PRs, merging or deploys, read `docs/branch-workflow.md`.
 - Read `docs/site-structure.md` before adding or moving components.
 - Follow `DESIGN.md` for anything visual.
 - The demo preview exists only in `astro dev`. Keep it behind `import.meta.env.DEV`.

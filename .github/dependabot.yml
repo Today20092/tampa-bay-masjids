@@ -1,0 +1,27 @@
+# One monthly PR for all minor and patch updates; major updates come one PR each.
+# .github/workflows/dependabot-auto-merge.yml merges the minor and patch ones once `verify` passes.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    # Skip releases younger than 7 days: a compromised or broken release is usually pulled by then.
+    # Security updates are not delayed.
+    cooldown:
+      default-days: 7
+    groups:
+      minor-and-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+    groups:
+      minor-and-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
