@@ -1,4 +1,4 @@
-import { ChevronDownIcon, ChevronRightIcon } from "lucide-react";
+import { ChevronDownIcon } from "lucide-react";
 import { Fragment } from "react";
 import {
   Table,
@@ -129,13 +129,12 @@ export function MasjidTable({
           const open = openId === masjid.id;
           const set = shownSet(row, view);
           const pinned = pins.includes(masjid.id);
-          const Chevron = open ? ChevronDownIcon : ChevronRightIcon;
           return (
             <li key={masjid.id} className="space-y-2 p-3">
               <div className="flex flex-wrap items-center justify-between gap-x-2">
                 <button
                   type="button"
-                  className="flex min-h-11 flex-1 items-center gap-2 text-left font-semibold"
+                  className="group/row flex min-h-11 flex-1 items-center gap-2 text-left font-semibold"
                   aria-expanded={open}
                   aria-controls={
                     open ? `detail-mobile-${masjid.id}` : undefined
@@ -152,7 +151,10 @@ export function MasjidTable({
                       </span>
                     )}
                   </span>
-                  <Chevron aria-hidden="true" className="size-4 shrink-0" />
+                  <ChevronDownIcon
+                    aria-hidden="true"
+                    className="size-4 shrink-0 group-aria-expanded/row:rotate-180"
+                  />
                 </button>
                 <div className="flex items-center">
                   <Directions masjid={masjid} />
@@ -241,7 +243,6 @@ export function MasjidTable({
             const { masjid } = row;
             const open = openId === masjid.id;
             const set = shownSet(row, view);
-            const Chevron = open ? ChevronDownIcon : ChevronRightIcon;
             const pinned = pins.includes(masjid.id);
             return (
               <Fragment key={masjid.id}>
@@ -252,13 +253,16 @@ export function MasjidTable({
                   >
                     <button
                       type="button"
-                      className="flex min-h-12 w-full min-w-22 cursor-pointer items-center gap-1 py-1.5 pr-2 pl-2 text-left text-xs font-semibold hover:bg-muted aria-expanded:bg-muted sm:min-h-14 sm:gap-2 sm:pl-4 sm:text-sm -outline-offset-3!"
+                      className="group/row flex min-h-12 w-full min-w-22 cursor-pointer items-center gap-1 py-1.5 pr-2 pl-2 text-left text-xs font-semibold hover:bg-muted aria-expanded:bg-muted sm:min-h-14 sm:gap-2 sm:pl-4 sm:text-sm -outline-offset-3!"
                       aria-expanded={open}
                       aria-controls={open ? `detail-${masjid.id}` : undefined}
                       onClick={() => onToggle(masjid.id)}
                       data-key={`row-${masjid.id}`}
                     >
-                      <Chevron aria-hidden="true" className="size-4 shrink-0" />
+                      <ChevronDownIcon
+                        aria-hidden="true"
+                        className="size-4 shrink-0 group-aria-expanded/row:rotate-180"
+                      />
                       <MasjidMark masjid={masjid} />
                       <span>
                         {masjid.name}
