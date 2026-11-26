@@ -8,6 +8,18 @@
   "mapsUrl": "https://maps.app.goo.gl/BKm8t6BJv7wVcG818",
   "nameSource": "https://ictampa.org/",
   "website": "https://ictampa.org/",
+  "iqama": {
+    "fajr": "06:10",
+    "dhuhr": "13:00",
+    "asr": "16:00",
+    "maghrib": "sunset",
+    "isha": "19:30",
+    "source": {
+      "label": "ICT prayer timetable",
+      "url": "https://timing.athanplus.com/masjid/widgets/monthly?masjid_id=0aAegzKj&theme=2"
+    },
+    "checked": "2026-11-26"
+  },
   "jumuah": {
     "times": ["13:15", "14:30"],
     "source": {
