@@ -153,7 +153,8 @@ Times use tabular numerals. Passed times drop to regular weight.
 
 Header, directory and footer share a fluid 64rem shell. The schedule selector applies to pinned
 masjids and the directory. Pinned masjids use two columns from 48rem. The directory switches to
-a labeled list below 42rem of available width. Time tiles wrap with `auto-fit` from 3.15rem.
+a labeled list below 42rem of available width. Daily time tiles wrap with `auto-fit` from 3.15rem;
+Jumu‘ah times use unlabeled tiles at a fixed 4rem.
 Directions are visible in every row. The area map loads on request after the timetable.
 The solar chart sits below the timetable, with nothing above the timetable pointing to it. Its live sun uses a ray symbol, and the complete list of calculated starts opens on demand. The header keeps the site mark and a quiet Facebook link on one row (the link reads "Group" beside the icon below 40rem); the footer carries the community call to action.
 
