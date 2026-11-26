@@ -6,11 +6,14 @@
   "address": "8080 N 56th St, Tampa, FL 33617",
   "nameSource": "https://tmcflorida.org/",
   "website": "https://tmcflorida.org/",
-  "jumuah": {
-    "times": ["12:35", "13:35", "15:25"],
+  "iqama": {
+    "fajr": "06:15",
+    "dhuhr": "13:00",
+    "asr": "16:00",
+    "maghrib": "sunset+10",
+    "isha": "19:30",
     "source": {
-      "label": "TMC Jumu‘ah page (khutbah start)",
-      "url": "https://tmcflorida.org/jummah-time"
+      "label": "TMC Announcements WhatsApp group schedule"
     },
     "checked": "2026-11-26"
   }
