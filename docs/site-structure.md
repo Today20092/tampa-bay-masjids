@@ -9,7 +9,7 @@ A page picks a layout and lists sections; sections are built from components.
 | `src/components/layout/`  | Page frame: header, footer, head, Facebook link              |
 | `src/components/sections/`| One page band each                                           |
 | `src/components/ui/`      | shadcn components                                            |
-| `src/features/directory/` | The interactive masjid list; `demo/` is dev only             |
+| `src/features/directory/` | The interactive masjid list             |
 | `src/data/`               | `site.ts` and one JSON file per masjid                       |
 | `src/lib/`                | Plain TypeScript with its tests                              |
 

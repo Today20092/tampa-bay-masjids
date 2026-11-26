@@ -18,8 +18,6 @@ colors:
   ring: "#895019"
   detail: "#f1f6f3"
   destructive: "#a52a1a"
-  sample: "#fde2b8"
-  sample-foreground: "#5b3200"
   friday: "#41466f"
   sky: "#192d47"
   sky-sun: "#ffd88d"
@@ -130,7 +128,7 @@ quiet so nine masjids and five times can be compared at a glance. Light theme on
 - **Indigo** (`friday`): selected Jumu‘ah schedule.
 - **Night blue and sunlight** (`sky`, `sky-sun`, `sky-muted`): the sun panel and its text.
 - **Focus orange** (`ring`): 3px outline, 2px offset.
-- `sample` colours appear only in the dev preview banner. `destructive` is unused by pages.
+- `destructive` is unused by pages.
 
 ### Named Rules
 

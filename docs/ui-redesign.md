@@ -18,6 +18,6 @@ Requested 2026-11-26. The owner's verdict on the first build: it needs work and 
 
 ## Start here
 
-`PRODUCT.md`, `DESIGN.md`, `GLOSSARY.md`, then the running site (`pnpm dev`; add
-`?demo&at=2026-11-27T11:00` for sample times). The old mockups in `prototype/` are reference only:
+`PRODUCT.md`, `DESIGN.md`, `GLOSSARY.md`, then the running site (`pnpm dev`). The old mockups in
+`prototype/` are reference only:
 the approved look may change; agreed behaviour does not without asking.
