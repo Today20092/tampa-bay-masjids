@@ -2,32 +2,32 @@
 name: Tampa Bay Masjids
 description: A phone-first masjid timetable that shows only confirmed times
 colors:
-  primary: "#14513f"
+  primary: "#174c40"
   primary-foreground: "#ffffff"
-  gold: "#e8c766"
-  background: "#f7f5ee"
+  gold: "#e9d6a2"
+  background: "#f7f8f5"
   card: "#ffffff"
-  foreground: "#17251f"
-  muted: "#eef3ef"
-  muted-foreground: "#4a574f"
-  past: "#56645c"
-  attention: "#8a4b00"
-  border: "#c9c4b3"
-  row: "#e2ddcc"
-  input: "#6f7d75"
-  ring: "#b45309"
-  detail: "#f3f6f3"
+  foreground: "#182923"
+  muted: "#eaf1ed"
+  muted-foreground: "#4a6056"
+  past: "#53655d"
+  attention: "#774617"
+  border: "#cddbd3"
+  row: "#e0e8e3"
+  input: "#677c71"
+  ring: "#895019"
+  detail: "#f1f6f3"
   destructive: "#a52a1a"
   sample: "#fde2b8"
   sample-foreground: "#5b3200"
 typography:
   title:
     fontFamily: "system-ui, sans-serif"
-    fontSize: "1.125rem"
+    fontSize: "1.5rem"
     fontWeight: 700
   masjid-name:
     fontFamily: "system-ui, sans-serif"
-    fontSize: "1.0625rem"
+    fontSize: "1.125rem"
     fontWeight: 700
   body:
     fontFamily: "system-ui, sans-serif"
@@ -75,20 +75,19 @@ components:
 
 # Design System: Tampa Bay Masjids
 
-Recorded from `src/styles/global.css` and the components. The descriptive wording is inferred;
-the values are the approved mockup's.
+The directory palette and controls are defined in `src/styles/global.css` and the components.
 
 ## Overview
 
 **Creative North Star: "The masjid notice board" (inferred)**
 
-A plain, dense, phone-first timetable. Deep green carries identity and the next time; warm gold is
+A phone-first timetable with a wider comparison layout on desktop. Deep green carries identity and the next time; warm gold is
 kept for the Facebook group; amber marks anything the visitor should verify. Everything else is
 quiet so nine masjids and five times can be compared at a glance. Light theme only.
 
 **Key Characteristics:**
 
-- One column, at most 36rem wide.
+- A shared content width of up to 64rem.
 - A table for comparison, bordered cards for pinned masjids.
 - State is shown by fill and weight as well as colour.
 
@@ -104,7 +103,7 @@ quiet so nine masjids and five times can be compared at a glance. Light theme on
 
 ### Neutral
 
-- **Parchment** (`background`), **white** (`card`), **ink** (`foreground`).
+- **Off-white** (`background`), **white** (`card`), **ink** (`foreground`).
 - **Sage** (`muted`, `detail`): table head, time tiles, opened row.
 - **Muted ink** (`muted-foreground`, `past`): secondary lines and passed times.
 - **Lines** (`border`, `row`, `input`): `input` is the darker line that outlines controls.
@@ -125,8 +124,8 @@ quiet so nine masjids and five times can be compared at a glance. Light theme on
 
 ### Hierarchy
 
-- **Title** (700, 1.125rem): site name.
-- **Masjid name** (700, 1.0625rem): pinned card heading and Arabic name.
+- **Title** (600, 1.5rem on mobile and 2.25rem on desktop): site name.
+- **Masjid name** (700, 1.125rem): pinned card heading and Arabic name.
 - **Body** (400, 0.875rem): general text; the search field is 1rem.
 - **Label** (0.8125rem): table, tiles, sources. This is the smallest size on the site.
 
@@ -134,8 +133,8 @@ Times use tabular numerals. Passed times drop to regular weight.
 
 ## Layout
 
-A single centred column (`max-w-xl`) with 10px side padding. Vertical stacks use a 10px gap,
-inside cards 8px. The table scrolls inside its own region when text is large; the masjid column
+Header, directory and footer share a fluid 64rem shell. Search and the schedule selector stack
+on phones and sit side by side on wider screens. Pinned masjids use two columns from 48rem. The table scrolls inside its own region when text is large; the masjid column
 and the opened row stay in view. Time tiles wrap with `auto-fit` from 3.15rem.
 
 ## Elevation & Depth
@@ -144,7 +143,7 @@ Flat. Depth comes from borders and tonal fills; no shadows.
 
 ## Shapes
 
-10px controls, 14px cards, 8px time tiles. Only the Daily / Jumu‘ah switch is a pill.
+10px controls, 14px cards, 8px time tiles. The Daily / Jumu‘ah selector groups two rounded segments.
 
 ## Components
 

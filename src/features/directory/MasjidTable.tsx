@@ -30,7 +30,7 @@ export function shownSet({ masjid, schedule }: Row, view: View) {
 }
 
 function Cells({ masjid, schedule, view }: Row & { view: View }) {
-  const wide = "h-12 px-1 text-center whitespace-normal";
+  const wide = "h-12 px-1 text-center whitespace-normal sm:h-14 sm:text-sm";
   const jumuah = schedule.jumuah && (
     <JumuahTimes times={schedule.jumuah.times} states={schedule.jumuahStates} />
   );
@@ -41,13 +41,19 @@ function Cells({ masjid, schedule, view }: Row & { view: View }) {
       <TableCell
         key={PRAYERS[k]}
         className={cn(
-          "h-12 px-px text-center text-xs tabular-nums",
-          state === "next" && "bg-primary font-bold text-primary-foreground",
+          "h-12 px-1 text-center text-xs tabular-nums sm:h-14 sm:text-sm",
           state === "past" && "text-past",
         )}
       >
-        {time ? formatTime(time) : <Replaced />}
-        {state === "next" && <span className="sr-only"> next</span>}
+        <span
+          className={cn(
+            "inline-block rounded-md px-1 py-0.5",
+            state === "next" && "bg-primary font-bold text-primary-foreground",
+          )}
+        >
+          {time ? formatTime(time) : <Replaced />}
+          {state === "next" && <span className="sr-only"> next</span>}
+        </span>
       </TableCell>
     ));
   return (
@@ -86,7 +92,7 @@ export function MasjidTable({
         role: "region",
         "aria-label": `${caption} table`,
         tabIndex: 0,
-        className: "rounded-lg border bg-card [container-type:inline-size]",
+        className: "rounded-xl border bg-card [container-type:inline-size]",
       }}
     >
       <TableCaption className="sr-only">{caption}</TableCaption>
@@ -94,7 +100,10 @@ export function MasjidTable({
         <TableRow className="border-row hover:bg-muted">
           <TableHead
             scope="col"
-            className={cn(sticky, "h-9 bg-muted pr-1 pl-2 font-bold")}
+            className={cn(
+              sticky,
+              "h-10 bg-muted pr-1 pl-3 font-semibold sm:h-11 sm:pl-5",
+            )}
           >
             Masjid
           </TableHead>
@@ -103,8 +112,8 @@ export function MasjidTable({
               key={name}
               scope="col"
               className={cn(
-                "h-9 px-px text-center font-bold",
-                view === "daily" && "w-12",
+                "h-10 px-1 text-center font-semibold sm:h-11",
+                view === "daily" && "w-12 sm:w-[12%]",
               )}
             >
               {name}
@@ -128,7 +137,7 @@ export function MasjidTable({
                 >
                   <button
                     type="button"
-                    className="flex min-h-12 w-full min-w-22 cursor-pointer items-center gap-0.5 py-1 pr-1 pl-1.5 text-left text-xs font-bold -outline-offset-3!"
+                    className="flex min-h-12 w-full min-w-22 cursor-pointer items-center gap-1 py-1.5 pr-2 pl-2 text-left text-xs font-semibold hover:bg-muted aria-expanded:bg-muted sm:min-h-14 sm:gap-2 sm:pl-4 sm:text-sm -outline-offset-3!"
                     aria-expanded={open}
                     aria-controls={open ? `detail-${masjid.id}` : undefined}
                     onClick={() => onToggle(masjid.id)}
@@ -137,6 +146,11 @@ export function MasjidTable({
                     <Chevron aria-hidden="true" className="size-4 shrink-0" />
                     <span>
                       {masjid.name}
+                      {masjid.area && (
+                        <span className="block font-normal text-muted-foreground">
+                          {masjid.area}
+                        </span>
+                      )}
                       {now && set && needsDateMarker(set.checked, now.date) && (
                         <span className="block font-normal text-attention">
                           Checked {formatDate(set.checked)}
@@ -156,16 +170,16 @@ export function MasjidTable({
                     colSpan={columns.length + 1}
                     className="bg-detail p-0 whitespace-normal"
                   >
-                    <div className="sticky left-0 flex w-[100cqw] flex-col gap-2 px-2.5 pt-2 pb-1 text-sm">
+                    <div className="sticky left-0 flex w-[100cqw] flex-col gap-2 p-3 sm:p-5 text-sm">
                       <div>
-                        <p>
-                          <ArabicName masjid={masjid} />
-                        </p>
-                        {masjid.area && (
-                          <p className="text-xs text-muted-foreground">
-                            {masjid.area}
+                        {masjid.arabicName && (
+                          <p>
+                            <ArabicName masjid={masjid} />
                           </p>
                         )}
+                        <p className="text-muted-foreground">
+                          {masjid.address}
+                        </p>
                       </div>
                       {view === "jumuah" && schedule.iqama && (
                         <DailyGrid daily={schedule.daily} />
