@@ -26,7 +26,7 @@ colors:
   sky-muted: "#d5e0ee"
 typography:
   title:
-    fontFamily: "Manrope Variable, system-ui, sans-serif"
+    fontFamily: "Georgia, serif"
     fontSize: "1.5rem"
     fontWeight: 700
   masjid-name:
@@ -142,7 +142,7 @@ quiet so nine masjids and five times can be compared at a glance. Light theme on
 
 ### Hierarchy
 
-- **Title** (600, 1.25rem on mobile and 1.5rem on desktop): site name.
+- **Title** (Georgia bold, 1.5rem on mobile and 2.5rem from 40rem): site name.
 - **Masjid name** (700, 1.125rem): pinned card heading and Arabic name.
 - **Body** (400, 0.875rem): general text; the search field is 1rem.
 - **Label** (0.8125rem): table, tiles, sources. This is the smallest size on the site.
@@ -155,7 +155,7 @@ Header, directory and footer share a fluid 64rem shell. The schedule selector ap
 masjids and the directory. Pinned masjids use two columns from 48rem. The directory switches to
 a labeled list below 42rem of available width. Time tiles wrap with `auto-fit` from 3.15rem.
 Directions are visible in every row. The area map loads on request after the timetable.
-The solar chart sits below the timetable, with nothing above the timetable pointing to it. Its live sun uses a ray symbol, and the complete list of calculated starts opens on demand. The header keeps the site mark and a quiet Facebook link on one row (the link reads "Group" beside the icon below 40rem); the footer carries the community call to action.
+The solar chart sits below the timetable, with nothing above the timetable pointing to it. Its live sun uses a ray symbol, and the complete list of calculated starts opens on demand. The header is a centered masthead on the page background, not a navigation bar: the arch mark and the name in Georgia bold (mark beside the name below 40rem, above it from 40rem), a quiet "Join our Facebook group" link, and a double rule. The footer carries the community call to action.
 
 ## Elevation & Depth
 
