@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "tampa-bay-masjids",
+  "account_id": "de011be818652cd288a0b1d934502de3",
   "compatibility_date": "2026-11-01",
   // Static assets only: no Worker script, bindings or database.
   "assets": {
