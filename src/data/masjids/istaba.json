@@ -6,5 +6,13 @@
   "area": "East Tampa",
   "address": "7326 East Sligh Avenue, Tampa, FL 33610",
   "nameSource": "https://istaba.org/",
-  "website": "https://istaba.org/"
+  "website": "https://istaba.org/",
+  "jumuah": {
+    "times": ["13:30"],
+    "source": {
+      "label": "ISTABA prayer page (khutbah start)",
+      "url": "https://istaba.org/prayer/"
+    },
+    "checked": "2026-11-26"
+  }
 }
