@@ -20,6 +20,7 @@
     "checked": "2026-11-26"
   },
   "jumuah": {
+    "timeIs": "khutbah",
     "times": ["13:30"],
     "source": {
       "label": "ISTABA prayer page (khutbah start)",

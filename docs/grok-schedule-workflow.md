@@ -31,7 +31,11 @@ be verified and reused on later runs.
    sunset offset only if the source explicitly gives one. For Friday use the announced service
    start, including an explicitly stated khutbah start, and preserve each confirmed service in
    chronological order. Record both labels in the evidence when the source also gives a separate
-   iqama. If the source meaning or applicable period is unclear, hold that schedule.
+   iqama. Set `jumuah.timeIs` only to what the source says the listed times are: `khutbah`,
+   `start` (a service start, such as "Begins") or `iqama`. Omit it when the source only says
+   "Jumu‘ah", or lists the time on an iqama board without labelling that row; the site then says
+   "Khutbah or iqama not stated". If the source meaning or applicable period is unclear, hold
+   that schedule.
 4. If a public website is missing, inaccessible or ambiguous, record why and leave its
    `checked` date alone. Refer any existing schedule whose correctness is now in doubt for a
    removal proposal so the directory can say “Check with the masjid.” A failed website lookup

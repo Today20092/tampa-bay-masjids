@@ -31,6 +31,22 @@ export interface Schedule {
   next: Next;
 }
 
+/** What a masjid's Jumu‘ah times are, shown with them. */
+export function jumuahTimeKind(
+  timeIs: NonNullable<Masjid["jumuah"]>["timeIs"],
+): string {
+  switch (timeIs) {
+    case "khutbah":
+      return "Khutbah starts";
+    case "start":
+      return "Service starts";
+    case "iqama":
+      return "Iqama";
+    case undefined:
+      return "Khutbah or iqama not stated";
+  }
+}
+
 /** `now` is null until the browser knows the date, so nothing can be shown as current. */
 export function scheduleFor(masjid: Masjid, now: Now | null): Schedule {
   if (!now) return { daily: [], jumuahStates: [], next: { kind: "none" } };

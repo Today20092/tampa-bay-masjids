@@ -13,7 +13,9 @@ The time a masjid sets for the congregational prayer to begin.
 _Avoid_: Prayer time (it can also mean the adhan time)
 
 **Jumu'ah time**:
-A time a masjid sets for Friday prayer. A masjid may have several.
+A time a masjid sets for Friday prayer. A masjid may have several. Its source says it is the
+khutbah start, the service start, or the iqama, or does not say.
+_Avoid_: calling a time the khutbah or iqama when the source does not
 
 **Confirmed time**:
 An iqama or Jumu'ah time with a known source and the date it was checked. Only confirmed times are shown.
