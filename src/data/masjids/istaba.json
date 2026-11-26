@@ -7,6 +7,18 @@
   "address": "7326 East Sligh Avenue, Tampa, FL 33610",
   "nameSource": "https://istaba.org/",
   "website": "https://istaba.org/",
+  "iqama": {
+    "fajr": "06:10",
+    "dhuhr": "12:50",
+    "asr": "15:55",
+    "maghrib": "17:44",
+    "isha": "19:15",
+    "source": {
+      "label": "ISTABA prayer widget (2026-11-26 only)",
+      "url": "https://themasjidapp.org/7856/prayers"
+    },
+    "checked": "2026-11-26"
+  },
   "jumuah": {
     "times": ["13:30"],
     "source": {
