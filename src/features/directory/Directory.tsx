@@ -14,7 +14,7 @@ import { MasjidTable, shownSet, type Row } from "./MasjidTable";
 import { AreaMap } from "./AreaMap";
 import { SolarClock } from "./SolarClock";
 import { PinnedCard } from "./PinnedCard";
-import { SaveToPhone } from "./SaveToPhone";
+import { ShareButton } from "./ShareButton";
 import { checkedRange, type View } from "./text";
 
 // Dev only: the production build drops this branch, so no sample times reach dist/.
@@ -302,7 +302,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
           )}
         </>
       )}
-      <SaveToPhone />
+      <ShareButton />
       <SolarClock />
     </div>
   );
