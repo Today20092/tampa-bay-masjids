@@ -1,0 +1,2 @@
+# Windows checkouts must keep LF, or the format check fails on every file.
+* text=auto eol=lf
