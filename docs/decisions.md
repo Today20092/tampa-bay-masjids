@@ -47,4 +47,5 @@ The combined mockup (`prototype/home-combined.html`) is approved for a local bui
 - **Pinned cards:** compact (name, next prayer, times), with actions behind a details toggle, so the others stay easy to reach.
 - Every masjid shows "Check with the masjid" until its times are confirmed.
 - **Share:** one "Share this page" button below the times table. It opens the device's share sheet with the site name, description and link; without one it copies the link. The preview card comes from the page's share tags. No bookmark or install button.
+- **Sun line:** the sun and prayer times panel is one line under the pinned masjids that opens in place. Its times are calculated starts and are labelled as calculated; masjid iqama times stay in the cards and table.
 - No commit, GitHub repository or deployment until the owner has seen the local site.

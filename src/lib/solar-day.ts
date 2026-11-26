@@ -97,6 +97,7 @@ export function solarDay(instant: Date, location: SkyLocation) {
     instant,
     events: events.map((event) => ({ ...event, ...point(event.time) })),
     nextPrayer,
+    previousEvent: events.findLast(({ time }) => time <= instant) ?? null,
     path,
     sun,
     ...position(instant),

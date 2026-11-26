@@ -128,7 +128,7 @@ quiet so nine masjids and five times can be compared at a glance. Light theme on
 
 - **Amber** (`attention`): "Check with the masjid" and "Checked Nov 15" markers.
 - **Indigo** (`friday`): selected Jumu‘ah schedule.
-- **Night blue and sunlight** (`sky`, `sky-sun`, `sky-muted`): the solar chart and its text.
+- **Night blue and sunlight** (`sky`, `sky-sun`, `sky-muted`): the sun panel and its text.
 - **Focus orange** (`ring`): 3px outline, 2px offset.
 - `sample` colours appear only in the dev preview banner. `destructive` is unused by pages.
 
@@ -156,7 +156,7 @@ masjids and the directory. Pinned masjids use two columns from 48rem. The direct
 a labeled list below 42rem of available width. Daily time tiles wrap with `auto-fit` from 3.15rem;
 Jumu‘ah times use unlabeled tiles at a fixed 4rem.
 Directions are visible in every row. The area map loads on request after the timetable.
-The solar chart sits below the timetable, with nothing above the timetable pointing to it. Its live sun uses a ray symbol, and the complete list of calculated starts opens on demand. The header is a centered masthead on the page background, not a navigation bar: the arch mark and the name in Georgia bold (mark beside the name below 40rem, above it from 40rem), a quiet "Join our Facebook group" link, and a double rule. The footer carries the community call to action.
+A one-line sun panel sits under the pinned masjids and above search: the next calculated prayer start with its countdown, and the start that just passed, so it never reads as a rival to a masjid's next iqama. It opens in place to the solar chart, whose live sun uses a ray symbol, and the list of calculated starts. The header is a centered masthead on the page background, not a navigation bar: the arch mark and the name in Georgia bold (mark beside the name below 40rem, above it from 40rem), a quiet "Join our Facebook group" link, and a double rule. The footer carries the community call to action.
 
 ## Elevation & Depth
 
