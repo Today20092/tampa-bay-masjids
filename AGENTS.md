@@ -65,5 +65,11 @@ pnpm preview    # serve the built site
 - For branches, worktrees, PRs, merging or deploys, read `docs/branch-workflow.md`.
 - Read `docs/site-structure.md` before adding or moving components.
 - Follow `DESIGN.md` for anything visual.
+- For directory interaction changes, use `ux-intent` and check both first visits and
+  returning visits with saved pins.
+- For visual refinements, use `refactoring-ui`. For accessibility changes or audits,
+  use `web-ui-accessibility`.
+- Use `frontend-quality` when asked to add or maintain browser checks or screenshot
+  baselines. Review the repository-specific setup before changing test infrastructure.
 - The demo preview exists only in `astro dev`. Keep it behind `import.meta.env.DEV`.
 - Do not edit `prototype/`.

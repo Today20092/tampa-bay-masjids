@@ -1,3 +1,4 @@
+import { SearchIcon } from "lucide-react";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyContent, EmptyDescription } from "@/components/ui/empty";
@@ -45,6 +46,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
   const [demo, setDemo] = useState<Demo | null>(null);
   const [demoWanted, setDemoWanted] = useState(false);
   const [query, setQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
   const [pins, setPins] = useState<string[]>([]);
   const [openId, setOpenId] = useState<string | null>(null);
   const [chosenView, setChosenView] = useState<View | null>(null);
@@ -75,6 +77,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
     schedule: scheduleFor(masjid, now),
   }));
   const searching = normalize(query) !== "";
+  const showSearch = pins.length === 0 || searchOpen;
   const pinned = searching
     ? []
     : pins.flatMap((id) => all.filter((row) => row.masjid.id === id));
@@ -111,57 +114,104 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
       focusKey.current = `row-${id}`;
     } else {
       setQuery("");
+      setSearchOpen(false);
       setOpenId(null);
       focusKey.current = `card-${id}`;
     }
   }
 
   return (
-    <div className="flex flex-col gap-2.5">
+    <div className="flex flex-col gap-4">
       {DemoControls && demoWanted && (
         <Suspense>
           <DemoControls masjids={masjids} onChange={setDemo} />
         </Suspense>
       )}
-      <Input
-        ref={searchRef}
-        type="search"
-        value={query}
-        onChange={(event) => search(event.target.value)}
-        placeholder="Search masjid or area"
-        aria-label="Search masjid or area"
-        autoComplete="off"
-        enterKeyHint="search"
-        className="min-h-11 bg-card"
-      />
-      <p role="status" className="sr-only">
-        {status}
-      </p>
+      {now && pinned.length > 0 && (
+        <section aria-labelledby="pinned-heading" className="space-y-3">
+          <h2 id="pinned-heading" className="text-base font-semibold">
+            Pinned masjids
+          </h2>
+          <div className="grid gap-3 md:grid-cols-2">
+            {pinned.map(({ masjid, schedule }) => (
+              <PinnedCard
+                key={masjid.id}
+                masjid={masjid}
+                schedule={schedule}
+                now={now}
+                onPin={() => pin(masjid.id)}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
-      {now &&
-        pinned.map(({ masjid, schedule }) => (
-          <PinnedCard
-            key={masjid.id}
-            masjid={masjid}
-            schedule={schedule}
-            now={now}
-            onPin={() => pin(masjid.id)}
-          />
-        ))}
-
-      {rows.length === 0 && !searching ? (
-        <p className="text-xs text-muted-foreground">Every masjid is pinned.</p>
-      ) : (
-        <>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div
+          id="directory-search"
+          hidden={!showSearch}
+          className="min-w-0 sm:flex-1"
+        >
+          <div className="flex flex-wrap gap-2">
+            <div className="relative min-w-40 flex-1">
+              <SearchIcon
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-y-0 left-4 my-auto size-4 text-muted-foreground"
+              />
+              <Input
+                ref={searchRef}
+                data-key="directory-search-input"
+                type="search"
+                value={query}
+                onChange={(event) => search(event.target.value)}
+                placeholder="Search masjid or area"
+                aria-label="Search masjid or area"
+                autoComplete="off"
+                enterKeyHint="search"
+                className="min-h-13 bg-card pl-11"
+              />
+            </div>
+            {pins.length > 0 && searchOpen && (
+              <Button
+                variant="outline"
+                size="touch"
+                onClick={() => {
+                  search("");
+                  setSearchOpen(false);
+                  focusKey.current = "open-search";
+                }}
+              >
+                Close search
+              </Button>
+            )}
+          </div>
+        </div>
+        {!showSearch && (
+          <Button
+            variant="outline"
+            size="touch"
+            aria-expanded={false}
+            aria-controls="directory-search"
+            data-key="open-search"
+            onClick={() => {
+              setSearchOpen(true);
+              focusKey.current = "directory-search-input";
+            }}
+          >
+            <SearchIcon aria-hidden="true" />
+            Search
+          </Button>
+        )}
+        {(rows.length > 0 || searching) && (
           <ToggleGroup
             aria-label="Which times"
             value={[view]}
             // Pressing the active choice again must not leave neither selected.
             onValueChange={([value]) => value && setChosenView(value as View)}
-            variant="outline"
+            variant="default"
             size="touch"
-            spacing={1.5}
-            className="w-full"
+            spacing={1}
+            className="w-full rounded-xl border border-input bg-muted p-1 sm:w-auto"
           >
             {(
               [
@@ -172,17 +222,32 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
               <ToggleGroupItem
                 key={value}
                 value={value}
-                className="flex-1 rounded-full! bg-card font-semibold aria-pressed:bg-primary aria-pressed:text-primary-foreground"
+                className="flex-1 rounded-lg! px-4 font-semibold sm:px-6 aria-pressed:bg-primary aria-pressed:text-primary-foreground"
               >
                 {label}
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
-          {!pins.length && !searching && (
-            <p className="text-xs text-muted-foreground">
-              Open a masjid to pin it.
-            </p>
-          )}
+        )}
+      </div>
+      <p role="status" className="sr-only">
+        {status}
+      </p>
+
+      {rows.length === 0 && !searching ? (
+        <p className="text-xs text-muted-foreground">Every masjid is pinned.</p>
+      ) : (
+        <>
+          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <h2 className="text-lg font-semibold tracking-tight">
+              {view === "daily" ? "Daily iqama times" : "Jumu‘ah times"}
+            </h2>
+            {!pins.length && !searching && (
+              <p className="text-xs text-muted-foreground">
+                Open a masjid to pin it.
+              </p>
+            )}
+          </div>
           {rows.length ? (
             <MasjidTable
               rows={rows}

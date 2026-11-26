@@ -1,3 +1,10 @@
+import {
+  GlobeIcon,
+  MapPinIcon,
+  MessageCircleIcon,
+  PinIcon,
+  PinOffIcon,
+} from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { directionsUrl, reportUrl } from "@/lib/links";
 import type { Masjid } from "@/lib/masjid-schema";
@@ -93,8 +100,8 @@ function Actions({
       variant === "outline" && "border-input bg-card",
     );
   const external = [
-    { label: "WhatsApp", href: masjid.whatsapp?.url },
-    { label: "Website", href: masjid.website },
+    { label: "WhatsApp", href: masjid.whatsapp?.url, Icon: MessageCircleIcon },
+    { label: "Website", href: masjid.website, Icon: GlobeIcon },
   ];
   return (
     <div>
@@ -105,12 +112,13 @@ function Actions({
           target="_blank"
           rel="noopener"
         >
+          <MapPinIcon aria-hidden="true" />
           <span>
             Directions<span className="sr-only"> to {masjid.name}</span>
           </span>
         </a>
         {external.map(
-          ({ label, href }) =>
+          ({ label, href, Icon }) =>
             href && (
               <a
                 key={label}
@@ -119,6 +127,7 @@ function Actions({
                 target="_blank"
                 rel="noopener"
               >
+                <Icon aria-hidden="true" />
                 <span>
                   {label}
                   <span className="sr-only"> for {masjid.name}</span>
@@ -133,6 +142,11 @@ function Actions({
           onClick={onPin}
           data-key={`pin-${masjid.id}`}
         >
+          {pinned ? (
+            <PinOffIcon aria-hidden="true" />
+          ) : (
+            <PinIcon aria-hidden="true" />
+          )}
           <span>
             {pinned ? "Unpin" : "Pin"}
             <span className="sr-only"> {masjid.name}</span>

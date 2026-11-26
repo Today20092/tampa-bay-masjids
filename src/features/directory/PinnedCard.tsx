@@ -36,11 +36,11 @@ export function PinnedCard({
   return (
     <section aria-labelledby={headingId}>
       <Collapsible>
-        <Card size="sm" className="gap-2 border-2 border-primary ring-0">
+        <Card size="sm" className="h-full gap-3 border border-border ring-0">
           {/* Wraps rather than the component's two columns, so large text never clips the toggle. */}
           <CardHeader className="flex flex-wrap items-start justify-between gap-2">
             <CardTitle className="flex flex-col items-start font-bold">
-              <h2 id={headingId} className="text-[1.0625rem]">
+              <h2 id={headingId} className="text-lg">
                 {masjid.name}
               </h2>
               <ArabicName masjid={masjid} />

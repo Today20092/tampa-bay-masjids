@@ -43,32 +43,37 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* Values come from the approved mockup, prototype/home-combined.html. Light only. */
+/* Light palette for the directory and its shared controls. */
 :root {
   color-scheme: light;
-  --background: #f7f5ee;
-  --foreground: #17251f;
+  --background: #f7f8f5;
+  --foreground: #182923;
   --card: #ffffff;
-  --card-foreground: #17251f;
-  --primary: #14513f;
+  --card-foreground: #182923;
+  --primary: #174c40;
   --primary-foreground: #ffffff;
-  --secondary: #eef3ef;
-  --secondary-foreground: #17251f;
-  --muted: #eef3ef;
-  --muted-foreground: #4a574f;
+  --secondary: #eaf1ed;
+  --secondary-foreground: #182923;
+  --muted: #eaf1ed;
+  --muted-foreground: #4a6056;
   --destructive: #a52a1a;
-  --border: #c9c4b3;
-  --input: #6f7d75;
-  --ring: #b45309;
-  --gold: #e8c766;
-  --gold-foreground: #17251f;
-  --past: #56645c;
-  --attention: #8a4b00;
-  --row: #e2ddcc;
-  --detail: #f3f6f3;
+  --border: #cddbd3;
+  --input: #677c71;
+  --ring: #895019;
+  --gold: #e9d6a2;
+  --gold-foreground: #182923;
+  --past: #53655d;
+  --attention: #774617;
+  --row: #e0e8e3;
+  --detail: #f1f6f3;
   --sample: #fde2b8;
   --sample-foreground: #5b3200;
   --radius: 0.625rem;
+}
+
+.site-shell {
+  width: min(100% - clamp(1.5rem, 6vw, 4rem), 64rem);
+  margin-inline: auto;
 }
 
 @layer base {
