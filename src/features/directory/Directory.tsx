@@ -298,7 +298,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
           )}
         </>
       )}
-      <AreaMap />
+      <AreaMap masjids={masjids} />
       <SolarClock />
     </div>
   );
