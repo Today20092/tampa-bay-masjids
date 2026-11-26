@@ -91,7 +91,7 @@ The directory palette and controls are defined in `src/styles/global.css` and th
 **Creative North Star: "The masjid notice board" (inferred)**
 
 A phone-first timetable with a wider comparison layout on desktop. Deep green carries identity, the next time and the Facebook group link; amber marks anything the visitor should verify. Everything else is
-quiet so nine masjids and five times can be compared at a glance. Light theme only.
+quiet so nine masjids and five times can be compared at a glance. The site follows the phone's light or dark setting (`prefers-color-scheme`); there is no theme toggle and no saved preference.
 
 **Key Characteristics:**
 
@@ -111,7 +111,36 @@ quiet so nine masjids and five times can be compared at a glance. Light theme on
 
 ### Primary
 
-- **Masjid green** (`primary`): community footer, the next time, links.
+- **Masjid green** (`primary`): the next time and text links. In dark mode it is a light mint so it reads on night backgrounds.
+- **Brand green** (`brand`, `brand-foreground`): the large community footer box and the map markers. It stays deep green in both themes.
+- **Logo tile** (`logo-tile`): a small tile behind each masjid logo. Transparent in light mode; white in dark mode so dark lettering stays readable.
+
+### Dark theme
+
+Set in the `prefers-color-scheme: dark` block of [global.css](src/styles/global.css). Brand, gold, sun and sky tokens keep their light values.
+
+| Token | Light | Dark |
+| --- | --- | --- |
+| `background` | `#f7f8f5` | `#0f1714` |
+| `foreground` | `#182923` | `#e6eee9` |
+| `card` / `popover` | `#ffffff` | `#17221e` |
+| `primary` | `#174c40` | `#7fc9b0` |
+| `primary-foreground` | `#ffffff` | `#0c1f19` |
+| `muted` / `secondary` | `#eaf1ed` | `#1f2d28` |
+| `muted-foreground` | `#4a6056` | `#a9bfb4` |
+| `border` / `row` / `detail` | `#cddbd3` / `#e0e8e3` / `#f1f6f3` | `#2c3f37` / `#22332c` / `#1b2823` |
+| `input` | `#677c71` | `#6f877c` |
+| `ring` | `#895019` | `#e6a964` |
+| `destructive` | `#a52a1a` | `#ff9a8a` |
+| `attention` | `#774617` | `#f0b878` |
+| `past` | `#53655d` | `#93a89d` |
+| `friday` | `#41466f` | `#b4b9f0` |
+
+Rules for dark mode: feature code uses tokens only, never `dark:` classes or `.dark` selectors; add a dark value to every token that the dark block changes; keep every pair in `src/lib/colors.test.ts` passing in both themes.
+
+### Sun
+
+- **Sun** (`sun-core`, `sun-ring`, `sun-ray`): the sun glyph on the sun chart. Same values in both themes.
 
 ### Secondary
 
@@ -196,7 +225,7 @@ shadcn on Base UI lives in `src/components/ui/`.
 - Do keep every control at 44px and every text at 0.8125rem or larger.
 - Do show "Check with the masjid" wherever a confirmed, fresh time is missing.
 - Don't use gold for text or controls; it is only for text selection and focus on green.
-- Don't add dark mode or shadows without a new design decision.
+- Don't add shadows without a new design decision.
 
 ## Masjid logos
 
