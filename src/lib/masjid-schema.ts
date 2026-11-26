@@ -83,12 +83,18 @@ export const masjidSchema = z
     website: httpsUrl.optional(),
     whatsapp: whatsapp.optional(),
     jumuahOnly: z.boolean().default(false),
+    /** The masjid has opened but has not started holding formal prayers; the site says so instead of "Check with the masjid" */
+    comingSoon: z.boolean().optional(),
     iqama: iqama.optional(),
     jumuah: jumuah.optional(),
   })
   .refine((m) => !m.arabicName || m.nameSource, {
     message: "arabicName needs nameSource, the masjid's own page that shows it",
     path: ["nameSource"],
+  })
+  .refine((m) => !(m.comingSoon && (m.iqama || m.jumuah || m.jumuahOnly)), {
+    message: "A coming-soon masjid has no prayer times yet",
+    path: ["comingSoon"],
   })
   .refine((m) => !(m.jumuahOnly && m.iqama), {
     message: "A Jumu‘ah-only masjid has no daily iqama times",

@@ -71,7 +71,7 @@ export function JumuahLine({
           states={schedule.jumuahStates}
         />
       ) : (
-        <Check />
+        <Check masjid={masjid} />
       )}
     </p>
   );
