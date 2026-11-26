@@ -26,6 +26,7 @@ Main-only: one task, one branch, one pull request into `main`. There is no devel
 | Merge to `main`        | GitHub Actions `verify`. Cloudflare runs `pnpm verify`, then `pnpm exec wrangler deploy`. |
 | Dependabot minor/patch | npm updates merge themselves once `verify` passes, which deploys. Monthly, 7-day cooldown. |
 | Dependabot other       | Major updates and GitHub Actions updates wait for the owner.                               |
+| Daily (`Time expiry`)  | Reads the live `masjids.json` and fails three days before any time disappears.             |
 
 Preview links are public and show unmerged data. The preview build is not a required check. There
 are no release tags.
