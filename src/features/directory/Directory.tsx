@@ -106,7 +106,8 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
     }, 500);
   }
 
-  function pin(id: string) {
+  // Pinning on the map keeps the visitor there: no focus move, no search reset.
+  function pin(id: string, fromMap = false) {
     const wasPinned = pins.includes(id);
     const next = togglePin(pins, id);
     setPins(next);
@@ -115,6 +116,11 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
     const name = masjids.find((m) => m.id === id)?.name;
     setStatus(`${wasPinned ? "Unpinned" : "Pinned"} ${name}`);
     setOpenId(null);
+    if (fromMap) {
+      // The first pin would otherwise hide a search that is still filtering.
+      if (searching) setSearchOpen(true);
+      return;
+    }
     focusKey.current = `pin-${id}`;
     if (!wasPinned) {
       setQuery("");
@@ -183,7 +189,14 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
         </section>
       )}
 
-      <AreaMap masjids={masjids} showSearch={showSearch}>
+      <AreaMap
+        rows={all}
+        view={view}
+        now={now}
+        pins={pins}
+        onPin={(id) => pin(id, true)}
+        showSearch={showSearch}
+      >
         <div
           id="directory-search"
           hidden={!showSearch}
@@ -267,7 +280,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
               openId={openId}
               pins={pins}
               onToggle={(id) => setOpenId(openId === id ? null : id)}
-              onPin={pin}
+              onPin={(id) => pin(id)}
             />
           ) : (
             <Empty className="p-4">

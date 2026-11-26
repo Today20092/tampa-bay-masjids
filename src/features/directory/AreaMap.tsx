@@ -1,7 +1,7 @@
 import { MapIcon } from "lucide-react";
 import { Component, lazy, Suspense, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
-import type { Masjid } from "@/lib/masjid-schema";
+import type { MapViewProps } from "./MapView";
 
 const MapView = lazy(() => import("./MapView"));
 
@@ -20,14 +20,10 @@ class MapError extends Component<{ children: ReactNode }, { failed: boolean }> {
 }
 
 export function AreaMap({
-  masjids,
   children,
   showSearch,
-}: {
-  masjids: Masjid[];
-  children: ReactNode;
-  showSearch: boolean;
-}) {
+  ...map
+}: MapViewProps & { children: ReactNode; showSearch: boolean }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="space-y-2">
@@ -53,7 +49,7 @@ export function AreaMap({
         {open && (
           <MapError>
             <Suspense fallback={<p role="status">Loading map…</p>}>
-              <MapView masjids={masjids} />
+              <MapView {...map} />
             </Suspense>
           </MapError>
         )}

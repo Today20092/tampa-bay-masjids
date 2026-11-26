@@ -119,11 +119,13 @@ export function PinButton({
   pinned,
   onPin,
   compact = false,
+  focusKey = `pin-${masjid.id}`,
 }: {
   masjid: Masjid;
   pinned: boolean;
   onPin: () => void;
   compact?: boolean;
+  focusKey?: string;
 }) {
   const label = pinned ? "Unpin" : "Pin";
   const Icon = pinned ? PinOffIcon : PinIcon;
@@ -134,7 +136,7 @@ export function PinButton({
       size="touch"
       className={cn("rounded-full text-primary", compact && "px-0")}
       onClick={onPin}
-      data-key={`pin-${masjid.id}`}
+      data-key={focusKey}
     >
       {!compact && <Icon aria-hidden="true" />}
       <span>
