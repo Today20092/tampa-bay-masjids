@@ -27,14 +27,13 @@ export function AreaMap({
   const [open, setOpen] = useState(false);
   return (
     <div className="space-y-2">
-      <div
-        className={
-          showSearch ? "flex flex-col items-start gap-3" : "flex gap-3"
-        }
-      >
+      <div className={showSearch ? "flex items-start gap-2" : "flex gap-3"}>
         {children}
         <Button
-          className={showSearch ? "" : "min-w-0 flex-1"}
+          // Beside the search field it matches its height and keeps one width.
+          className={
+            showSearch ? "min-h-13 shrink-0 bg-card" : "min-w-0 flex-1"
+          }
           variant="outline"
           size="touch"
           aria-expanded={open}
@@ -42,7 +41,7 @@ export function AreaMap({
           onClick={() => setOpen(!open)}
         >
           <MapIcon aria-hidden="true" />
-          {open ? "Hide map" : "Show map"}
+          {showSearch ? "Map" : open ? "Hide map" : "Show map"}
         </Button>
       </div>
       <div id="area-map" hidden={!open}>
