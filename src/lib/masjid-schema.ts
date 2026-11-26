@@ -54,6 +54,8 @@ const jumuah = z.strictObject({
         }),
       "Jumu‘ah times must be in order, between 11:00 and 17:00",
     ),
+  /** Where Jumu‘ah is held, when that is not the masjid's own address */
+  venue: z.strictObject({ name: text, address: text }).optional(),
   ...confirmed,
 });
 

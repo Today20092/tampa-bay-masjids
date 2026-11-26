@@ -66,10 +66,7 @@ export function JumuahLine({
     <p className="text-sm">
       Jumu‘ah{masjid.jumuahOnly && " only"}{" "}
       {schedule.jumuah ? (
-        <JumuahTimes
-          times={schedule.jumuah.times}
-          states={schedule.jumuahStates}
-        />
+        <JumuahTimes {...schedule.jumuah} states={schedule.jumuahStates} />
       ) : (
         <Check masjid={masjid} />
       )}

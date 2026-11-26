@@ -11,7 +11,7 @@ Agreed on 2026-11-26.
 - **Agent edits:** Grok Bot opens GitHub pull requests; a person approves them.
 - **Mobile layout:** searchable, pinned masjid first, directions open the phone's maps app. No built-in map yet.
 - **Name and language:** "Tampa Bay Masjids", English with Arabic masjid names where available.
-- **WhatsApp number:** a separate $3/month Ultra Mobile PayGo number, used in the official WhatsApp app. Announcements are shared to Grok Bot by hand. No OpenWA for now.
+- **WhatsApp number:** a separate $3/month Ultra Mobile PayGo number, used in the official WhatsApp app. Announcements are shared to Grok Bot by hand. Agents may also read masjid groups through the local OpenWA API, read-only (see AGENTS.md; this replaces "No OpenWA for now").
 - **Facebook link:** a "Join our Facebook group" button at the top and bottom.
 - **Home layout:** the pinned masjid as a card above a table of the others; with nothing pinned, the table comes first. Directions, WhatsApp, Website, Pin and "Report a wrong time" sit inside the card or an opened row. This replaces the earlier all-cards layout.
 - **Daily / Jumu'ah:** a switch above the table, opening on Jumu'ah on Fridays.

@@ -67,7 +67,7 @@ export function llmsText(masjids: Masjid[]): string {
     if (!m.comingSoon)
       lines.push(
         m.jumuah
-          ? `- Jumu‘ah: ${m.jumuah.times.join(", ")} (${from(m.jumuah)})`
+          ? `- Jumu‘ah: ${m.jumuah.times.join(", ")}${m.jumuah.venue ? ` at ${m.jumuah.venue.name}, ${m.jumuah.venue.address}` : ""} (${from(m.jumuah)})`
           : "- Jumu‘ah: check with the masjid",
       );
     return lines.join("\n");
