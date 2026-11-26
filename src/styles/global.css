@@ -1,0 +1,104 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Light only: keep the components’ dark: classes from following the system theme. */
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: system-ui, sans-serif;
+  --font-heading: system-ui, sans-serif;
+  /* Nothing on the site is smaller than 13px at the default text size. */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.35;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.35;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-gold: var(--gold);
+  --color-gold-foreground: var(--gold-foreground);
+  --color-past: var(--past);
+  --color-attention: var(--attention);
+  --color-row: var(--row);
+  --color-detail: var(--detail);
+  --color-sample: var(--sample);
+  --color-sample-foreground: var(--sample-foreground);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* Values come from the approved mockup, prototype/home-combined.html. Light only. */
+:root {
+  color-scheme: light;
+  --background: #f7f5ee;
+  --foreground: #17251f;
+  --card: #ffffff;
+  --card-foreground: #17251f;
+  --primary: #14513f;
+  --primary-foreground: #ffffff;
+  --secondary: #eef3ef;
+  --secondary-foreground: #17251f;
+  --muted: #eef3ef;
+  --muted-foreground: #4a574f;
+  --destructive: #a52a1a;
+  --border: #c9c4b3;
+  --input: #6f7d75;
+  --ring: #b45309;
+  --gold: #e8c766;
+  --gold-foreground: #17251f;
+  --past: #56645c;
+  --attention: #8a4b00;
+  --row: #e2ddcc;
+  --detail: #f3f6f3;
+  --sample: #fde2b8;
+  --sample-foreground: #5b3200;
+  --radius: 0.625rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-sm text-foreground antialiased;
+    caret-color: var(--primary);
+    scrollbar-color: var(--input) transparent;
+  }
+  h1,
+  h2 {
+    text-wrap: balance;
+  }
+  a {
+    text-underline-offset: 0.2em;
+  }
+  ::selection {
+    background: var(--gold);
+    color: var(--gold-foreground);
+  }
+}
+
+/* Unlayered, so it wins over the components' own outline utilities. */
+:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+.on-primary :focus-visible {
+  outline-color: var(--gold);
+}

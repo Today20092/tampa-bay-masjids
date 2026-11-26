@@ -1,0 +1,19 @@
+---
+import { buttonVariants } from "@/components/ui/button";
+import { SITE } from "@/data/site";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title={`Page not found · ${SITE.name}`}
+  description={SITE.description}
+  noindex
+>
+  <div class="flex flex-col items-center gap-3 py-10 text-center">
+    <h2 class="text-lg font-bold">Page not found</h2>
+    <p>This address has no page. All masjids are on the home page.</p>
+    <a class={buttonVariants({ size: "touch" })} href="/">
+      See all masjids
+    </a>
+  </div>
+</BaseLayout>

@@ -1,0 +1,151 @@
+<!doctype html>
+<!-- PROTOTYPE, throwaway. Combined layout: pinned card (A) above table (C). Sample times only. -->
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROTOTYPE: Tampa Bay Masjids</title>
+<style>
+  *{box-sizing:border-box} body{margin:0;font-family:var(--font-sans,system-ui,sans-serif)}
+  .wrap{max-width:390px;margin:0 auto}
+  .demo{display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:8px;font-size:.8125rem;color:var(--foreground,#111)}
+  .demo select{min-height:44px;border-radius:8px;border:1px solid var(--border,#999);background:var(--background,#fff);color:inherit;font:inherit;padding:0 8px}
+  .phone{position:relative;height:720px;overflow:auto;border:1px solid var(--border,#999);border-radius:24px;background:#f7f5ee;color:#17251f;font-size:.875rem;line-height:1.35}
+  .phone button,.phone input{font-family:inherit;font-size:inherit;color:inherit}
+  .phone :focus-visible{outline:3px solid #b45309;outline-offset:2px}
+  header{padding:12px 16px;background:#14513f;color:#fff;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+  h1{margin:0;font-size:1.125rem}
+  .fb{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 12px;border-radius:10px;background:#e8c766;color:#17251f;font-weight:700;font-size:.8125rem;text-decoration:none}
+  .sample{background:#fde2b8;color:#5b3200;text-align:center;font-weight:700;font-size:.8125rem;padding:4px}
+  main{padding:10px}
+  input[type=search]{width:100%;min-height:44px;padding:0 12px;border:1px solid #6f7d75;border-radius:10px;background:#fff;margin-bottom:10px}
+  .phone input[type=search]{font-size:1rem}
+  .card{background:#fff;border:2px solid #14513f;border-radius:14px;padding:12px;margin-bottom:12px}
+  h2{font-size:1.0625rem;margin:0} .ar{font-size:1.0625rem;color:#14513f} .sub{font-size:.8125rem;color:#4a574f}
+  .next-line{margin:6px 0;font-weight:700}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(3.6rem,1fr));gap:4px;text-align:center;margin:8px 0}
+  .grid div{background:#eef3ef;border-radius:8px;padding:6px 0;font-size:.8125rem} .grid b{display:block;font-size:.9375rem}
+  .next{background:#14513f!important;color:#fff;font-weight:700} .past{color:#56645c}
+  .jum{margin:8px 0;font-size:.9375rem}
+  .jum .next{padding:2px 8px;border-radius:6px}
+  .acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .acts a,.acts button{flex:1 1 3.5rem;min-height:44px;display:flex;align-items:center;justify-content:center;border:1px solid #6f7d75;border-radius:10px;background:#fff;color:#17251f;text-decoration:none;font-weight:600;cursor:pointer;padding:0 4px;text-align:center}
+  .acts a.go{background:#14513f;border-color:#14513f;color:#fff}
+  .sub a{display:inline-flex;align-items:center;min-height:44px;color:#14513f;font-weight:600}
+  .title{display:flex;flex-wrap:wrap;gap:0 10px;justify-content:space-between;align-items:baseline}
+  .link{display:inline-flex;align-items:center;min-height:44px;color:#14513f;font-weight:600}
+  .seg{display:flex;gap:6px;margin-bottom:8px}
+  .seg button{flex:1;min-height:44px;border:1px solid #6f7d75;border-radius:999px;background:#fff;font-weight:600;cursor:pointer}
+  .seg button[aria-pressed=true]{background:#14513f;color:#fff}
+  .scroll{position:relative;container-type:inline-size;overflow-x:auto;background:#fff;border:1px solid #c9c4b3;border-radius:10px}
+  table{width:100%;border-collapse:collapse;font-size:.8125rem}
+  th,td{border-bottom:1px solid #e2ddcc;text-align:center;padding:0 1px;height:48px}
+  thead th{background:#eef3ef;height:36px;font-size:.75rem}
+  th[scope=row],thead th:first-child{text-align:left;font-weight:700}
+  th button{display:flex;gap:4px;align-items:center;width:100%;min-height:48px;border:0;background:none;text-align:left;padding:4px 2px 4px 6px;cursor:pointer;font-weight:700}
+  th button small{display:block;font-weight:400;color:#8a4b00;font-size:.75rem}
+  th[scope=row],thead th:first-child{position:sticky;left:0;z-index:1}
+  th[scope=row]{background:#fff}
+  .in{position:sticky;left:10px;width:calc(100cqw - 20px)}
+  .check{color:#8a4b00;font-weight:600}
+  tr.detail td{text-align:left;padding:4px 10px 12px;background:#f3f6f3}
+  .hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  footer{padding:4px 12px 20px;text-align:center}
+</style>
+<div class="wrap">
+  <label class="demo">Pretend it is <select id="now">
+    <option value="0,850">Thursday 2:10 PM</option><option value="0,1000">Thursday 4:40 PM</option>
+    <option value="0,1290">Thursday 9:30 PM</option><option value="1,660">Friday 11:00 AM</option></select></label>
+  <div class="phone">
+    <header><h1>Tampa Bay Masjids</h1><a class="fb" href="https://www.facebook.com/groups/tampabaymuslims" target="_blank" rel="noopener">Join our Facebook group</a></header>
+    <div class="sample">SAMPLE TIMES. Not real. Do not use.</div>
+    <main>
+      <input type="search" id="q" placeholder="Search masjid or area" aria-label="Search masjid or area">
+      <p class="hidden" role="status" id="status"></p>
+      <div id="view"></div>
+    </main>
+    <footer><a class="fb" href="https://www.facebook.com/groups/tampabaymuslims" target="_blank" rel="noopener">Join our Facebook group</a></footer>
+  </div>
+</div>
+<script>
+const P=['Fajr','Dhuhr','Asr','Maghrib','Isha'], REPORT='clean.barn3748@fastmail.com';
+// d: five sample iqama times; j: sample Jumu'ah times; src/day: source and November day checked; wa: has an approved WhatsApp link
+const M=[
+ {n:'Al-Qassam',ar:'مسجد القسام',area:'North Tampa',addr:'5905 East 130th Avenue, Tampa, FL',d:['6:10','1:30','4:15','5:45','7:30'],j:['1:15','2:30'],src:'Masjid website',day:24,wa:true},
+ {n:'ISTABA',area:'East Tampa',addr:'7326 East Sligh Avenue, Tampa, FL 33610',d:['6:15','1:00','4:00','5:44','7:15'],j:['1:30'],src:'Masjid website',day:25,wa:true},
+ {n:'TMC',area:'Temple Terrace area',addr:'8080 N 56th St, Tampa, FL 33617',d:['6:20','1:15','4:30','5:45','7:45'],j:['12:35','1:35'],src:'WhatsApp announcement',day:23},
+ {n:'Omar',ar:'مسجد عمر',area:'Busch Blvd',addr:'4801 East Busch Boulevard, Tampa, FL 33617'},
+ {n:'Abu Bakr',ar:'مسجد أبو بكر',area:'North 30th St',addr:'11010 North 30th Street, Tampa, FL 33612'},
+ {n:'Darussalam',ar:'دار السلام',area:'Thonotosassa',addr:'15830 Morris Bridge Road, Thonotosassa, FL 33592',d:['6:15','1:00','4:20','5:40','8:00'],j:['1:15','2:25'],src:'Masjid website',day:15},
+ {n:'IC of Wesley Chapel',area:'Lutz',addr:'19130 Livingston Avenue, Lutz, FL 33559',d:['5:55','12:30','3:25','5:44','7:05'],j:['12:15'],src:'Masjid website',day:24},
+ {n:'An-Noor',ar:'مسجد النور',area:'Wesley Chapel',addr:'2250 Ashley Oaks Circle, Wesley Chapel, FL 33544'},
+ {n:'USF Jumu‘ah',area:'USF Marshall Center',addr:'4103 USF Cedar Cir, Tampa, FL 33620',j:['1:30'],src:'WhatsApp announcement',day:20}
+];
+const mins=(s,k)=>{let[h,m]=s.split(':').map(Number);if(k!==0&&h<11)h+=12;return h*60+m};
+const nextOf=(d,t)=>d.findIndex((s,k)=>mins(s,k)>=t); // -1 means tomorrow's Fajr
+const norm=s=>s.toLowerCase().normalize('NFD').replace(/[^\p{L}\p{N}]/gu,'');
+const $=id=>document.getElementById(id);
+let pin=0; try{const s=localStorage.getItem('pin');if(s!==null)pin=+s}catch{}
+let open=null, friday, t, view;
+function clock(){const[f,m]=$('now').value.split(',').map(Number);friday=!!f;t=m;view=friday?'j':'d'}
+const nextJ=m=>friday?m.j.findIndex(s=>mins(s)>=t):-1;
+const sr=s=>`<span class="hidden">${s}</span>`;
+function nextLine(m){
+  if(jumNext(m))return `Next: Jumu‘ah ${m.j[nextJ(m)]}`;
+  if(!m.d)return m.j?'Jumu‘ah only':'';
+  const k=dayNext(m);return k<0?`Next: tomorrow, Fajr ${m.d[0]}`:`Next: ${P[k]} ${m.d[k]}`;
+}
+const noDhuhr=(m,k)=>friday&&m.j&&k===1;
+const dayNext=m=>m.d.findIndex((s,k)=>!noDhuhr(m,k)&&mins(s,k)>=t);
+const jumNext=m=>friday&&m.j&&nextJ(m)>=0&&!(m.d&&mins(m.d[0],0)>=t);
+const cls=(m,k)=>{if(jumNext(m))return k===0?'past':'';const n=dayNext(m);return n<0?(k===0?'next':'past'):k===n?'next':k<n?'past':''};
+const val=(m,k)=>noDhuhr(m,k)?'<span aria-hidden="true">–</span>'+sr('Jumu‘ah instead'):m.d[k];
+function actions(m,i){return `<div class="acts">
+  <a class="go" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(m.addr)}">Directions${sr(' to '+m.n)}</a>
+  ${m.wa?`<a href="#" onclick="return false">WhatsApp${sr(' for '+m.n)}</a>`:''}
+  <a href="#" onclick="return false">Website${sr(' for '+m.n)}</a>
+  <button data-pin="${i}" data-key="pin${i}">${i===pin?'Unpin':'Pin'}${sr(' '+m.n)}</button></div>
+  <a class="link" href="mailto:${REPORT}?subject=${encodeURIComponent('Wrong time: '+m.n)}">Report a wrong time</a>`}
+const source=m=>m.src?`<div class="sub">Source: ${m.src.startsWith('WhatsApp')?m.src:`<a href="#" onclick="return false">${m.src}</a>`} · checked Nov ${m.day}</div>`:'<p class="check">Check with the masjid</p>';
+function body(m,i){return `${m.d?`<div class="grid">${P.map((p,k)=>`<div class="${cls(m,k)}">${p}<b>${val(m,k)}</b>${cls(m,k)==='next'?sr('next'):''}</div>`).join('')}</div>`:''}
+  ${jum(m)}${source(m)}${actions(m,i)}`}
+const jumTimes=m=>m.j.map((x,k)=>jumNext(m)&&k===nextJ(m)?`<span class="next">${x}${sr(' next')}</span>`:`<span class="${friday&&mins(x)<t?'past':''}">${x}</span>`).join(' · ');
+const jum=m=>m.j?`<div class="jum">Jumu‘ah <b>${jumTimes(m)}</b></div>`:'';
+function render(focusKey){
+  const q=norm($('q').value);
+  const hit=M.map((m,i)=>({m,i})).filter(({m,i})=>q?norm(m.n+' '+(m.ar||'')+' '+m.area+' '+m.addr).includes(q):i!==pin);
+  const p=M[pin];
+  let h=p&&!q?`<section class="card" aria-label="Pinned masjid"><div class="title"><h2>${p.n}</h2>${p.ar?`<span class="ar" lang="ar" dir="rtl">${p.ar}</span>`:''}</div><div class="sub">Pinned · ${p.area}</div><div class="next-line">${nextLine(p)}</div>${body(p,pin)}</section>`:'';
+  h+=`<div class="seg" role="group" aria-label="Which times"><button data-view="d" data-key="vd" aria-pressed="${view==='d'}">Daily</button><button data-view="j" data-key="vj" aria-pressed="${view==='j'}">Jumu‘ah</button></div>`;
+  if(!p&&!q)h+='<p class="sub">Open a masjid to pin it.</p>';
+  if(!hit.length)h+=`<p>No masjid matches your search.</p><div class="acts"><button data-clear data-key="clear">Clear search</button></div>`;
+  else{
+    const cols=view==='d'?5:1;
+    h+=`<div class="scroll"><table><caption class="hidden">${view==='d'?'Daily iqama times':'Jumu‘ah times'}</caption><thead><tr><th scope="col">Masjid</th>${view==='d'?P.map(x=>`<th scope="col">${x}</th>`).join(''):'<th scope="col">Jumu‘ah</th>'}</tr></thead><tbody>`+
+    hit.map(({m,i})=>{
+      const old=m.day&&26-m.day>7?`<small>Checked Nov ${m.day}</small>`:'';
+      let cells;
+      if(view==='d')cells=m.d?m.d.map((x,k)=>`<td class="${cls(m,k)}">${val(m,k)}${cls(m,k)==='next'?sr(' next'):''}</td>`).join(''):`<td colspan="5">${m.j?`Jumu‘ah only: <b>${m.j.join(' · ')}</b>`:'<span class="check">Check with the masjid</span>'}</td>`;
+      else cells=`<td>${m.j?jumTimes(m).replace('class="next"','class="next" style="padding:4px 8px;border-radius:6px"'):'<span class="check">Check with the masjid</span>'}</td>`;
+      return `<tr><th scope="row"><button data-open="${i}" data-key="row${i}" aria-expanded="${open===i}" aria-controls="d${i}"><span aria-hidden="true">${open===i?'▾':'▸'}</span><span>${m.n}${old}</span></button></th>${cells}</tr>`+
+        (open===i?`<tr class="detail" id="d${i}"><td colspan="${cols+1}"><div class="in">${m.ar?`<div class="ar" lang="ar" dir="rtl" style="text-align:left">${m.ar}</div>`:''}<div class="sub">${m.area}</div>${view==='j'&&m.d?body(m,i):`${jum(m)}${source(m)}${actions(m,i)}`}</div></td></tr>`:'')
+    }).join('')+'</tbody></table></div>';
+    const days=hit.filter(x=>x.m.day).map(x=>x.m.day);
+    if(days.length)h+=`<p class="sub">Times checked Nov ${Math.min(...days)} to ${Math.max(...days)}. Tap a masjid for its source.</p>`;
+  }
+  $('view').innerHTML=h;
+  if(focusKey)$('view').querySelector(`[data-key="${focusKey}"]`)?.focus();
+}
+$('view').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;let key=d.key;
+  if(d.view)view=d.view;
+  else if(d.open)open=open===+d.open?null:+d.open;
+  else if(d.pin){const i=+d.pin,un=i===pin;pin=un?-1:i;open=un?i:null;if(!un)$('q').value='';key=un?'row'+i:'pin'+i;
+    try{localStorage.setItem('pin',pin)}catch{}$('status').textContent=(un?'Unpinned ':'Pinned ')+M[i].n}
+  else if('clear' in d){$('q').value='';key=null}
+  render(key);if('clear' in d)$('q').focus()});
+$('q').addEventListener('input',()=>{open=null;render();const n=$('view').querySelectorAll('th[scope=row]').length;$('status').textContent=n+(n===1?' masjid found':' masjids found')});
+$('now').addEventListener('change',()=>{clock();render()});
+console.assert(norm('Al-Qassam').includes(norm('al qassam'))&&norm('USF Jumu‘ah').includes(norm("jumu'ah")),'search');
+console.assert(nextOf(M[0].d,850)===2&&nextOf(M[0].d,1290)===-1&&nextOf(M[0].d,300)===0,'next prayer');
+clock();render();
+</script>
+</html>

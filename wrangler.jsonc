@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tampa-bay-masjids",
+  "compatibility_date": "2026-11-01",
+  // Static assets only: no Worker script, bindings or database.
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page",
+  },
+  "routes": [{ "pattern": "masjids.ayoubabed.xyz", "custom_domain": true }],
+}

@@ -1,0 +1,166 @@
+import { Button, buttonVariants } from "@/components/ui/button";
+import { directionsUrl, reportUrl } from "@/lib/links";
+import type { Masjid } from "@/lib/masjid-schema";
+import type { Schedule } from "@/lib/schedule";
+import { formatDate } from "@/lib/time";
+import { cn } from "@/lib/utils";
+import { Check, JumuahTimes } from "./Times";
+
+const textLink = "inline-flex min-h-11 items-center font-semibold text-primary";
+
+export function ArabicName({ masjid }: { masjid: Masjid }) {
+  return masjid.arabicName ? (
+    <span lang="ar" dir="rtl" className="text-[1.0625rem] text-primary">
+      {masjid.arabicName}
+    </span>
+  ) : null;
+}
+
+/** Jumu‘ah times, or the notice that they exist but are no longer confirmed. */
+export function JumuahLine({
+  masjid,
+  schedule,
+}: {
+  masjid: Masjid;
+  schedule: Schedule;
+}) {
+  if (!schedule.jumuah && !masjid.jumuah) return null;
+  return (
+    <p className="text-[0.9375rem]">
+      Jumu‘ah{masjid.jumuahOnly && " only"}{" "}
+      {schedule.jumuah ? (
+        <JumuahTimes
+          times={schedule.jumuah.times}
+          states={schedule.jumuahStates}
+        />
+      ) : (
+        <Check />
+      )}
+    </p>
+  );
+}
+
+function Sources({ schedule }: { schedule: Schedule }) {
+  const { iqama, jumuah } = schedule;
+  const sets = [
+    ...(iqama ? [{ label: "Daily source", ...iqama }] : []),
+    ...(jumuah ? [{ label: "Jumu‘ah source", ...jumuah }] : []),
+  ];
+  if (!sets.length) return null;
+  const same =
+    sets.length === 2 &&
+    sets[0].checked === sets[1].checked &&
+    sets[0].source.label === sets[1].source.label &&
+    sets[0].source.url === sets[1].source.url;
+  const shown = same || sets.length === 1 ? [sets[0]] : sets;
+  return (
+    <div className="text-xs text-muted-foreground">
+      {shown.map(({ label, source, checked }) => (
+        <p key={label}>
+          {shown.length > 1 ? label : "Source"}:{" "}
+          {source.url ? (
+            <a
+              className={cn(textLink, "underline")}
+              href={source.url}
+              target="_blank"
+              rel="noopener"
+            >
+              {source.label}
+            </a>
+          ) : (
+            source.label
+          )}{" "}
+          · checked {formatDate(checked)}
+        </p>
+      ))}
+    </div>
+  );
+}
+
+function Actions({
+  masjid,
+  pinned,
+  onPin,
+}: {
+  masjid: Masjid;
+  pinned: boolean;
+  onPin: () => void;
+}) {
+  const action = (variant: "default" | "outline") =>
+    cn(
+      buttonVariants({ variant, size: "touch" }),
+      "min-w-fit flex-[1_1_3.5rem] font-semibold",
+      variant === "outline" && "border-input bg-card",
+    );
+  const external = [
+    { label: "WhatsApp", href: masjid.whatsapp?.url },
+    { label: "Website", href: masjid.website },
+  ];
+  return (
+    <div>
+      <div className="flex flex-wrap gap-1.5">
+        <a
+          className={action("default")}
+          href={directionsUrl(masjid)}
+          target="_blank"
+          rel="noopener"
+        >
+          <span>
+            Directions<span className="sr-only"> to {masjid.name}</span>
+          </span>
+        </a>
+        {external.map(
+          ({ label, href }) =>
+            href && (
+              <a
+                key={label}
+                className={action("outline")}
+                href={href}
+                target="_blank"
+                rel="noopener"
+              >
+                <span>
+                  {label}
+                  <span className="sr-only"> for {masjid.name}</span>
+                </span>
+              </a>
+            ),
+        )}
+        <Button
+          variant="outline"
+          size="touch"
+          className={action("outline")}
+          onClick={onPin}
+          data-key={`pin-${masjid.id}`}
+        >
+          <span>
+            {pinned ? "Unpin" : "Pin"}
+            <span className="sr-only"> {masjid.name}</span>
+          </span>
+        </Button>
+      </div>
+      <a className={cn(textLink, "underline")} href={reportUrl(masjid)}>
+        Report a wrong time
+        <span className="sr-only"> for {masjid.name}</span>
+      </a>
+    </div>
+  );
+}
+
+/** What follows a masjid's times: source, checked date and actions. */
+export function SourceAndActions({
+  schedule,
+  ...actions
+}: {
+  masjid: Masjid;
+  schedule: Schedule;
+  pinned: boolean;
+  onPin: () => void;
+}) {
+  return (
+    <>
+      <Sources schedule={schedule} />
+      <Actions {...actions} />
+    </>
+  );
+}

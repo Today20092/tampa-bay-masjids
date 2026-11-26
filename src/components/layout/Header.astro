@@ -1,0 +1,11 @@
+---
+import FacebookLink from "./FacebookLink.astro";
+import { SITE } from "@/data/site";
+---
+
+<header class="on-primary bg-primary text-primary-foreground">
+  <div class="mx-auto flex max-w-xl flex-wrap items-center justify-between gap-2 px-4 py-3">
+    <h1 class="text-lg font-bold">{SITE.name}</h1>
+    <FacebookLink />
+  </div>
+</header>

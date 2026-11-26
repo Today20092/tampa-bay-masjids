@@ -1,0 +1,24 @@
+{
+  "order": 4,
+  "name": "Omar",
+  "area": "Busch Blvd",
+  "address": "4801 East Busch Boulevard, Tampa, FL 33617",
+  "iqama": {
+    "fajr": "06:00",
+    "dhuhr": "14:00",
+    "asr": "16:15",
+    "maghrib": "sunset",
+    "isha": "19:35",
+    "source": {
+      "label": "Masjid WhatsApp group photo"
+    },
+    "checked": "2026-11-26"
+  },
+  "jumuah": {
+    "times": ["14:15"],
+    "source": {
+      "label": "Masjid WhatsApp group photo"
+    },
+    "checked": "2026-11-26"
+  }
+}

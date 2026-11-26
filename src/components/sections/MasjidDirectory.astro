@@ -1,0 +1,59 @@
+---
+import Directory from "@/features/directory/Directory";
+import { directionsUrl, reportUrl } from "@/lib/links";
+import { getMasjids } from "@/lib/masjids";
+
+const masjids = await getMasjids();
+const link =
+  "inline-flex min-h-11 items-center font-semibold text-primary underline";
+---
+
+<div class="js-only">
+  <Directory client:load masjids={masjids} />
+</div>
+
+<!-- Without JavaScript nothing can tell whether a time is still current, so none is shown. -->
+<noscript>
+  <style>
+    .js-only {
+      display: none;
+    }
+  </style>
+  <p class="pb-2">
+    Turn on JavaScript to search, pin and see confirmed times. Until then, check
+    times with the masjid.
+  </p>
+  <ul class="flex flex-col gap-2">
+    {masjids.map((masjid) => (
+      <li class="rounded-lg border bg-card px-3 pt-2">
+        <h2 class="font-bold">{masjid.name}</h2>
+        {masjid.arabicName && (
+          <p lang="ar" dir="rtl" class="text-left text-primary">
+            {masjid.arabicName}
+          </p>
+        )}
+        <p class="text-xs text-muted-foreground">{masjid.address}</p>
+        {masjid.jumuahOnly && <p>Jumu‘ah only</p>}
+        <p class="font-semibold text-attention">Check with the masjid</p>
+        <p class="flex flex-wrap gap-x-4">
+          <a class={link} href={directionsUrl(masjid)}>
+            Directions<span class="sr-only"> to {masjid.name}</span>
+          </a>
+          {masjid.whatsapp && (
+            <a class={link} href={masjid.whatsapp.url}>
+              WhatsApp<span class="sr-only"> for {masjid.name}</span>
+            </a>
+          )}
+          {masjid.website && (
+            <a class={link} href={masjid.website}>
+              Website<span class="sr-only"> for {masjid.name}</span>
+            </a>
+          )}
+          <a class={link} href={reportUrl(masjid)}>
+            Report a wrong time<span class="sr-only"> for {masjid.name}</span>
+          </a>
+        </p>
+      </li>
+    ))}
+  </ul>
+</noscript>

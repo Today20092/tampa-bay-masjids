@@ -1,0 +1,24 @@
+{
+  "order": 5,
+  "name": "Abu Bakr",
+  "area": "North 30th St",
+  "address": "11010 North 30th Street, Tampa, FL 33612",
+  "iqama": {
+    "fajr": "06:15",
+    "dhuhr": "13:00",
+    "asr": "15:35",
+    "maghrib": "sunset+7",
+    "isha": "19:00",
+    "source": {
+      "label": "Masjid WhatsApp group photo"
+    },
+    "checked": "2026-11-26"
+  },
+  "jumuah": {
+    "times": ["13:30"],
+    "source": {
+      "label": "Masjid WhatsApp group photo"
+    },
+    "checked": "2026-11-26"
+  }
+}

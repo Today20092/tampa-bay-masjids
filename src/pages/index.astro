@@ -1,0 +1,9 @@
+---
+import MasjidDirectory from "@/components/sections/MasjidDirectory.astro";
+import { SITE } from "@/data/site";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title={SITE.name} description={SITE.description}>
+  <MasjidDirectory />
+</BaseLayout>

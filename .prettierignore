@@ -1,0 +1,11 @@
+dist/
+.astro/
+.wrangler/
+pnpm-lock.yaml
+prototype/
+docs/
+.impeccable/
+GLOSSARY.md
+src/components/ui/
+PRODUCT.md
+DESIGN.md

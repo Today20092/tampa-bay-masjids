@@ -1,0 +1,17 @@
+---
+import { buttonVariants } from "@/components/ui/button";
+import { SITE } from "@/data/site";
+import { cn } from "@/lib/utils";
+---
+
+<a
+  class={cn(
+    buttonVariants({ size: "touch" }),
+    "bg-gold text-xs font-bold text-gold-foreground hover:bg-gold/85",
+  )}
+  href={SITE.facebookGroup}
+  target="_blank"
+  rel="noopener"
+>
+  Join our Facebook group
+</a>
