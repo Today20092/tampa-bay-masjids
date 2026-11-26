@@ -138,7 +138,7 @@ export function PinButton({
       onClick={onPin}
       data-key={focusKey}
     >
-      {!compact && <Icon aria-hidden="true" />}
+      <Icon aria-hidden="true" />
       <span>
         {label}
         <span className="sr-only"> {masjid.name}</span>

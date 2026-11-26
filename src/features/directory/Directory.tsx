@@ -136,39 +136,31 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
         </Suspense>
       )}
 
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <ToggleGroup
-          aria-label="Prayer schedule"
-          value={[view]}
-          // Pressing the active choice again must not leave neither selected.
-          onValueChange={([value]) => value && setChosenView(value as View)}
-          variant="default"
-          size="touch"
-          spacing={1}
-          className="w-full gap-4 border-b sm:w-auto"
-        >
-          {(
-            [
-              ["daily", "Daily"],
-              ["jumuah", "Jumu‘ah"],
-            ] as const
-          ).map(([value, label]) => (
-            <ToggleGroupItem
-              key={value}
-              value={value}
-              className={`flex-1 rounded-none! border-b-2 border-transparent px-3 font-semibold text-muted-foreground hover:bg-transparent aria-pressed:bg-transparent ${value === "daily" ? "aria-pressed:border-primary aria-pressed:text-primary" : "aria-pressed:border-friday aria-pressed:text-friday"}`}
-            >
-              {label}
-            </ToggleGroupItem>
-          ))}
-        </ToggleGroup>
-        <a
-          href="#solar-heading"
-          className="inline-flex min-h-11 items-center font-semibold text-primary underline"
-        >
-          Sun and prayer times
-        </a>
-      </div>
+      <ToggleGroup
+        aria-label="Prayer schedule"
+        value={[view]}
+        // Pressing the active choice again must not leave neither selected.
+        onValueChange={([value]) => value && setChosenView(value as View)}
+        variant="default"
+        size="touch"
+        spacing={1}
+        className="w-full gap-4 rounded-none! border-b sm:w-fit"
+      >
+        {(
+          [
+            ["daily", "Daily"],
+            ["jumuah", "Jumu‘ah"],
+          ] as const
+        ).map(([value, label]) => (
+          <ToggleGroupItem
+            key={value}
+            value={value}
+            className={`flex-1 rounded-none! border-b-2 border-transparent px-3 font-semibold text-muted-foreground hover:bg-transparent aria-pressed:bg-transparent ${value === "daily" ? "aria-pressed:border-primary aria-pressed:text-primary" : "aria-pressed:border-friday aria-pressed:text-friday"}`}
+          >
+            {label}
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
       {now && pinned.length > 0 && (
         <section aria-labelledby="pinned-heading" className="space-y-3">
           <h2 id="pinned-heading" className="text-base font-semibold">

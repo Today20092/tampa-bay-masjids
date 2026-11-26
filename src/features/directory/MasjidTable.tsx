@@ -131,7 +131,7 @@ export function MasjidTable({
               <div className="flex flex-wrap items-center justify-between gap-x-2">
                 <button
                   type="button"
-                  className="flex min-h-11 min-w-0 flex-1 items-center gap-2 text-left font-semibold"
+                  className="flex min-h-11 flex-1 items-center gap-2 text-left font-semibold"
                   aria-expanded={open}
                   aria-controls={
                     open ? `detail-mobile-${masjid.id}` : undefined
