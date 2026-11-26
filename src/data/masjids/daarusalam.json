@@ -16,7 +16,7 @@
   "jumuah": {
     "times": ["12:50", "14:00"],
     "source": {
-      "label": "ISONET prayer schedule (khutbah start)",
+      "label": "ISONET prayer schedule (service starts)",
       "url": "https://www.newtampamasjid.org/prayer-schedule"
     },
     "checked": "2026-11-26"
