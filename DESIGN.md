@@ -173,6 +173,18 @@ shadcn on Base UI lives in `src/components/ui/`.
 - **Table**: row header is a disclosure button; `containerProps` names the scrolling region.
 - **Empty**: no search results.
 
+### Action hierarchy
+
+- Use links for destinations, including email and in-page navigation, and buttons for commands
+  that change state. Keep the same label for the same action across the directory.
+- Give the primary next step in a group a filled treatment, and use outlined controls for peer
+  actions. A link may use either treatment while retaining link semantics.
+- Use underlined text links for supporting sources, jump links, and reporting a wrong time. Keep
+  them recognizable before hover, keyboard accessible, and large enough to use on touch screens.
+- Keep Directions prominent on pinned cards and quiet in the comparison list, where a filled
+  control in every row would compete with the times. The no-JavaScript list uses text links for
+  its destinations so the fallback remains simple and readable.
+
 ## Do's and Don'ts
 
 - Do use the tokens; add a token before adding a colour.
