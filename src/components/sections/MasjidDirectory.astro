@@ -2,6 +2,7 @@
 import Directory from "@/features/directory/Directory";
 import { directionsUrl, reportUrl } from "@/lib/links";
 import { getMasjids } from "@/lib/masjids";
+import { CHECK, COMING_SOON } from "@/lib/wording";
 
 const masjids = await getMasjids();
 const link =
@@ -38,9 +39,9 @@ const link =
         <p class="text-xs text-muted-foreground">{masjid.address}</p>
         {masjid.jumuahOnly && <p>Jumu‘ah only</p>}
         {masjid.comingSoon ? (
-          <p class="font-semibold">Prayers coming soon</p>
+          <p class="font-semibold">{COMING_SOON}</p>
         ) : (
-          <p class="font-semibold text-attention">Check with the masjid</p>
+          <p class="font-semibold text-attention">{CHECK}</p>
         )}
         <p class="flex flex-wrap gap-x-4">
           <a class={link} href={directionsUrl(masjid)}>
