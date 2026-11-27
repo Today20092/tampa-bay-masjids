@@ -20,8 +20,8 @@ import { Check, DailyGrid, JumuahTimes } from "./Times";
 
 const KIND = { khutbah: "khutbah", start: "starts", iqama: "iqama" };
 
-/** A narrow row's square action: the icon shows, the label stays for screen readers. */
-const ICON_ONLY = "size-11 px-0 text-primary";
+/** A card's square action: the icon shows, the label stays for screen readers. */
+const ICON_ONLY = "size-11 px-0";
 
 /** Goes where the shown times are prayed: the Jumu‘ah venue when its times are the ones shown. */
 export function Directions({
@@ -49,7 +49,7 @@ export function Directions({
           size: "touch",
         }),
         iconOnly
-          ? ICON_ONLY
+          ? [ICON_ONLY, !prominent && "text-primary"]
           : [
               "w-fit rounded-full",
               !prominent && "font-normal text-muted-foreground",
@@ -258,7 +258,9 @@ export function PinButton({
       variant={iconOnly ? "outline" : "ghost"}
       size="touch"
       className={cn(
-        iconOnly ? ICON_ONLY : "rounded-full font-normal text-muted-foreground",
+        iconOnly
+          ? [ICON_ONLY, "text-primary"]
+          : "rounded-full font-normal text-muted-foreground",
         compact && "px-0",
       )}
       onClick={onPin}

@@ -44,7 +44,7 @@ Agreed on 2026-11-26.
 The combined mockup (`prototype/home-combined.html`) is approved for a local build, with these changes:
 
 - **Pins:** a visitor can pin several masjids. Nothing is pinned on the first visit, so every masjid is visible. This replaces the single pinned card.
-- **Pinned cards:** compact (name, next prayer, times), with actions behind a details toggle, so the others stay easy to reach.
+- **Pinned cards:** compact (name, next prayer, times), so the others stay easy to reach. Directions and Unpin are icon buttons at the top right, where list rows have Directions and Pin; the other details open from the arrow and name.
 - Every masjid shows "Check with the masjid" until its times are confirmed.
 - **Share:** one "Share this page" button below the times table. It opens the device's share sheet with the site name, description and link; without one it copies the link and the button reads “Link copied” at the same width. The preview card comes from the page's share tags. No bookmark or install button.
 - **Sun line:** the sun and prayer times panel sits under the pinned masjids with its chart always visible; the list of starts and the location button open in place. Its times are calculated starts and are labelled as calculated; masjid iqama times stay in the cards and table.
