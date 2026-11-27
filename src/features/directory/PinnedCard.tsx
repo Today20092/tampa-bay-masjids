@@ -15,6 +15,7 @@ import {
   JumuahLine,
   OtherSchedule,
   PinButton,
+  placeLine,
   SourceAndActions,
 } from "./MasjidDetail";
 import { MasjidMark } from "./MasjidMark";
@@ -23,12 +24,14 @@ import { Check, DailyGrid } from "./Times";
 export function PinnedCard({
   masjid,
   schedule,
+  miles,
   now,
   view,
   onPin,
 }: {
   masjid: Masjid;
   schedule: Schedule;
+  miles?: number;
   now: Now;
   view: View;
   onPin: () => void;
@@ -36,6 +39,7 @@ export function PinnedCard({
   const shown = shownFor(masjid, schedule, view);
   const marked = dateToMark(now.date, shown.checked, shown.next?.checked);
   const headingId = `pinned-${masjid.id}`;
+  const place = placeLine({ masjid, schedule, miles }, view);
 
   return (
     <Collapsible
@@ -49,9 +53,9 @@ export function PinnedCard({
             <h3 id={headingId} className="text-lg">
               {masjid.name}
             </h3>
-            {masjid.area && (
+            {place && (
               <span className="text-xs font-normal text-muted-foreground">
-                {masjid.area}
+                {place}
               </span>
             )}
             <ArabicName masjid={masjid} />
@@ -83,6 +87,7 @@ export function PinnedCard({
         <div className="flex flex-wrap gap-1">
           <Directions masjid={masjid} prominent />
           <CollapsibleTrigger
+            data-key={`row-${masjid.id}`}
             render={<Button variant="ghost" size="touch" />}
             className="group/details rounded-full text-muted-foreground font-semibold"
           >

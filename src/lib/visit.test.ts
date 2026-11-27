@@ -3,7 +3,9 @@ import type { Masjid } from "./masjid-schema";
 import {
   closeSearch,
   FIRST_VISIT,
+  linkedId,
   listing,
+  openLinked,
   openSearch,
   pin,
   search,
@@ -32,6 +34,21 @@ const visit = (changes: Partial<Visit>): Visit => ({
 });
 
 describe("visit", () => {
+  it("a shared link opens its row, or leaves a pinned card to show it", () => {
+    const known = ["a", "b"];
+    expect(linkedId("#b", known)).toBe("b");
+    expect(linkedId("#nope", known)).toBe(null);
+    expect(linkedId("", known)).toBe(null);
+    const before = visit({ query: "alpha", searchOpen: true, pins: ["a"] });
+    expect(openLinked(before, "b")).toEqual({
+      ...before,
+      query: "",
+      searchOpen: false,
+      openId: "b",
+    });
+    expect(openLinked(before, "a").openId).toBe(null);
+  });
+
   it("first visit shows every masjid and the search box", () => {
     const view = listing(FIRST_VISIT, rows);
     expect(view.searching).toBe(false);

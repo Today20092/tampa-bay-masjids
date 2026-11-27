@@ -50,4 +50,7 @@ The combined mockup (`prototype/home-combined.html`) is approved for a local bui
 - **Sun line:** the sun and prayer times panel sits under the pinned masjids with its chart always visible; the list of starts and the location button open in place. Its times are calculated starts and are labelled as calculated; masjid iqama times stay in the cards and table.
 - **Night view:** from Maghrib until Fajr (not sunrise) the sun panel flips to the night, showing its length and when the last third begins. Details are in [DESIGN.md](../DESIGN.md).
 - **Dark mode:** the site follows the phone's light or dark setting. A footer Theme switch (Auto, Light, Dark) lets a visitor override it; the choice stays in that browser. Dark values are token overrides in `global.css`; feature code never uses `dark:`. Keeps the green, gold and parchment identity (see [DESIGN.md](../DESIGN.md)).
+- **Nearest:** a button beside the list heading sorts it by straight-line distance and shows the miles. The browser asks for location only on a tap; it stays on the page, never saved or sent. Pinned cards stay on top in pin order. Where Jumu‘ah meets away from the masjid, the Jumu‘ah view says the miles are to the masjid.
+- **Link to one masjid:** an opened row or card has Share, which links to `/#<id>` and opens that masjid.
+- **Home screen icon:** a web manifest and Apple touch icon. `display` stays `browser`, so there is still no install button or prompt.
 - No commit, GitHub repository or deployment until the owner has seen the local site.
