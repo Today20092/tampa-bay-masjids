@@ -116,9 +116,9 @@ quiet so nine masjids and five times can be compared at a glance. The site follo
 - **Small sizes** ([favicon.svg](public/favicon.svg)): one gold arch, the cream opening and wider doors, with no steps or floor light.
 - **App icons:** render [app-icon.svg](docs/app-icon.svg) to `apple-touch-icon.png` (180px), `icon-192.png` and `icon-512.png` in `public/`. It is full bleed and keeps the art inside the maskable safe circle.
 - **Mark colors** belong to the artwork only: `#174c40` tile, `#b48f3e`, `#e8c766`, `#fff6d6`, `#0f342b` door and an `#e9d184` beam that fades out. They do not change in dark mode and are not interface tokens.
-- **Lockups:** mark beside the name below 40rem; mark centered above the name from 40rem and on the share card. The name is Source Serif 4 semibold. Do not stack “Tampa Bay” over “Masjids”.
+- **Lockups:** mark beside the name in the header; mark centered above the name on the share card. The name is Source Serif 4 semibold. Do not stack “Tampa Bay” over “Masjids”.
 - Use “Iqama, Jumu‘ah, and directions” when a short description helps identify the directory, but not in the site header.
-- **Star lattice** ([lattice.svg](public/lattice.svg)): a faint eight-point star pattern, strongest at the edges and gone behind the middle. Only in the header and on the share card, never behind prayer times. It relates this site to its sister site, which keeps its own colors and mark; no personal name or photo is part of this brand.
+- **Star lattice** ([lattice.svg](public/lattice.svg)): a faint eight-point star pattern, strongest at the edges and gone behind the middle. Only on the share card, never behind prayer times. It relates this site to its sister site, which keeps its own colors and mark; no personal name or photo is part of this brand.
 - The [share card source](docs/social-preview.svg) shows what the directory offers: the mark, a serif headline, masjid logos, the five prayer names, then Jumu‘ah and directions. Show no times, because link previews outlive them. Keep the top-right corner clear for Facebook's info button, and keep text large enough to read on a phone.
 - The logos and both fonts are embedded in the SVG as base64. Update the card when a listed logo changes; logo copies come from [the masjid logos](public/masjid-logos/).
 - Edit the SVG and screenshot it at 1200 × 630, 1× scale, in headless Edge or Chrome as [the share PNG](public/social-preview.png). The shared page head uses that PNG for Open Graph and X cards; raise its `?v=` number there whenever the PNG changes.
@@ -132,7 +132,7 @@ Light is paper and night-blue ink; dark is night and lamp gold.
 
 ### Primary
 
-- **Primary** (`primary`): the next time, the main filled action, text links, headings in the masthead and selected controls. Night-blue ink in light, lamp gold in dark.
+- **Primary** (`primary`): the next time, the main filled action, text links, the site name in the header and selected controls. Night-blue ink in light, lamp gold in dark.
 - **Brand fill** (`brand`, `brand-foreground`): the large community footer box and the map markers. Navy in light, ink blue in dark.
 - **Footer action** (`brand-action`, `brand-action-foreground`): the Join button on the brand fill. Paper in light, lamp gold in dark.
 - **Logo tile** (`logo-tile`): a small tile behind each masjid logo. Transparent in light mode; white in dark mode so dark lettering stays readable. Dark mode also dims the logos to 84% brightness.
@@ -167,8 +167,7 @@ Rules for dark mode: feature code uses tokens only, never `dark:` classes or `.d
 ### Page texture
 
 - **Paper grain** (light only): a faint noise on the page background. Cards, tiles and times sit on solid fills.
-- **Lamp glow** (dark only): a soft warm radial glow behind the header.
-- High contrast mode removes both.
+- High contrast mode removes it.
 
 ### Sun
 
@@ -204,7 +203,7 @@ Rules for dark mode: feature code uses tokens only, never `dark:` classes or `.d
 
 ### Hierarchy
 
-- **Title** (Source Serif 4 semibold, 1.5rem on mobile and 2.5rem from 40rem): site name.
+- **Title** (Source Serif 4 semibold, 1rem below 22.5rem, 1.125rem on phones and 1.5rem from 40rem): site name.
 - **Masjid name** (700, 1.125rem): pinned card heading and Arabic name.
 - **Body** (400, 0.875rem): general text; the search field is 1rem.
 - **Label** (0.8125rem): table, tiles, sources. This is the smallest size on the site.
@@ -224,7 +223,7 @@ khutbah"), or in one muted caption under the table's. Say nothing when the sourc
 label each tile. An opened row or card reads Jumu‘ah, name and address, the masjid's own links and Share,
 then a source footnote with "Report a wrong time", which appears only beside shown times.
 Directions are visible in every row. The area map loads on request after the timetable.
-The sun panel sits under the pinned masjids and above search. It always shows the next calculated prayer start with its countdown, the start that just passed (so it never reads as a rival to a masjid's next iqama), and the solar chart, whose live sun uses a ray symbol. Tapping it opens the location button and the list of calculated starts in place. From Maghrib until Fajr the panel shows the night: the chart is the sun's depth below the horizon mirrored into an arc, with Isha, the last third, Fajr and sunrise marked, the night's length inside it, and a crescent that marks the time (not the moon's position or phase). The list then shows the night's times, including Islamic midnight. The day curve folds into the horizon and the night curve springs out of it as the sun is carved into the crescent; the flip plays only when Maghrib arrives on an open page (or on returning to it), and Fajr reverses it. A fresh load opens straight in day or night, and the sun or moon eases along that arc from its start to now. Reduced motion places it without gliding and only crossfades the flip. Where the night cannot be calculated the day chart stays. The header is a centered masthead on the page background, not a navigation bar: the doorway mark and the name in Source Serif 4 semibold (mark beside the name below 40rem, above it from 40rem), a quiet "Join our Facebook group" link, and a double rule, over the faint star lattice, with the lamp glow behind it in dark mode. The footer carries the community call to action in a lifted brand-fill box (navy with a paper button in light, ink blue with a gold button in dark) and, last on the page, the Theme switch.
+The sun panel sits under the pinned masjids and above search. It always shows the next calculated prayer start with its countdown, the start that just passed (so it never reads as a rival to a masjid's next iqama), and the solar chart, whose live sun uses a ray symbol. Tapping it opens the location button and the list of calculated starts in place. From Maghrib until Fajr the panel shows the night: the chart is the sun's depth below the horizon mirrored into an arc, with Isha, the last third, Fajr and sunrise marked, the night's length inside it, and a crescent that marks the time (not the moon's position or phase). The list then shows the night's times, including Islamic midnight. The day curve folds into the horizon and the night curve springs out of it as the sun is carved into the crescent; the flip plays only when Maghrib arrives on an open page (or on returning to it), and Fajr reverses it. A fresh load opens straight in day or night, and the sun or moon eases along that arc from its start to now. Reduced motion places it without gliding and only crossfades the flip. Where the night cannot be calculated the day chart stays. The header is a slim one-row bar on the card fill with a single line below, not sticky: the doorway mark and the name in Source Serif 4 semibold on the left, and a quiet outlined pill to the Facebook group on the right ("Join" below 30rem, "Join our Facebook group" above, and the full phrase to screen readers at every width). It is 64px tall on phones and 72px from 40rem; with enlarged text the pill wraps below the name. The footer carries the community call to action in a lifted brand-fill box (navy with a paper button in light, ink blue with a gold button in dark) and, last on the page, the Theme switch.
 
 ## Elevation & Depth
 
