@@ -54,5 +54,5 @@ The combined mockup (`prototype/home-combined.html`) is approved for a local bui
 - **Directions:** opens a Google Maps route preview and never starts navigation, so the visitor can check the destination first. Where a masjid's Jumu‘ah times are shown and it meets elsewhere, Directions goes to that venue.
 - **Dated periods:** a masjid may list `iqamaPeriods` and `jumuahPeriods`, each with inclusive `from` and `to` dates. There is no database. Directory runs `scheduleFor` in the browser and uses the period that covers today's Tampa date; that period stays visible through its `to` date. On any other day the standing `iqama` or `jumuah` block applies, including the 14-day limit.
 - **Link to one masjid:** an opened row or card has Share, which links to `/#<id>` and opens that masjid.
-- **Home screen icon:** a web manifest and Apple touch icon. `display` stays `browser`, so there is still no install button or prompt.
+- **Installable web app:** a web manifest and Apple touch icon. `display` is `standalone`, so a phone can install the site from the browser menu and open it without browser bars. The site adds no install button or prompt of its own. There is no service worker, so opening the app needs a connection.
 - No commit, GitHub repository or deployment until the owner has seen the local site.

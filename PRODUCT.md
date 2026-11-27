@@ -38,7 +38,7 @@ It shows only confirmed times, each with its source and checked date. Anything e
 
 ## Capabilities and Constraints
 
-- Sort by nearest, a share link for each masjid, a home screen icon.
+- Sort by nearest, a share link for each masjid, installable as a web app on phones.
 - Search, Daily / Jumu‘ah switch (opens on Jumu‘ah on Fridays), next prayer per masjid, any
   number of pins stored in the visitor's browser.
 - Static Astro site on Cloudflare with Tailwind 4 and shadcn on Base UI. No database, accounts,

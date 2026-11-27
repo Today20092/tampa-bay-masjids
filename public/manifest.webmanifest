@@ -2,7 +2,7 @@
   "name": "Tampa Bay Masjids",
   "short_name": "TB Masjids",
   "start_url": "/",
-  "display": "browser",
+  "display": "standalone",
   "background_color": "#1f3461",
   "theme_color": "#1f3461",
   "icons": [
