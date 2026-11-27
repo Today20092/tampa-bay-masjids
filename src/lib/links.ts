@@ -1,14 +1,15 @@
 import { SITE } from "@/data/site";
 import type { Masjid } from "./masjid-schema";
 
+/** Google Maps starts navigating from the visitor's location when it can, and previews the route otherwise. */
 export function directionsUrl({
   address,
-  mapsUrl,
-}: Pick<Masjid, "address" | "mapsUrl">): string {
-  if (mapsUrl) return mapsUrl;
+  mapsPlaceId,
+}: Pick<Masjid, "address" | "mapsPlaceId">): string {
   // Every listed masjid is in Florida; the state alone helps maps where city and ZIP are unconfirmed.
   const destination = /\bFL\b/.test(address) ? address : `${address}, FL`;
-  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`;
+  const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}&dir_action=navigate`;
+  return mapsPlaceId ? `${url}&destination_place_id=${mapsPlaceId}` : url;
 }
 
 /** Opens the directory at one masjid. */
