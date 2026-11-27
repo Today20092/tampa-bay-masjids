@@ -3,21 +3,21 @@ import FacebookLink from "./FacebookLink.astro";
 import { SITE } from "@/data/site";
 ---
 
-<header class="masthead pt-4 text-center sm:pt-8">
-  <div class="site-shell">
-    <div class="flex items-center justify-center gap-2.5 sm:flex-col sm:gap-2">
+<header class="border-b bg-card">
+  {/* Wraps, so enlarged text moves the link down instead of squeezing the name. */}
+  <div class="site-shell flex min-h-16 flex-wrap items-center justify-between gap-2 py-2 sm:min-h-18">
+    <div class="flex min-w-0 items-center gap-2 sm:gap-3">
       <img
         src="/logo-mark.svg"
         alt=""
-        width="40"
-        height="40"
-        class="shrink-0 sm:size-20"
+        width="32"
+        height="32"
+        class="shrink-0 min-[22.5rem]:size-9 sm:size-11"
       />
-      <h1 class="text-xl font-semibold text-primary min-[22.5rem]:text-2xl sm:text-[2.5rem] sm:leading-tight">
+      <h1 class="text-base font-semibold text-primary min-[22.5rem]:text-lg sm:text-2xl">
         {SITE.name}
       </h1>
     </div>
     <FacebookLink />
-    <div class="border-b-4 border-double border-primary/50"></div>
   </div>
 </header>

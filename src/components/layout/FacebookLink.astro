@@ -6,10 +6,10 @@ const { emphasized = false } = Astro.props as { emphasized?: boolean };
 
 <a
   class:list={[
-    "inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold",
+    "inline-flex min-h-11 shrink-0 items-center justify-center gap-2 px-3 py-2 text-sm font-semibold",
     emphasized
-      ? "border border-transparent bg-brand-action text-brand-action-foreground shadow-brand-action transition-all hover:bg-brand-action/90 active:translate-y-px active:shadow-pressed"
-      : "text-primary hover:bg-muted",
+      ? "rounded-lg border border-transparent bg-brand-action text-brand-action-foreground shadow-brand-action transition-all hover:bg-brand-action/90 active:translate-y-px active:shadow-pressed"
+      : "rounded-full border text-primary hover:bg-muted",
   ]}
   href={SITE.facebookGroup}
   target="_blank"
@@ -23,5 +23,12 @@ const { emphasized = false } = Astro.props as { emphasized?: boolean };
   >
     <path d="M14 21v-8h3l.5-3H14V8.2c0-.9.3-1.5 1.6-1.5H18V4.1c-.5-.1-1.5-.2-2.7-.2-2.8 0-4.7 1.7-4.7 4.8V10H8v3h2.6v8z" />
   </svg>
-  Join our Facebook group
+  {/* The narrow header shows only "Join"; the accessible name stays whole. */}
+  <span>
+    Join
+    <span class:list={[!emphasized && "max-[30rem]:sr-only"]}>
+      {/* The leading space is a string, so HTML compression keeps it. */}
+      {" our Facebook group"}
+    </span>
+  </span>
 </a>

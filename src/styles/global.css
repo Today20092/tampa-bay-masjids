@@ -200,7 +200,6 @@
     color-mix(in srgb, var(--umber-950) 22%, transparent);
   /* Paper grain on the page only; cards and times sit on solid fills. */
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .27 0 0 0 0 .14 0 0 0 .13 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
-  --masthead-glow: none;
   --logo-brightness: 1;
 }
 
@@ -258,11 +257,6 @@
     --elevation-pressed: 0 1px 1px
       color-mix(in srgb, var(--black) 55%, transparent);
     --grain: none;
-    --masthead-glow: radial-gradient(
-      60% 90% at 50% 20%,
-      color-mix(in srgb, var(--lamp-400) 17%, transparent),
-      transparent 70%
-    );
     --logo-brightness: 0.84;
   }
 }
@@ -270,25 +264,6 @@
 .site-shell {
   width: min(100% - clamp(1.5rem, 6vw, 4rem), 64rem);
   margin-inline: auto;
-}
-
-/* The star lattice behind the header only: strongest at the edges, gone behind the name. */
-.masthead {
-  position: relative;
-  isolation: isolate;
-  background-image: var(--masthead-glow);
-}
-.masthead::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--primary);
-  opacity: 0.14;
-  mask:
-    url("/lattice.svg") center top / 3rem,
-    linear-gradient(to right, black, transparent 35% 65%, black);
-  mask-composite: intersect;
 }
 
 @layer base {
@@ -357,8 +332,7 @@
 
 /* High contrast keeps background images, so remove the decoration behind text. */
 @media (forced-colors: active) {
-  body,
-  .masthead {
+  body {
     background-image: none;
   }
 }
