@@ -119,7 +119,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       <ToggleGroup
         aria-label="Prayer schedule"
         value={[view]}
@@ -241,7 +241,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
       {rows.length === 0 && !searching ? (
         <p className="text-xs text-muted-foreground">Every masjid is pinned.</p>
       ) : (
-        <>
+        <div className="flex flex-col gap-4">
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
             <h2 className="text-lg font-semibold tracking-tight">
               {view === "daily" ? "Daily iqama times" : "Jumu‘ah times"}
@@ -287,7 +287,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
               Times checked {checked}. Tap a masjid for its source.
             </p>
           )}
-        </>
+        </div>
       )}
       <ShareButton />
     </div>
