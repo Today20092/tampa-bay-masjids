@@ -9,12 +9,12 @@ import { readPins, togglePin, writePins } from "@/lib/pins";
 import { scheduleFor } from "@/lib/schedule";
 import { matches, normalize } from "@/lib/search";
 import { nowInTampa, type Now } from "@/lib/time";
-import { MasjidTable, shownSet, type Row } from "./MasjidTable";
+import { MasjidTable, type Row } from "./MasjidTable";
 import { AreaMap } from "./AreaMap";
 import { SolarClock } from "./SolarClock";
 import { PinnedCard } from "./PinnedCard";
 import { ShareButton } from "./ShareButton";
-import { checkedRange, type View } from "./text";
+import { checkedRange, shownFor, type View } from "@/lib/shown";
 
 /** Current Tampa time, updated while the page stays open; null during the static render. */
 function useNow() {
@@ -80,7 +80,9 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
     searching ? matches(row.masjid, query) : !pins.includes(row.masjid.id),
   );
   const checked = checkedRange(
-    rows.flatMap((row) => shownSet(row, view)?.checked ?? []),
+    rows.flatMap(
+      (row) => shownFor(row.masjid, row.schedule, view).checked ?? [],
+    ),
   );
 
   function search(value: string) {

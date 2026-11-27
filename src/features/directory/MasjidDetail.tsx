@@ -9,9 +9,10 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { directionsUrl, reportUrl } from "@/lib/links";
 import type { Masjid } from "@/lib/masjid-schema";
 import type { Schedule } from "@/lib/schedule";
+import type { View } from "@/lib/shown";
 import { formatDate } from "@/lib/time";
 import { cn } from "@/lib/utils";
-import { Check, JumuahTimes } from "./Times";
+import { Check, DailyGrid, JumuahTimes } from "./Times";
 
 const textLink = "inline-flex min-h-11 items-center font-semibold text-primary";
 
@@ -68,7 +69,7 @@ export function JumuahLine({
   if (!schedule.jumuah && !masjid.jumuah) return null;
   return (
     <p className="text-sm">
-      Jumu‘ah{masjid.jumuahOnly && " only"}{" "}
+      {masjid.jumuahOnly ? "Jumu‘ah only · " : "Jumu‘ah "}
       {schedule.jumuah ? (
         <JumuahTimes {...schedule.jumuah} states={schedule.jumuahStates} />
       ) : (
@@ -76,6 +77,25 @@ export function JumuahLine({
       )}
     </p>
   );
+}
+
+/** The other schedule a row or card shows beside its times, in the view it is not showing. */
+export function OtherSchedule({
+  masjid,
+  schedule,
+  view,
+  pinned = false,
+}: {
+  masjid: Masjid;
+  schedule: Schedule;
+  view: View;
+  pinned?: boolean;
+}) {
+  if (view === "jumuah" && schedule.iqama)
+    return <DailyGrid daily={schedule.daily} pinned={pinned} />;
+  if (view === "daily" && !masjid.jumuahOnly)
+    return <JumuahLine masjid={masjid} schedule={schedule} />;
+  return null;
 }
 
 function Sources({ schedule }: { schedule: Schedule }) {

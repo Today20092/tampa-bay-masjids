@@ -5,20 +5,20 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { needsDateMarker } from "@/lib/freshness";
 import type { Masjid } from "@/lib/masjid-schema";
 import type { Schedule } from "@/lib/schedule";
+import { dateToMark, shownFor, type View } from "@/lib/shown";
 import { formatDate, type Now } from "@/lib/time";
 import {
   ArabicName,
   Directions,
   JumuahLine,
+  OtherSchedule,
   PinButton,
   SourceAndActions,
 } from "./MasjidDetail";
 import { MasjidMark } from "./MasjidMark";
 import { Check, DailyGrid } from "./Times";
-import { nextLine, type View } from "./text";
 
 export function PinnedCard({
   masjid,
@@ -33,10 +33,8 @@ export function PinnedCard({
   view: View;
   onPin: () => void;
 }) {
-  const { iqama, jumuah } = schedule;
-  const isFridayView = view === "jumuah" || masjid.jumuahOnly;
-  const checked = (isFridayView ? jumuah : iqama)?.checked;
-  const line = isFridayView ? null : nextLine(schedule);
+  const shown = shownFor(masjid, schedule, view);
+  const marked = dateToMark(now.date, shown.checked, shown.next?.checked);
   const headingId = `pinned-${masjid.id}`;
 
   return (
@@ -62,31 +60,23 @@ export function PinnedCard({
         <PinButton masjid={masjid} pinned onPin={onPin} />
       </div>
       <div className="flex flex-col gap-2">
-        {line && (
+        {shown.next && (
           <p className="flex items-center gap-2 font-bold text-primary">
             <Clock3Icon aria-hidden="true" className="size-4 shrink-0" />
-            {line}
+            {shown.next.line}
           </p>
         )}
-        {isFridayView ? (
-          jumuah ? (
-            <JumuahLine masjid={masjid} schedule={schedule} />
-          ) : (
-            <p>
-              <Check masjid={masjid} />
-            </p>
-          )
-        ) : iqama ? (
+        {shown.times === "jumuah" ? (
+          <JumuahLine masjid={masjid} schedule={schedule} />
+        ) : shown.times === "daily" ? (
           <DailyGrid daily={schedule.daily} pinned />
         ) : (
           <p>
             <Check masjid={masjid} />
           </p>
         )}
-        {checked && needsDateMarker(checked, now.date) && (
-          <p className="text-xs text-attention">
-            Checked {formatDate(checked)}
-          </p>
+        {marked && (
+          <p className="text-xs text-attention">Checked {formatDate(marked)}</p>
         )}
       </div>
       <div>
@@ -108,6 +98,12 @@ export function PinnedCard({
         </div>
         <CollapsibleContent className="mt-2 flex flex-col gap-2 border-t pt-2">
           <p className="text-xs text-muted-foreground">{masjid.address}</p>
+          <OtherSchedule
+            masjid={masjid}
+            schedule={schedule}
+            view={view}
+            pinned
+          />
           <SourceAndActions masjid={masjid} schedule={schedule} />
         </CollapsibleContent>
       </div>
