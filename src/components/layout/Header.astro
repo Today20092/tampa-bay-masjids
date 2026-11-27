@@ -3,19 +3,21 @@ import FacebookLink from "./FacebookLink.astro";
 import { SITE } from "@/data/site";
 ---
 
-<header class="site-shell pt-4 text-center sm:pt-8">
-  <div class="flex items-center justify-center gap-2.5 sm:flex-col sm:gap-2">
-    <img
-      src="/favicon.svg"
-      alt=""
-      width="34"
-      height="34"
-      class="shrink-0 sm:size-14"
-    />
-    <h1 class="font-[Georgia,serif] text-xl font-bold text-primary min-[22.5rem]:text-2xl sm:text-[2.5rem] sm:leading-tight">
-      {SITE.name}
-    </h1>
+<header class="masthead pt-4 text-center sm:pt-8">
+  <div class="site-shell">
+    <div class="flex items-center justify-center gap-2.5 sm:flex-col sm:gap-2">
+      <img
+        src="/logo-mark.svg"
+        alt=""
+        width="40"
+        height="40"
+        class="shrink-0 sm:size-20"
+      />
+      <h1 class="text-xl font-semibold text-primary min-[22.5rem]:text-2xl sm:text-[2.5rem] sm:leading-tight">
+        {SITE.name}
+      </h1>
+    </div>
+    <FacebookLink />
+    <div class="border-b-4 border-double border-primary/50"></div>
   </div>
-  <FacebookLink />
-  <div class="border-b-4 border-double border-primary/50"></div>
 </header>
