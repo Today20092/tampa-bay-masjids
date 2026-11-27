@@ -53,14 +53,16 @@ export function toMinutes(clock: string): number {
 }
 
 // shortcut: one Tampa point for every masjid; use per-masjid coordinates if the list spreads past the bay.
-const TAMPA = new Coordinates(27.95, -82.46);
+export const TAMPA_POINT = { latitude: 27.95, longitude: -82.46 };
 
 /** Sunset (the Maghrib adhan) on a Tampa date, in minutes since midnight */
 export function sunsetMinutes(date: string): number {
   const [y, m, d] = date.split("-").map(Number);
   const day = new Date(y, m - 1, d);
   const method = CalculationMethod.NorthAmerica();
-  return nowInTampa(new PrayerTimes(TAMPA, day, method).maghrib).minutes;
+  const { latitude, longitude } = TAMPA_POINT;
+  const coordinates = new Coordinates(latitude, longitude);
+  return nowInTampa(new PrayerTimes(coordinates, day, method).maghrib).minutes;
 }
 
 // A masjid that says only "after sunset" gives no minutes.

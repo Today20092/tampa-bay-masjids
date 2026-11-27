@@ -3,6 +3,11 @@
   "name": "Omar",
   "area": "Busch Blvd",
   "address": "4801 East Busch Boulevard, Tampa, FL 33617",
+  "location": {
+    "address": "4801 East Busch Boulevard, Tampa, FL 33617",
+    "lng": -82.408211,
+    "lat": 28.032582
+  },
   "iqama": {
     "fajr": "06:10",
     "dhuhr": "14:00",

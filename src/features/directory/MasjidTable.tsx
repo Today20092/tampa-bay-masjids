@@ -9,45 +9,34 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { needsDateMarker } from "@/lib/freshness";
 import type { Masjid } from "@/lib/masjid-schema";
 import { PRAYERS, type Schedule } from "@/lib/schedule";
+import { dateToMark, shownFor, type Shown, type View } from "@/lib/shown";
 import { formatDate, formatTime, type Now } from "@/lib/time";
 import { cn } from "@/lib/utils";
 import {
   ArabicName,
   Directions,
-  JumuahLine,
+  OtherSchedule,
   PinButton,
   SourceAndActions,
 } from "./MasjidDetail";
 import { MasjidMark } from "./MasjidMark";
 import { Check, DailyGrid, JumuahTimes, Replaced } from "./Times";
-import type { View } from "./text";
 
 export interface Row {
   masjid: Masjid;
   schedule: Schedule;
 }
 
-/** The confirmed set whose times a row is showing, if any. */
-export function shownSet({ masjid, schedule }: Row, view: View) {
-  if (view === "jumuah") return schedule.jumuah;
-  return schedule.iqama ?? (masjid.jumuahOnly ? schedule.jumuah : undefined);
-}
-
-function Cells({ masjid, schedule, view }: Row & { view: View }) {
+function Cells({
+  masjid,
+  schedule,
+  view,
+  shown,
+}: Row & { view: View; shown: Shown }) {
   const wide = "h-12 px-1 text-center whitespace-normal sm:h-14 sm:text-sm";
-  const jumuah = schedule.jumuah && (
-    <JumuahTimes {...schedule.jumuah} states={schedule.jumuahStates} />
-  );
-  if (view === "jumuah")
-    return (
-      <TableCell className={wide}>
-        {jumuah ?? <Check masjid={masjid} />}
-      </TableCell>
-    );
-  if (schedule.iqama)
+  if (shown.times === "daily")
     return schedule.daily.map(({ time, state }, k) => (
       <TableCell
         key={PRAYERS[k]}
@@ -67,10 +56,17 @@ function Cells({ masjid, schedule, view }: Row & { view: View }) {
         </span>
       </TableCell>
     ));
+  const times =
+    shown.times === "jumuah" && schedule.jumuah ? (
+      <JumuahTimes {...schedule.jumuah} states={schedule.jumuahStates} />
+    ) : (
+      <Check masjid={masjid} />
+    );
+  if (view === "jumuah") return <TableCell className={wide}>{times}</TableCell>;
   return (
     <TableCell colSpan={PRAYERS.length} className={wide}>
-      {masjid.jumuahOnly && "Jumu‘ah only: "}
-      {(masjid.jumuahOnly && jumuah) || <Check masjid={masjid} />}
+      {masjid.jumuahOnly && "Jumu‘ah only · "}
+      {times}
     </TableCell>
   );
 }
@@ -86,12 +82,7 @@ function RowDetail({ masjid, schedule, view }: Row & { view: View }) {
         )}
         <p className="text-muted-foreground">{masjid.address}</p>
       </div>
-      {view === "jumuah" && schedule.iqama && (
-        <DailyGrid daily={schedule.daily} />
-      )}
-      {view === "daily" && !masjid.jumuahOnly && (
-        <JumuahLine masjid={masjid} schedule={schedule} />
-      )}
+      <OtherSchedule masjid={masjid} schedule={schedule} view={view} />
       <SourceAndActions masjid={masjid} schedule={schedule} />
     </div>
   );
@@ -127,7 +118,8 @@ export function MasjidTable({
         {rows.map((row) => {
           const { masjid, schedule } = row;
           const open = openId === masjid.id;
-          const set = shownSet(row, view);
+          const shown = shownFor(masjid, schedule, view);
+          const marked = now ? dateToMark(now.date, shown.checked) : null;
           const pinned = pins.includes(masjid.id);
           return (
             <li key={masjid.id} className="space-y-3 px-3 py-4">
@@ -140,7 +132,6 @@ export function MasjidTable({
                     open ? `detail-mobile-${masjid.id}` : undefined
                   }
                   onClick={() => onToggle(masjid.id)}
-                  data-key={`row-${masjid.id}`}
                 >
                   <MasjidMark masjid={masjid} />
                   <span>
@@ -166,13 +157,12 @@ export function MasjidTable({
                   />
                 </div>
               </div>
-              {view === "daily" && schedule.iqama ? (
+              {shown.times === "daily" ? (
                 <DailyGrid daily={schedule.daily} />
               ) : (
                 <p className="text-sm">
                   {view === "daily" && masjid.jumuahOnly && "Jumu‘ah only · "}
-                  {(view === "jumuah" || masjid.jumuahOnly) &&
-                  schedule.jumuah ? (
+                  {shown.times === "jumuah" && schedule.jumuah ? (
                     <JumuahTimes
                       {...schedule.jumuah}
                       states={schedule.jumuahStates}
@@ -182,9 +172,9 @@ export function MasjidTable({
                   )}
                 </p>
               )}
-              {now && set && needsDateMarker(set.checked, now.date) && (
+              {marked && (
                 <p className="text-xs text-attention">
-                  Checked {formatDate(set.checked)}
+                  Checked {formatDate(marked)}
                 </p>
               )}
               {open && (
@@ -242,7 +232,8 @@ export function MasjidTable({
           {rows.map((row) => {
             const { masjid } = row;
             const open = openId === masjid.id;
-            const set = shownSet(row, view);
+            const shown = shownFor(masjid, row.schedule, view);
+            const marked = now ? dateToMark(now.date, shown.checked) : null;
             const pinned = pins.includes(masjid.id);
             return (
               <Fragment key={masjid.id}>
@@ -257,7 +248,6 @@ export function MasjidTable({
                       aria-expanded={open}
                       aria-controls={open ? `detail-${masjid.id}` : undefined}
                       onClick={() => onToggle(masjid.id)}
-                      data-key={`row-${masjid.id}`}
                     >
                       <ChevronDownIcon
                         aria-hidden="true"
@@ -271,17 +261,15 @@ export function MasjidTable({
                             {masjid.area}
                           </span>
                         )}
-                        {now &&
-                          set &&
-                          needsDateMarker(set.checked, now.date) && (
-                            <span className="block font-normal text-attention">
-                              Checked {formatDate(set.checked)}
-                            </span>
-                          )}
+                        {marked && (
+                          <span className="block font-normal text-attention">
+                            Checked {formatDate(marked)}
+                          </span>
+                        )}
                       </span>
                     </button>
                   </TableHead>
-                  <Cells {...row} view={view} />
+                  <Cells {...row} view={view} shown={shown} />
                   <TableCell className="pr-3 text-right">
                     <div className="flex justify-end">
                       <Directions masjid={masjid} />

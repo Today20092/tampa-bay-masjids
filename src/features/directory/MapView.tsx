@@ -8,50 +8,11 @@ import {
   MarkerContent,
 } from "@/components/ui/map";
 import { Button } from "@/components/ui/button";
-import { needsDateMarker } from "@/lib/freshness";
+import { dateToMark, shownFor, type View } from "@/lib/shown";
 import { formatDate, type Now } from "@/lib/time";
 import { Directions, JumuahLine, PinButton } from "./MasjidDetail";
 import type { Row } from "./MasjidTable";
 import { Check } from "./Times";
-import { nextLine, type View } from "./text";
-
-// US Census Geocoder address matches, checked 2026-11-26. Address interpolation is approximate.
-// Keeping the matched address here prevents a stale pin if the listing moves.
-const locations: Record<string, [string, number, number]> = {
-  "abu-bakr": [
-    "11010 North 30th Street, Tampa, FL 33612",
-    -82.426246,
-    28.048283,
-  ],
-  "al-qassam": [
-    "5910 East 130th Avenue, Tampa, FL 33617",
-    -82.392112,
-    28.064634,
-  ],
-  "an-noor": [
-    "2250 Ashley Oaks Circle, Wesley Chapel, FL 33544",
-    -82.361854,
-    28.189128,
-  ],
-  daarusalam: [
-    "15830 Morris Bridge Road, Thonotosassa, FL 33592",
-    -82.279909,
-    28.147347,
-  ],
-  istaba: ["7326 East Sligh Avenue, Tampa, FL 33610", -82.373779, 28.010811],
-  omar: ["4801 East Busch Boulevard, Tampa, FL 33617", -82.408211, 28.032582],
-  tmc: ["8080 N 56th St, Tampa, FL 33617", -82.393509, 28.022622],
-  "usf-jumuah": [
-    "Marshall Student Center Amphitheater, 4103 USF Cedar Cir, Tampa, FL 33620",
-    -82.412408,
-    28.065619,
-  ],
-  "wesley-chapel": [
-    "19130 Livingston Avenue, Lutz, FL 33559",
-    -82.430442,
-    28.153921,
-  ],
-};
 
 export type MapViewProps = {
   rows: Row[];
@@ -71,25 +32,33 @@ function MapTimes({
   view: View;
   now: Now | null;
 }) {
-  const friday = view === "jumuah" || masjid.jumuahOnly;
-  const set = friday ? schedule.jumuah : schedule.iqama;
-  if (!set)
-    return (
-      <p className="text-sm">
-        <Check masjid={masjid} />
-      </p>
-    );
+  const shown = shownFor(masjid, schedule, view);
+  const marked = now
+    ? dateToMark(
+        now.date,
+        shown.times === "jumuah"
+          ? shown.checked
+          : (shown.next?.checked ?? shown.checked),
+      )
+    : null;
   return (
     <div>
-      {friday ? (
+      {shown.times === "jumuah" ? (
         <JumuahLine masjid={masjid} schedule={schedule} />
       ) : (
-        <p className="text-sm font-bold text-primary">{nextLine(schedule)}</p>
+        <>
+          {shown.next && (
+            <p className="text-sm font-bold text-primary">{shown.next.line}</p>
+          )}
+          {shown.times === "unconfirmed" && (
+            <p className="text-sm">
+              <Check masjid={masjid} />
+            </p>
+          )}
+        </>
       )}
-      {now && needsDateMarker(set.checked, now.date) && (
-        <p className="text-xs text-attention">
-          Checked {formatDate(set.checked)}
-        </p>
+      {marked && (
+        <p className="text-xs text-attention">Checked {formatDate(marked)}</p>
       )}
     </div>
   );
@@ -104,13 +73,11 @@ export default function MapView({
 }: MapViewProps) {
   const mapRef = useRef<MapLibreMap>(null);
   const [selected, setSelected] = useState<string | null>(null);
-  const located = rows
-    .map((row) => row.masjid)
-    .filter((m) => locations[m.id]?.[0] === m.address);
+  const located = rows.map((row) => row.masjid).filter((m) => m.location);
   const active = rows.find((row) => row.masjid.id === selected);
   function select(id: string) {
     setSelected(id);
-    const [, lng, lat] = locations[id];
+    const { lng, lat } = located.find((m) => m.id === id)!.location!;
     mapRef.current?.easeTo({
       center: [lng, lat],
       // Keep the marker above the card that covers the bottom of the map.
@@ -137,7 +104,7 @@ export default function MapView({
         >
           <MapControls position="top-right" className="[&_button]:size-11" />
           {located.map((masjid) => {
-            const [, longitude, latitude] = locations[masjid.id];
+            const { lng: longitude, lat: latitude } = masjid.location!;
             return (
               <MapMarker
                 key={masjid.id}

@@ -3,6 +3,12 @@
   "name": "An-Noor",
   "area": "Wesley Chapel",
   "address": "2250 Ashley Oaks Circle, Wesley Chapel, FL 33544",
+  "location": {
+    "address": "2250 Ashley Oaks Circle, Wesley Chapel, FL 33544",
+    "lng": -82.361854,
+    "lat": 28.189128
+  },
+  "logo": "an-noor",
   "iqama": {
     "fajr": "06:20",
     "dhuhr": "13:05",

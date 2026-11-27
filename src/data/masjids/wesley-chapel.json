@@ -4,6 +4,12 @@
   "aliases": ["Islamic Community of Wesley Chapel", "Masjid Ibrahim", "ICWC"],
   "area": "Lutz",
   "address": "19130 Livingston Avenue, Lutz, FL 33559",
+  "location": {
+    "address": "19130 Livingston Avenue, Lutz, FL 33559",
+    "lng": -82.430442,
+    "lat": 28.153921
+  },
+  "logo": "wesley-chapel",
   "nameSource": "https://icwc.us/",
   "website": "https://icwc.us/",
   "comingSoon": true

@@ -1,12 +1,8 @@
 import { CalculationMethod, Coordinates, PrayerTimes } from "adhan";
 import { getPosition } from "suncalc";
-import { addDays, TIME_ZONE } from "./time";
+import { addDays, TAMPA_POINT, TIME_ZONE } from "./time";
 
-export const TAMPA_SKY = {
-  latitude: 27.95,
-  longitude: -82.46,
-  zone: TIME_ZONE,
-};
+export const TAMPA_SKY = { ...TAMPA_POINT, zone: TIME_ZONE };
 type SkyLocation = typeof TAMPA_SKY;
 
 const labels = [
