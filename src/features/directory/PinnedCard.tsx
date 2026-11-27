@@ -15,7 +15,7 @@ import {
   JumuahLine,
   OtherSchedule,
   PinButton,
-  placeLine,
+  PlaceLine,
   SourceAndActions,
 } from "./MasjidDetail";
 import { MasjidMark } from "./MasjidMark";
@@ -44,25 +44,26 @@ export function PinnedCard({
     shown.next?.checked,
   );
   const headingId = `pinned-${masjid.id}`;
-  const place = placeLine({ masjid, schedule, miles }, view);
 
   return (
     <Collapsible
       render={<section aria-labelledby={headingId} />}
-      className="grid gap-3 rounded-xl border bg-card px-3 py-4 shadow-lift md:row-span-3 md:grid-rows-subgrid"
+      className="group/card grid gap-3 rounded-xl border bg-card px-3 py-4 shadow-lift md:row-span-3 md:grid-rows-subgrid"
     >
       <div className="flex flex-wrap items-start justify-between gap-x-2">
         <div className="flex min-w-0 flex-1 items-start gap-3">
           <MasjidMark masjid={masjid} />
-          <div className="flex flex-col items-start font-bold">
+          <div className="flex min-w-0 flex-col items-start font-bold">
             <h3 id={headingId} className="text-lg">
               {masjid.name}
             </h3>
-            {place && (
-              <span className="text-xs font-normal text-muted-foreground">
-                {place}
-              </span>
-            )}
+            <PlaceLine
+              masjid={masjid}
+              schedule={schedule}
+              miles={miles}
+              view={view}
+              areaClassName="group-has-aria-expanded/card:whitespace-normal"
+            />
             <ArabicName masjid={masjid} />
           </div>
         </div>

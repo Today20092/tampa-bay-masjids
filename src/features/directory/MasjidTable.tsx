@@ -19,7 +19,7 @@ import {
   Directions,
   OtherSchedule,
   PinButton,
-  placeLine,
+  PlaceLine,
   SourceAndActions,
 } from "./MasjidDetail";
 import { MasjidMark } from "./MasjidMark";
@@ -126,13 +126,13 @@ export function MasjidTable({
             ? checkedMarker(now.date, shown, shown.checked)
             : null;
           const pinned = pins.includes(masjid.id);
-          const place = placeLine(row, view);
           return (
-            <li key={masjid.id} className="space-y-3 px-3 py-4">
-              <div className="flex flex-wrap items-center justify-between gap-x-2">
+            <li key={masjid.id} className="space-y-2 px-3 py-3">
+              {/* The icons overlay the button's first line, so the location keeps the full width. */}
+              <div className="relative">
                 <button
                   type="button"
-                  className="group/row flex min-h-11 flex-1 items-center gap-2 text-left font-semibold"
+                  className="group/row flex w-full flex-col items-stretch gap-1 text-left font-semibold"
                   aria-expanded={open}
                   data-key={`row-${masjid.id}`}
                   aria-controls={
@@ -140,27 +140,30 @@ export function MasjidTable({
                   }
                   onClick={() => onToggle(masjid.id)}
                 >
-                  <MasjidMark masjid={masjid} />
-                  <span>
-                    {masjid.name}
-                    {place && (
-                      <span className="block text-xs font-normal text-muted-foreground">
-                        {place}
-                      </span>
-                    )}
+                  <span className="flex min-h-11 items-center gap-2 pr-26 @max-[17rem]/directory:flex-wrap @max-[17rem]/directory:pr-0">
+                    <ChevronDownIcon
+                      aria-hidden="true"
+                      className="size-4 shrink-0 group-aria-expanded/row:rotate-180"
+                    />
+                    <MasjidMark masjid={masjid} />
+                    <span className="min-w-0 flex-1 @max-[17rem]/directory:min-w-24">
+                      {masjid.name}
+                    </span>
                   </span>
-                  <ChevronDownIcon
-                    aria-hidden="true"
-                    className="size-4 shrink-0 group-aria-expanded/row:rotate-180"
+                  <PlaceLine
+                    {...row}
+                    view={view}
+                    areaClassName="group-aria-expanded/row:whitespace-normal"
                   />
                 </button>
-                <div className="flex items-center">
-                  <Directions {...row} view={view} compact />
+                {/* With enlarged text there is no room beside the name. */}
+                <div className="absolute top-0 right-0 flex gap-1.5 @max-[17rem]/directory:static @max-[17rem]/directory:mt-2">
+                  <Directions {...row} view={view} iconOnly />
                   <PinButton
                     masjid={masjid}
                     pinned={pinned}
                     onPin={() => onPin(masjid.id)}
-                    compact
+                    iconOnly
                   />
                 </div>
               </div>
@@ -240,7 +243,6 @@ export function MasjidTable({
               ? checkedMarker(now.date, shown, shown.checked)
               : null;
             const pinned = pins.includes(masjid.id);
-            const place = placeLine(row, view);
             return (
               <Fragment key={masjid.id}>
                 <TableRow className="border-row hover:bg-transparent has-aria-expanded:bg-transparent">
@@ -263,11 +265,12 @@ export function MasjidTable({
                       <MasjidMark masjid={masjid} />
                       <span>
                         {masjid.name}
-                        {place && (
-                          <span className="block font-normal text-muted-foreground">
-                            {place}
-                          </span>
-                        )}
+                        <PlaceLine
+                          {...row}
+                          view={view}
+                          className="block sm:text-sm"
+                          areaClassName="whitespace-normal"
+                        />
                         {marker && (
                           <span className="block font-normal text-attention">
                             {marker}
