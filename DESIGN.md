@@ -104,8 +104,9 @@ quiet so nine masjids and five times can be compared at a glance. The site follo
 - Use the pointed arch in [the favicon](public/favicon.svg) as the brand mark. Keep the gold silhouette on masjid green and give it clear space. Pair it with the full name “Tampa Bay Masjids” where space allows.
 - Use masjid green and parchment as the main pair. Lamp gold can frame the mark and divide text on branded graphics. On the site, follow the control and status colors below.
 - Use Georgia bold for the name on branded graphics and system sans-serif for supporting text and the interface. Use “Iqama, Jumu‘ah, and directions” when a short description helps identify the directory.
-- The [share card source](docs/social-preview.svg) uses a quiet geometric border and serif title inspired by Islam with Ayoub. Keep ornament at the edges and leave the name and description in an open central area.
-- Edit the SVG and export it in VectorCraft at 1× as [the 1200 × 630 PNG](public/social-preview.png). The shared page head uses that PNG for Open Graph and X cards.
+- The [share card source](docs/social-preview.svg) shows what the directory offers: a serif headline, masjid logos, the five prayer names, then Jumu‘ah and directions. Show no times, because link previews outlive them. Keep the top-right corner clear for Facebook's info button, and keep text large enough to read on a phone.
+- The logos are embedded in the SVG as base64 copies of [the masjid logos](public/masjid-logos/). Update the card when a listed logo changes.
+- Edit the SVG and screenshot it at 1200 × 630, 1× scale, in a headless browser (Edge or Chrome, on Windows for Georgia and Segoe UI) as [the share PNG](public/social-preview.png). The shared page head uses that PNG for Open Graph and X cards; raise its `?v=` number there whenever the PNG changes.
 
 ## Colors
 
