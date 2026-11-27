@@ -2,6 +2,7 @@ import {
   ChevronDownIcon,
   LocateFixedIcon,
   MoonIcon,
+  MoonStarIcon,
   SunIcon,
   SunriseIcon,
   SunsetIcon,
@@ -15,6 +16,7 @@ import {
 } from "@/components/ui/collapsible";
 import { solarDay, TAMPA_SKY } from "@/lib/solar-day";
 import { formatDate } from "@/lib/time";
+import { SkyChart, useNightFlip } from "./SkyChart";
 
 const eventIcons = {
   fajr: SunriseIcon,
@@ -23,6 +25,13 @@ const eventIcons = {
   asr: SunIcon,
   maghrib: SunsetIcon,
   isha: MoonIcon,
+  midnight: MoonIcon,
+  lastThird: MoonStarIcon,
+};
+
+const listLabels: Partial<Record<keyof typeof eventIcons, string>> = {
+  maghrib: "Maghrib · Sunset",
+  lastThird: "Last third begins",
 };
 
 export function SolarClock() {
@@ -35,6 +44,9 @@ export function SolarClock() {
     () => instant && solarDay(instant, place),
     [instant, place],
   );
+  const { chart, shownNight, flipMs } = useNightFlip(Boolean(data?.isNight));
+  const HeaderIcon = shownNight ? MoonIcon : SunIcon;
+  const tonight = data?.isNight ? data.night : null;
   const next = data?.nextPrayer;
   const minutesLeft =
     next && instant
@@ -100,13 +112,15 @@ export function SolarClock() {
     <Collapsible
       render={<section aria-labelledby="solar-heading" />}
       className="sky-panel rounded-xl p-1"
+      data-night={shownNight || undefined}
+      data-flipping={flipMs !== null || undefined}
     >
       <h2 id="solar-heading" className="sr-only">
         Sun and prayer times
       </h2>
       <CollapsibleTrigger className="group/sun w-full cursor-pointer rounded-lg p-2 text-left hover:bg-sky-foreground/10">
         <span className="flex items-center gap-3">
-          <SunIcon
+          <HeaderIcon
             aria-hidden="true"
             className="size-5 shrink-0 text-sky-sun"
           />
@@ -128,91 +142,13 @@ export function SolarClock() {
             className="size-4 shrink-0 group-aria-expanded/sun:rotate-180"
           />
         </span>
-        <svg
-          viewBox="0 -20 480 160"
-          className="max-h-44 w-full overflow-visible"
-          aria-hidden="true"
-        >
-          {data && (
-            <>
-              <path
-                d="M16 86H464"
-                stroke="currentColor"
-                className="text-sky-muted"
-                strokeDasharray="3 4"
-                opacity=".55"
-              />
-              <polyline
-                points={data.path}
-                fill="none"
-                stroke="currentColor"
-                className="text-sky-sun"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              {data.sun && (
-                <g
-                  key={`${data.date}/${place.latitude}/${place.longitude}`}
-                  className="sky-marker text-sky-sun"
-                  style={{
-                    transform: `translate(${data.sun.x}px, ${data.sun.y}px)`,
-                  }}
-                >
-                  <g transform="scale(.72)">
-                    <path
-                      d="M0-27 6-18 16-22 18-12 27-8 22 0 27 8 18 12 16 22 6 18 0 27-6 18-16 22-18 12-27 8-22 0-27-8-18-12-16-22-6-18Z"
-                      className="fill-sun-ray"
-                    />
-                    <circle r="15" className="fill-sun-core" />
-                    <circle r="11" fill="none" className="stroke-sun-ring" />
-                  </g>
-                </g>
-              )}
-              {data.events.map(({ key, label, x, y }) => {
-                const isNext = key === data.nextOnChart;
-                const below =
-                  y < 143 &&
-                  (key === "fajr" || key === "asr" || key === "isha");
-                const labelY = y + (below ? 35 : -25);
-                return (
-                  <g
-                    key={key}
-                    className={isNext ? "text-sky-sun" : "text-sky-muted"}
-                  >
-                    <line
-                      x1={x}
-                      x2={x}
-                      y1={y}
-                      y2={labelY + (below ? -16 : 6)}
-                      stroke="currentColor"
-                      strokeWidth="1.2"
-                      opacity={isNext ? 1 : 0.65}
-                    />
-                    <circle
-                      cx={x}
-                      cy={y}
-                      r={isNext ? 4 : 2.75}
-                      fill="var(--sky)"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                    />
-                    <text
-                      x={Math.max(40, Math.min(440, x))}
-                      y={labelY}
-                      textAnchor="middle"
-                      fill="currentColor"
-                      fontSize="16"
-                      fontWeight={isNext ? 700 : 500}
-                    >
-                      {label}
-                    </text>
-                  </g>
-                );
-              })}
-            </>
-          )}
-        </svg>
+        <SkyChart
+          ref={chart}
+          data={data}
+          shownNight={shownNight}
+          flipMs={flipMs}
+          markerKey={`${data?.date}/${place.latitude}/${place.longitude}`}
+        />
       </CollapsibleTrigger>
       <CollapsibleContent className="mt-1 border-t border-sky-muted/25 px-2 pt-2 pb-2 sm:px-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
@@ -244,8 +180,15 @@ export function SolarClock() {
         )}
         {data && (
           <>
+            {tonight && (
+              <p className="border-t border-sky-muted/25 py-2 text-xs text-sky-muted">
+                Tonight is {Math.floor(tonight.minutes / 60)}h{" "}
+                {tonight.minutes % 60}m from Maghrib to Fajr. Islamic midnight
+                and the last third are measured across it.
+              </p>
+            )}
             <dl className="divide-y divide-sky-muted/20 border-t border-sky-muted/25 text-sm tabular-nums">
-              {data.events.map(({ key, label, time }) => {
+              {(tonight ?? data).events.map(({ key, label, time }) => {
                 const Icon = eventIcons[key];
                 return (
                   <div
@@ -257,7 +200,7 @@ export function SolarClock() {
                         aria-hidden="true"
                         className="size-4 shrink-0 text-sky-sun"
                       />
-                      {key === "maghrib" ? "Maghrib · Sunset" : label}
+                      {listLabels[key] ?? label}
                     </dt>
                     <dd className="font-semibold">{data.clock.format(time)}</dd>
                   </div>

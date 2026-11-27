@@ -107,6 +107,12 @@
   --sky-foreground: #ffffff;
   --sky-sun: #ffd88d;
   --sky-muted: #d5e0ee;
+  --sky-night: #0f1830;
+  --night-line: #aebdf0;
+  --night-past: #dbe3ff;
+  --night-third: #d9c4ff;
+  --moon: #f3ecd2;
+  --dusk: #ff9a5c;
   --brand: #174c40;
   --brand-foreground: #ffffff;
   --logo-tile: transparent;
@@ -122,7 +128,7 @@
   color-scheme: dark;
 }
 
-/* Dark palette. Brand, gold and sun tokens keep their light values. */
+/* Dark palette. Brand, gold, sky and sun tokens keep their light values. */
 :root {
   @variant dark {
     --background: #0f1714;
@@ -232,6 +238,173 @@
     --sun-core: Canvas;
     --sun-ring: CanvasText;
     --sun-ray: CanvasText;
+    --sky-night: Canvas;
+    --night-line: CanvasText;
+    --night-past: CanvasText;
+    --night-third: CanvasText;
+    --moon: CanvasText;
+    --dusk: transparent;
+  }
+}
+
+/* The sun chart. Day to night: one curve folds into the horizon, the other springs out of it,
+   the sun is carved into a crescent and the sky darkens. Removing data-night runs it back. */
+.sky-panel {
+  --sky-spring: cubic-bezier(0.3, 1.35, 0.5, 1);
+  transition: background-color 1.4s ease;
+}
+.sky-panel[data-night] {
+  --sky: var(--sky-night);
+}
+.sky-dot {
+  fill: var(--sky);
+  transition: fill 1.4s;
+}
+.sky-line {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sky-day-line {
+  stroke: var(--sky-sun);
+}
+.sky-ahead {
+  stroke: var(--night-line);
+  opacity: 0.38;
+}
+.sky-third {
+  stroke: var(--night-third);
+  stroke-width: 7;
+  opacity: 0.35;
+}
+.sky-past {
+  stroke: var(--night-past);
+}
+.sky-curve {
+  transform: translate(0, 86px) scale(1, 1) translate(0, -86px);
+  transition:
+    transform 0.8s var(--sky-spring) 0.45s,
+    opacity 0.25s 0.45s;
+}
+.sky-curve.sky-night,
+.sky-panel[data-night] .sky-curve.sky-day {
+  transform: translate(0, 86px) scale(1, 0.001) translate(0, -86px);
+  opacity: 0;
+  transition:
+    transform 0.45s cubic-bezier(0.6, 0, 0.9, 0.4),
+    opacity 0.15s 0.35s;
+}
+.sky-panel[data-night] .sky-curve.sky-night {
+  transform: translate(0, 86px) scale(1, 1) translate(0, -86px);
+  opacity: 1;
+  transition:
+    transform 0.85s var(--sky-spring) 0.5s,
+    opacity 0.25s 0.5s;
+}
+.sky-labels {
+  transition:
+    opacity 0.5s 1s,
+    translate 0.6s 1s;
+}
+.sky-labels.sky-night,
+.sky-panel[data-night] .sky-labels.sky-day {
+  opacity: 0;
+  translate: 0 6px;
+  transition:
+    opacity 0.2s,
+    translate 0.2s;
+}
+.sky-panel[data-night] .sky-labels.sky-night {
+  opacity: 1;
+  translate: 0 0;
+  transition:
+    opacity 0.6s 1.2s,
+    translate 0.6s var(--sky-spring) 1.2s;
+}
+.sky-star {
+  fill: var(--sky-foreground);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.sky-panel[data-night] .sky-star {
+  opacity: var(--star-opacity);
+  transition: opacity 0.9s calc(0.7s + var(--star-delay));
+}
+.sky-ray {
+  fill: var(--sun-ray);
+  transition:
+    scale 0.6s var(--sky-spring) 0.7s,
+    rotate 0.8s 0.7s,
+    opacity 0.3s 0.7s;
+}
+.sky-panel[data-night] .sky-ray {
+  scale: 0.2;
+  rotate: 90deg;
+  opacity: 0;
+  transition:
+    scale 0.4s,
+    rotate 0.4s,
+    opacity 0.35s;
+}
+.sky-core {
+  fill: var(--sun-core);
+  transition: fill 0.8s 0.4s;
+}
+.sky-panel[data-night] .sky-core {
+  fill: var(--moon);
+}
+.sky-ring {
+  stroke: var(--sun-ring);
+  transition: opacity 0.3s;
+}
+.sky-panel[data-night] .sky-ring {
+  opacity: 0;
+}
+/* Mask luminance, not theme colours: white keeps the disc, black cuts the crescent. */
+.sky-mask-show {
+  fill: white;
+}
+.sky-bite {
+  fill: black;
+  transform: translate(34px, -26px);
+  transition: transform 0.5s;
+}
+.sky-panel[data-night] .sky-bite {
+  transform: translate(7px, -5px);
+  transition: transform 0.8s var(--sky-spring) 0.55s;
+}
+.sky-dusk-stop {
+  stop-color: var(--dusk);
+}
+.sky-glow {
+  opacity: 0;
+}
+.sky-panel[data-flipping] .sky-glow {
+  animation: sky-glow 1.6s ease-in-out;
+}
+@keyframes sky-glow {
+  40% {
+    opacity: 0.75;
+  }
+}
+/* The flip moves the marker frame by frame; a transition would drag behind it. */
+.sky-panel[data-flipping] .sky-marker {
+  transition: none;
+}
+/* Reduced motion: nothing moves, day and night only crossfade. */
+@media (prefers-reduced-motion: reduce) {
+  .sky-panel,
+  .sky-panel svg * {
+    transition-property: opacity, fill, background-color !important;
+    transition-duration: 0.4s !important;
+    transition-delay: 0s !important;
+  }
+  .sky-panel .sky-curve {
+    transform: none !important;
+  }
+  .sky-panel .sky-labels {
+    translate: none !important;
   }
 }
 
