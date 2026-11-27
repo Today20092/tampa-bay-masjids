@@ -2,6 +2,10 @@
   Strict-Transport-Security: max-age=31536000
   X-Content-Type-Options: nosniff
 
+# Without a charset some readers garble the Arabic names.
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+
 # Astro puts a content hash in these file names.
 # shortcut: a missing file here gets the same header on its 404; _headers cannot match by status.
 /_astro/*
