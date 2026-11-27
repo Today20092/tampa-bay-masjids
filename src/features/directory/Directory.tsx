@@ -274,7 +274,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
                 variant="outline"
                 size="touch"
                 aria-pressed={nearest.on}
-                className="bg-card font-semibold aria-pressed:border-primary aria-pressed:bg-muted aria-pressed:text-primary forced-colors:aria-pressed:border-4"
+                className="font-semibold aria-pressed:border-primary aria-pressed:bg-muted aria-pressed:text-primary aria-pressed:shadow-pressed forced-colors:aria-pressed:border-4"
                 onClick={nearest.toggle}
               >
                 <LocateFixedIcon aria-hidden="true" />
@@ -307,7 +307,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
                 <Button
                   variant="outline"
                   size="touch"
-                  className="w-full border-input bg-card font-semibold"
+                  className="w-full font-semibold"
                   onClick={() => {
                     search("");
                     searchRef.current?.focus();

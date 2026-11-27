@@ -100,11 +100,17 @@ const TEXT_PAIRS: [string, string][] = [
   ["popover-foreground", "popover"],
   ["friday", "background"],
   ["friday", "card"],
+  ["brand-action-foreground", "brand-action"],
+  // Outline and quiet buttons turn to full ink on the muted hover fill.
+  ["foreground", "muted"],
+  // The address and footnote of an opened row.
+  ["muted-foreground", "detail"],
 ];
 
 // Non-text pairs need 3:1.
 const NON_TEXT_PAIRS: [string, string][] = [
   ["gold", "brand"],
+  ["brand-action", "brand"],
   ["night-past", "sky-night"],
   ["moon", "sky-night"],
   ["ring", "background"],
@@ -116,6 +122,9 @@ const NON_TEXT_PAIRS: [string, string][] = [
 function hexValue(t: Record<string, string>, name: string): string {
   const value = t[name];
   if (!value) throw new Error(`token --${name} is not defined in global.css`);
+  // Semantic tokens point at a palette primitive.
+  const reference = /^var\(--([\w-]+)\)$/.exec(value);
+  if (reference) return hexValue(t, reference[1]);
   if (!/^#[0-9a-f]{6}$/i.test(value)) {
     throw new Error(
       `token --${name} is ${value}; the contrast check reads 6-digit hex only`,

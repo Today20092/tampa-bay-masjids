@@ -2,31 +2,35 @@
 name: Tampa Bay Masjids
 description: A phone-first masjid timetable that shows only confirmed times
 colors:
-  primary: "#174c40"
-  primary-foreground: "#ffffff"
+  primary: "#1f3461"
+  primary-foreground: "#fdf9ef"
   gold: "#e9d6a2"
   gold-foreground: "#182923"
-  background: "#f7f8f5"
-  card: "#ffffff"
-  card-foreground: "#182923"
-  popover: "#ffffff"
-  popover-foreground: "#182923"
-  foreground: "#182923"
-  secondary: "#eaf1ed"
-  secondary-foreground: "#182923"
-  accent: "#eaf1ed"
-  accent-foreground: "#182923"
-  muted: "#eaf1ed"
-  muted-foreground: "#4a6056"
-  past: "#53655d"
-  attention: "#774617"
-  border: "#cddbd3"
-  row: "#e0e8e3"
-  input: "#677c71"
+  background: "#f4eee0"
+  card: "#fdf9ef"
+  card-foreground: "#1c1d24"
+  popover: "#fdf9ef"
+  popover-foreground: "#1c1d24"
+  foreground: "#1c1d24"
+  secondary: "#ece4d0"
+  secondary-foreground: "#1c1d24"
+  accent: "#ece4d0"
+  accent-foreground: "#1c1d24"
+  muted: "#ece4d0"
+  muted-foreground: "#5d5a55"
+  past: "#605d57"
+  attention: "#8f3a14"
+  border: "#ddd3bc"
+  row: "#e6ddc8"
+  input: "#7d7360"
   ring: "#895019"
-  detail: "#f1f6f3"
+  detail: "#f7f1e3"
   destructive: "#a52a1a"
-  friday: "#41466f"
+  friday: "#17604a"
+  brand: "#1f3461"
+  brand-foreground: "#fdf9ef"
+  brand-action: "#fdf9ef"
+  brand-action-foreground: "#1f3461"
   sky: "#192d47"
   sky-foreground: "#ffffff"
   sky-sun: "#ffd88d"
@@ -96,7 +100,7 @@ The directory palette and controls are defined in `src/styles/global.css` and th
 
 **Creative North Star: "The masjid notice board" (inferred)**
 
-A phone-first timetable with a wider comparison layout on desktop. Deep green carries identity, the next time and the Facebook group link; amber marks anything the visitor should verify. Everything else is
+A phone-first timetable with a wider comparison layout on desktop. Night-blue ink on paper (lamp gold on night in dark mode) carries identity, the next time and the Facebook group link; rust (coral in dark) marks anything the visitor should verify. Everything else is
 quiet so nine masjids and five times can be compared at a glance. The site follows the phone's light or dark setting unless the visitor picks Light or Dark in the footer.
 
 **Key Characteristics:**
@@ -104,6 +108,7 @@ quiet so nine masjids and five times can be compared at a glance. The site follo
 - A shared content width of up to 64rem.
 - A table for comparison, with pinned masjids separated by a rule.
 - State is shown by fill and weight as well as colour.
+- Depth is limited to three levels: lifted surfaces, raised buttons, and everything else flat.
 
 ## Brand assets
 
@@ -120,34 +125,50 @@ quiet so nine masjids and five times can be compared at a glance. The site follo
 
 ## Colors
 
+Light is paper and night-blue ink; dark is night and lamp gold.
+[global.css](src/styles/global.css) writes each raw colour once as a named primitive (`--paper-*`,
+`--ink-*`, `--night-*`, `--lamp-*` and so on) and points the semantic tokens at them with
+`var()`. Primitives are not Tailwind utilities: components use the semantic tokens only.
+
 ### Primary
 
-- **Masjid green** (`primary`): the next time and text links. In dark mode it is a light mint so it reads on night backgrounds.
-- **Brand green** (`brand`, `brand-foreground`): the large community footer box and the map markers. It stays deep green in both themes.
-- **Logo tile** (`logo-tile`): a small tile behind each masjid logo. Transparent in light mode; white in dark mode so dark lettering stays readable.
+- **Primary** (`primary`): the next time, the main filled action, text links, headings in the masthead and selected controls. Night-blue ink in light, lamp gold in dark.
+- **Brand fill** (`brand`, `brand-foreground`): the large community footer box and the map markers. Navy in light, ink blue in dark.
+- **Footer action** (`brand-action`, `brand-action-foreground`): the Join button on the brand fill. Paper in light, lamp gold in dark.
+- **Logo tile** (`logo-tile`): a small tile behind each masjid logo. Transparent in light mode; white in dark mode so dark lettering stays readable. Dark mode also dims the logos to 84% brightness.
 
 ### Dark theme
 
-Set in the `@variant dark` block of [global.css](src/styles/global.css). Brand, gold, sun and sky tokens keep their light values.
+Set in the `@variant dark` block of [global.css](src/styles/global.css). Gold, sun, night-sky and sky text tokens keep their light values.
 
 | Token | Light | Dark |
 | --- | --- | --- |
-| `background` | `#f7f8f5` | `#0f1714` |
-| `foreground` | `#182923` | `#e6eee9` |
-| `card` / `popover` | `#ffffff` | `#17221e` |
-| `primary` | `#174c40` | `#7fc9b0` |
-| `primary-foreground` | `#ffffff` | `#0c1f19` |
-| `muted` / `secondary` | `#eaf1ed` | `#1f2d28` |
-| `muted-foreground` | `#4a6056` | `#a9bfb4` |
-| `border` / `row` / `detail` | `#cddbd3` / `#e0e8e3` / `#f1f6f3` | `#2c3f37` / `#22332c` / `#1b2823` |
-| `input` | `#677c71` | `#6f877c` |
-| `ring` | `#895019` | `#e6a964` |
+| `background` | `#f4eee0` | `#0b0f17` |
+| `foreground` | `#1c1d24` | `#f2efe8` |
+| `card` / `popover` | `#fdf9ef` | `#141a26` |
+| `primary` | `#1f3461` | `#e8c766` |
+| `primary-foreground` | `#fdf9ef` | `#1a1405` |
+| `muted` / `secondary` | `#ece4d0` | `#202839` |
+| `accent` | `#ece4d0` | `#273044` |
+| `muted-foreground` | `#5d5a55` | `#9ea8bc` |
+| `border` / `row` / `detail` | `#ddd3bc` / `#e6ddc8` / `#f7f1e3` | `#273044` / `#222a3b` / `#182030` |
+| `input` | `#7d7360` | `#6b758b` |
+| `ring` | `#895019` | `#9cc2ff` |
 | `destructive` | `#a52a1a` | `#ff9a8a` |
-| `attention` | `#774617` | `#f0b878` |
-| `past` | `#53655d` | `#93a89d` |
-| `friday` | `#41466f` | `#b4b9f0` |
+| `attention` | `#8f3a14` | `#ff9f80` |
+| `past` | `#605d57` | `#929cb1` |
+| `friday` | `#17604a` | `#e8c766` |
+| `brand` / `brand-foreground` | `#1f3461` / `#fdf9ef` | `#18264a` / `#f2efe8` |
+| `brand-action` / `brand-action-foreground` | `#fdf9ef` / `#1f3461` | `#e8c766` / `#1a1405` |
+| `sky` | `#192d47` | `#18264a` |
 
 Rules for dark mode: feature code uses tokens only, never `dark:` classes or `.dark` selectors; add a dark value to every token that the dark block changes; keep every pair in `src/lib/colors.test.ts` passing in both themes.
+
+### Page texture
+
+- **Paper grain** (light only): a faint noise on the page background. Cards, tiles and times sit on solid fills.
+- **Lamp glow** (dark only): a soft warm radial glow behind the header.
+- High contrast mode removes both.
 
 ### Sun
 
@@ -156,26 +177,26 @@ Rules for dark mode: feature code uses tokens only, never `dark:` classes or `.d
 
 ### Secondary
 
-- **Lamp gold** (`gold`): text selection and focus outline on green.
+- **Lamp gold** (`gold`): text selection and the focus outline on the brand fill.
 
 ### Neutral
 
-- **Off-white** (`background`), **white** (`card`), **ink** (`foreground`).
-- **Sage** (`muted`, `detail`): table head, time tiles, opened row.
-- **Muted ink** (`muted-foreground`, `past`): secondary lines and passed times.
-- **Lines** (`border`, `row`, `input`): `input` is the darker line that outlines controls.
+- **Paper or night** (`background`), **card**, **ink** (`foreground`).
+- **Muted fills** (`muted`, `detail`): table head, time tiles, opened row.
+- **Muted ink** (`muted-foreground`, `past`): secondary lines, quiet row actions and passed times.
+- **Lines** (`border`, `row`, `input`): `border` is the soft outline of surfaces and outline buttons; `input` is the 3:1 line around text fields and selects.
 
 ### Signals
 
-- **Amber** (`attention`): "Check with the masjid" and "Checked Nov 15" markers.
-- **Indigo** (`friday`): selected Jumu‘ah schedule.
+- **Rust, coral in dark** (`attention`): "Check with the masjid" and "Checked Nov 15" markers. Coral keeps them apart from gold.
+- **Jumu‘ah** (`friday`): the selected Jumu‘ah schedule. Green in light, so it differs from the navy Daily tab; lamp gold in dark.
 - **Night blue and sunlight** (`sky`, `sky-foreground`, `sky-sun`, `sky-muted`): the sun panel and its text.
-- **Focus orange** (`ring`): 3px outline, 2px offset.
+- **Focus** (`ring`): 3px outline, 2px offset. Copper in light, blue in dark.
 - `destructive` is unused by pages.
 
 ### Named Rules
 
-**The Next Time Rule.** A solid green fill inside a table or card means "next", nothing else.
+**The Next Time Rule.** Among times, only the next one gets a solid `primary` fill, flat, with no shadow. The other solid `primary` fills are raised buttons that name an action, such as the pinned card's Directions.
 
 ## Typography
 
@@ -203,11 +224,19 @@ khutbah"), or in one muted caption under the table's. Say nothing when the sourc
 label each tile. An opened row or card reads Jumu‘ah, name and address, the masjid's own links and Share,
 then a source footnote with "Report a wrong time", which appears only beside shown times.
 Directions are visible in every row. The area map loads on request after the timetable.
-The sun panel sits under the pinned masjids and above search. It always shows the next calculated prayer start with its countdown, the start that just passed (so it never reads as a rival to a masjid's next iqama), and the solar chart, whose live sun uses a ray symbol. Tapping it opens the location button and the list of calculated starts in place. From Maghrib until Fajr the panel shows the night: the chart is the sun's depth below the horizon mirrored into an arc, with Isha, the last third, Fajr and sunrise marked, the night's length inside it, and a crescent that marks the time (not the moon's position or phase). The list then shows the night's times, including Islamic midnight. The day curve folds into the horizon and the night curve springs out of it as the sun is carved into the crescent; the flip plays only when Maghrib arrives on an open page (or on returning to it), and Fajr reverses it. A fresh load opens straight in day or night, and the sun or moon eases along that arc from its start to now. Reduced motion places it without gliding and only crossfades the flip. Where the night cannot be calculated the day chart stays. The header is a centered masthead on the page background, not a navigation bar: the doorway mark and the name in Source Serif 4 semibold (mark beside the name below 40rem, above it from 40rem), a quiet "Join our Facebook group" link, and a double rule, over the faint star lattice. The footer carries the community call to action and, last on the page, the Theme switch.
+The sun panel sits under the pinned masjids and above search. It always shows the next calculated prayer start with its countdown, the start that just passed (so it never reads as a rival to a masjid's next iqama), and the solar chart, whose live sun uses a ray symbol. Tapping it opens the location button and the list of calculated starts in place. From Maghrib until Fajr the panel shows the night: the chart is the sun's depth below the horizon mirrored into an arc, with Isha, the last third, Fajr and sunrise marked, the night's length inside it, and a crescent that marks the time (not the moon's position or phase). The list then shows the night's times, including Islamic midnight. The day curve folds into the horizon and the night curve springs out of it as the sun is carved into the crescent; the flip plays only when Maghrib arrives on an open page (or on returning to it), and Fajr reverses it. A fresh load opens straight in day or night, and the sun or moon eases along that arc from its start to now. Reduced motion places it without gliding and only crossfades the flip. Where the night cannot be calculated the day chart stays. The header is a centered masthead on the page background, not a navigation bar: the doorway mark and the name in Source Serif 4 semibold (mark beside the name below 40rem, above it from 40rem), a quiet "Join our Facebook group" link, and a double rule, over the faint star lattice, with the lamp glow behind it in dark mode. The footer carries the community call to action in a lifted brand-fill box (navy with a paper button in light, ink blue with a gold button in dark) and, last on the page, the Theme switch.
 
 ## Elevation & Depth
 
-Flat. Depth comes from borders and tonal fills; no shadows.
+Three levels, set as tokens in [global.css](src/styles/global.css) with their own light and dark values. Components use the utilities, never raw shadows or `dark:` classes.
+
+| Level | Utility | Used by |
+| --- | --- | --- |
+| Soft lift | `shadow-lift` | Pinned card, sun panel, masjid list and table, map popup, footer community box, no-JavaScript cards |
+| Button lift | `shadow-button` (filled), `shadow-button-outline` (outline), `shadow-brand-action` (footer Join) | Pressable filled and outline buttons: pinned Directions, Search, Show map, Nearest, Share, footer Join |
+| Flat | none | Time tiles, next-time pill, tabs, row actions, Details, header link |
+
+A raised button sinks 1px and takes `shadow-pressed` while pressed; a switched-on Nearest stays sunk. Keyboard focus keeps the lift and adds the outline. Surfaces keep a border, so they still separate in high contrast mode, where shadows disappear.
 
 ## Shapes
 
@@ -219,8 +248,8 @@ shadcn on Base UI lives in `src/components/ui/`.
 
 - **Button** `size="touch"`: at least 44px both ways, label may wrap. Links use `buttonVariants`
   on an `<a>`.
-- **ToggleGroup** `size="touch"`: Daily uses green and Jumu‘ah uses indigo when selected. The footer
-  Theme switch (Auto, Light, Dark) uses the same green underline. Auto saves nothing.
+- **ToggleGroup** `size="touch"`: when selected, Daily uses `primary` and Jumu‘ah uses `friday`.
+  The footer Theme switch (Auto, Light, Dark) uses the same `primary` underline. Auto saves nothing.
 - **Input**: search, 44px, 16px text.
 - **Collapsible**: pinned masjid with an inline Details disclosure.
 - **Table**: row header is a disclosure button; `containerProps` names the scrolling region.
@@ -235,7 +264,9 @@ shadcn on Base UI lives in `src/components/ui/`.
 - Use underlined text links for supporting sources, jump links, and reporting a wrong time. Keep
   them recognizable before hover, keyboard accessible, and large enough to use on touch screens.
 - Keep Directions prominent on pinned cards and quiet in the comparison list, where a filled
-  control in every row would compete with the times. The no-JavaScript list uses text links for
+  control in every row would compete with the times. Row Directions, Pin and the pinned card's
+  Unpin are `muted-foreground` at regular weight, with icons and 44px targets.
+- Outline buttons use the card fill, the soft `border` line and the outline lift. The no-JavaScript list uses text links for
   its destinations so the fallback remains simple and readable.
 
 ## Do's and Don'ts
@@ -243,8 +274,11 @@ shadcn on Base UI lives in `src/components/ui/`.
 - Do use the tokens; add a token before adding a colour.
 - Do keep every control at 44px and every text at 0.8125rem or larger.
 - Do show "Check with the masjid" wherever a confirmed, fresh time is missing.
-- Don't use gold for text or controls; it is only for text selection and focus on green.
-- Don't add shadows without a new design decision.
+- Do use lamp gold through the semantic tokens: in dark mode it is `primary`, so it colours links,
+  headings, selected controls and filled buttons.
+- Don't use the `gold` token for text or controls; it is only for text selection and focus on the brand fill.
+- Don't add a shadow level, or lift anything in the flat row above, without a new design decision.
+- Don't put the paper grain on cards or behind times.
 
 ## Masjid logos
 

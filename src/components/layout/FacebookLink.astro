@@ -8,7 +8,7 @@ const { emphasized = false } = Astro.props as { emphasized?: boolean };
   class:list={[
     "inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold",
     emphasized
-      ? "bg-card text-primary hover:bg-muted"
+      ? "border border-transparent bg-brand-action text-brand-action-foreground shadow-brand-action transition-all hover:bg-brand-action/90 active:translate-y-px active:shadow-pressed"
       : "text-primary hover:bg-muted",
   ]}
   href={SITE.facebookGroup}

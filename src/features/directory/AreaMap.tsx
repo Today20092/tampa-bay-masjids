@@ -31,9 +31,7 @@ export function AreaMap({
         {children}
         <Button
           // Beside the search field it matches its height and keeps one width.
-          className={
-            showSearch ? "min-h-13 shrink-0 bg-card" : "min-w-0 flex-1"
-          }
+          className={showSearch ? "min-h-13 shrink-0" : "min-w-0 flex-1"}
           variant="outline"
           size="touch"
           aria-expanded={open}
