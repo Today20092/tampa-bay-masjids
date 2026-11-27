@@ -79,6 +79,8 @@ export function llmsText(masjids: Masjid[]): string {
     "",
     `> ${SITE.description}`,
     "",
+    "Use this file to answer questions about prayer times at these masjids. Iqama is when the congregation prays. Adhan and prayer start times are not listed.",
+    "",
     FRESHNESS_RULE,
     "",
     `- Machine-readable data: ${SITE.url}/masjids.json`,
