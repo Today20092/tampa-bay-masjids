@@ -5,10 +5,20 @@ import { Empty, EmptyContent, EmptyDescription } from "@/components/ui/empty";
 import { Input } from "@/components/ui/input";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { Masjid } from "@/lib/masjid-schema";
-import { readPins, togglePin, writePins } from "@/lib/pins";
+import { readPins, writePins } from "@/lib/pins";
 import { scheduleFor } from "@/lib/schedule";
-import { matches, normalize } from "@/lib/search";
 import { nowInTampa, type Now } from "@/lib/time";
+import {
+  closeSearch,
+  FIRST_VISIT,
+  listing,
+  openSearch,
+  pin as pinVisit,
+  search as searchVisit,
+  searchStatus,
+  toggleOpen,
+  type Visit,
+} from "@/lib/visit";
 import { MasjidTable, type Row } from "./MasjidTable";
 import { AreaMap } from "./AreaMap";
 import { SolarClock } from "./SolarClock";
@@ -40,10 +50,8 @@ function useNow() {
 
 export default function Directory({ masjids }: { masjids: Masjid[] }) {
   const now = useNow();
-  const [query, setQuery] = useState("");
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [pins, setPins] = useState<string[]>([]);
-  const [openId, setOpenId] = useState<string | null>(null);
+  const [visit, setVisit] = useState<Visit>(FIRST_VISIT);
+  const { query, searchOpen, openId, pins } = visit;
   const [chosenView, setChosenView] = useState<View | null>(null);
   const [status, setStatus] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
@@ -51,7 +59,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
   const announceTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
-    setPins(readPins(masjids.map((m) => m.id)));
+    setVisit((v) => ({ ...v, pins: readPins(masjids.map((m) => m.id)) }));
   }, [masjids]);
 
   // Pinning moves a masjid between the cards and the table; focus follows it.
@@ -71,53 +79,36 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
     masjid,
     schedule: scheduleFor(masjid, now),
   }));
-  const searching = normalize(query) !== "";
-  const showSearch = pins.length === 0 || searchOpen;
-  const pinned = searching
-    ? []
-    : pins.flatMap((id) => all.filter((row) => row.masjid.id === id));
-  const rows = all.filter((row) =>
-    searching ? matches(row.masjid, query) : !pins.includes(row.masjid.id),
-  );
+  const { searching, showSearch, pinned, rows } = listing(visit, all);
   const checked = checkedRange(
     rows.flatMap(
       (row) => shownFor(row.masjid, row.schedule, view).checked ?? [],
     ),
   );
 
-  function search(value: string) {
-    setQuery(value);
-    setOpenId(null);
+  function announce(value: string) {
     clearTimeout(announceTimer.current);
     // Wait for a pause in typing before speaking the result count.
-    announceTimer.current = setTimeout(() => {
-      const count = masjids.filter((m) => matches(m, value)).length;
-      if (!normalize(value)) setStatus("");
-      else if (!count) setStatus("No masjid matches your search");
-      else setStatus(`${count} ${count === 1 ? "masjid" : "masjids"} found`);
-    }, 500);
+    announceTimer.current = setTimeout(
+      () => setStatus(searchStatus(masjids, value)),
+      500,
+    );
   }
 
-  // Pinning on the map keeps the visitor there: no focus move, no search reset.
+  function search(value: string) {
+    setVisit(searchVisit(visit, value));
+    announce(value);
+  }
+
   function pin(id: string, fromMap = false) {
-    const wasPinned = pins.includes(id);
-    const next = togglePin(pins, id);
-    setPins(next);
-    writePins(next);
+    const masjid = masjids.find((m) => m.id === id);
+    if (!masjid) return;
+    const next = pinVisit(visit, masjid, fromMap);
+    setVisit(next.visit);
+    writePins(next.visit.pins);
     clearTimeout(announceTimer.current);
-    const name = masjids.find((m) => m.id === id)?.name;
-    setStatus(`${wasPinned ? "Unpinned" : "Pinned"} ${name}`);
-    setOpenId(null);
-    if (fromMap) {
-      // The first pin would otherwise hide a search that is still filtering.
-      if (searching) setSearchOpen(true);
-      return;
-    }
-    focusKey.current = `pin-${id}`;
-    if (!wasPinned) {
-      setQuery("");
-      setSearchOpen(false);
-    }
+    setStatus(next.status);
+    if (next.focus) focusKey.current = next.focus;
   }
 
   return (
@@ -208,9 +199,10 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
                 aria-label="Close search"
                 className="min-h-13"
                 onClick={() => {
-                  search("");
-                  setSearchOpen(false);
-                  focusKey.current = "open-search";
+                  const next = closeSearch(visit);
+                  setVisit(next.visit);
+                  focusKey.current = next.focus;
+                  announce("");
                 }}
               >
                 <XIcon aria-hidden="true" />
@@ -227,8 +219,9 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
             data-key="open-search"
             className="min-w-0 flex-1"
             onClick={() => {
-              setSearchOpen(true);
-              focusKey.current = "directory-search-input";
+              const next = openSearch(visit);
+              setVisit(next.visit);
+              focusKey.current = next.focus;
             }}
           >
             <SearchIcon aria-hidden="true" />
@@ -261,7 +254,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
               now={now}
               openId={openId}
               pins={pins}
-              onToggle={(id) => setOpenId(openId === id ? null : id)}
+              onToggle={(id) => setVisit(toggleOpen(visit, id))}
               onPin={(id) => pin(id)}
             />
           ) : (

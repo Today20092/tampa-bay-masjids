@@ -82,5 +82,5 @@ export function dateToMark(
     (date): date is string =>
       date !== undefined && needsDateMarker(date, today),
   );
-  return [...old].sort()[0] ?? null;
+  return old.sort()[0] ?? null;
 }

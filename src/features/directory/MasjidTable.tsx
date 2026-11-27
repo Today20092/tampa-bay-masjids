@@ -132,7 +132,6 @@ export function MasjidTable({
                     open ? `detail-mobile-${masjid.id}` : undefined
                   }
                   onClick={() => onToggle(masjid.id)}
-                  data-key={`row-${masjid.id}`}
                 >
                   <MasjidMark masjid={masjid} />
                   <span>
@@ -249,7 +248,6 @@ export function MasjidTable({
                       aria-expanded={open}
                       aria-controls={open ? `detail-${masjid.id}` : undefined}
                       onClick={() => onToggle(masjid.id)}
-                      data-key={`row-${masjid.id}`}
                     >
                       <ChevronDownIcon
                         aria-hidden="true"
