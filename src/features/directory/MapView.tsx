@@ -126,7 +126,7 @@ export default function MapView({
         phone. Map locations are approximate; use directions for the
         destination.
       </p>
-      <div className="relative h-80 overflow-hidden rounded-lg border">
+      <div className="relative h-80 overflow-clip rounded-lg border">
         <Map
           ref={mapRef}
           center={[-82.38, 28.1]}
@@ -150,6 +150,16 @@ export default function MapView({
                     aria-label={`Show ${masjid.name} on map`}
                     aria-pressed={selected === masjid.id}
                     onClick={() => select(masjid.id)}
+                    // Off-map markers are clipped, so keyboard focus moves the map to them.
+                    onFocus={(event) => {
+                      if (!event.currentTarget.matches(":focus-visible"))
+                        return;
+                      mapRef.current?.easeTo({
+                        center: [longitude, latitude],
+                        offset: [0, active ? -90 : 0],
+                        duration: 0,
+                      });
+                    }}
                     className="flex size-11 items-center justify-center text-brand focus-visible:outline-3 focus-visible:outline-ring"
                   >
                     <MapPin
