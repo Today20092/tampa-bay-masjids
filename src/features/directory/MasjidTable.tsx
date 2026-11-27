@@ -153,7 +153,7 @@ export function MasjidTable({
                   />
                 </button>
                 <div className="flex items-center">
-                  <Directions masjid={masjid} compact />
+                  <Directions {...row} view={view} compact />
                   <PinButton
                     masjid={masjid}
                     pinned={pinned}
@@ -279,7 +279,7 @@ export function MasjidTable({
                   <Cells {...row} view={view} shown={shown} />
                   <TableCell className="pr-3 text-right">
                     <div className="flex justify-end">
-                      <Directions masjid={masjid} />
+                      <Directions {...row} view={view} />
                       <PinButton
                         masjid={masjid}
                         pinned={pinned}
