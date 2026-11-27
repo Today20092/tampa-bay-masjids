@@ -7,8 +7,8 @@ import {
   type State,
 } from "@/lib/schedule";
 import { formatTime } from "@/lib/time";
+import { CHECK, COMING_SOON } from "@/lib/wording";
 import { cn } from "@/lib/utils";
-import { CHECK, COMING_SOON } from "./text";
 
 /** A dash with a spoken explanation, for Friday's Dhuhr. */
 export function Replaced() {

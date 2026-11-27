@@ -4,12 +4,13 @@ import { directionsUrl } from "./links";
 import type { Masjid } from "./masjid-schema";
 import { jumuahTimeKind } from "./schedule";
 import { TIME_ZONE } from "./time";
+import { CHECK, COMING_SOON } from "./wording";
 
 const FRESHNESS_RULE =
   `Times are ${TIME_ZONE} wall-clock times in 24-hour HH:MM. Never present a time after its ` +
   `validThrough date: the last day that is under ${STALE_AFTER_DAYS} days after it was checked and before the next ` +
   `US clock change. Show the checked date when it is more than ${MARK_AFTER_DAYS} days old. ` +
-  `Where there is no usable time, say "Check with the masjid", except a masjid with comingSoon true, which has not started formal prayers yet and should be described as "Prayers coming soon". ` +
+  `Where there is no usable time, say "${CHECK}", except a masjid with comingSoon true, which has not started formal prayers yet and should be described as "${COMING_SOON}". ` +
   `Maghrib may be "sunset" (shortly after the sunset adhan) or "sunset+N" (N minutes after it). ` +
   `jumuah.timeIs says what the Jumu‘ah times are: "khutbah", "start" (the service start) or "iqama". When it is absent the source did not say, so do not call them either khutbah or iqama.`;
 
@@ -58,19 +59,19 @@ export function llmsText(masjids: Masjid[]): string {
     ];
     if (m.website) lines.push(`- Website: ${m.website}`);
     if (m.whatsapp) lines.push(`- WhatsApp: ${m.whatsapp}`);
-    if (m.comingSoon) lines.push("- Prayers coming soon");
+    if (m.comingSoon) lines.push(`- ${COMING_SOON}`);
     else if (m.jumuahOnly) lines.push("- Jumu‘ah only");
     else if (m.iqama) {
       const { fajr, dhuhr, asr, maghrib, isha } = m.iqama;
       lines.push(
         `- Iqama: Fajr ${fajr}, Dhuhr ${dhuhr}, Asr ${asr}, Maghrib ${maghrib}, Isha ${isha} (${from(m.iqama)})`,
       );
-    } else lines.push("- Iqama: check with the masjid");
+    } else lines.push(`- Iqama: ${CHECK.toLowerCase()}`);
     if (!m.comingSoon)
       lines.push(
         m.jumuah
           ? `- Jumu‘ah (${jumuahTimeKind(m.jumuah.timeIs).toLowerCase()}): ${m.jumuah.times.join(", ")}${m.jumuah.venue ? ` at ${m.jumuah.venue.name}, ${m.jumuah.venue.address}` : ""} (${from(m.jumuah)})`
-          : "- Jumu‘ah: check with the masjid",
+          : `- Jumu‘ah: ${CHECK.toLowerCase()}`,
       );
     return lines.join("\n");
   });
