@@ -26,6 +26,34 @@
     },
     "checked": "2026-11-26"
   },
+  "iqamaPeriods": [
+    {
+      "from": "2026-12-07",
+      "to": "2026-12-13",
+      "fajr": "06:20",
+      "dhuhr": "13:00",
+      "asr": "16:00",
+      "maghrib": "sunset+10",
+      "isha": "19:30",
+      "source": {
+        "label": "Al-Qassam December 2026 schedule (sent by the masjid administrator on WhatsApp)"
+      },
+      "checked": "2026-11-27"
+    },
+    {
+      "from": "2026-12-14",
+      "to": "2026-12-31",
+      "fajr": "06:30",
+      "dhuhr": "13:00",
+      "asr": "16:00",
+      "maghrib": "sunset+10",
+      "isha": "19:30",
+      "source": {
+        "label": "Al-Qassam December 2026 schedule (sent by the masjid administrator on WhatsApp)"
+      },
+      "checked": "2026-11-27"
+    }
+  ],
   "jumuah": {
     "times": ["13:15", "14:30"],
     "source": {
