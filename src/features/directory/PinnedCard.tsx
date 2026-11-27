@@ -85,7 +85,12 @@ export function PinnedCard({
       </div>
       <div>
         <div className="flex flex-wrap gap-1">
-          <Directions masjid={masjid} prominent />
+          <Directions
+            masjid={masjid}
+            schedule={schedule}
+            view={view}
+            prominent
+          />
           <CollapsibleTrigger
             data-key={`row-${masjid.id}`}
             render={<Button variant="ghost" size="touch" />}

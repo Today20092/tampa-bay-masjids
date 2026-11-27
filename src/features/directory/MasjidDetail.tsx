@@ -12,7 +12,7 @@ import { formatMiles } from "@/lib/distance";
 import { directionsUrl, masjidUrl, reportUrl } from "@/lib/links";
 import type { Masjid } from "@/lib/masjid-schema";
 import type { Schedule } from "@/lib/schedule";
-import type { View } from "@/lib/shown";
+import { shownFor, type View } from "@/lib/shown";
 import { formatDate } from "@/lib/time";
 import { cn } from "@/lib/utils";
 import { ShareButton } from "./ShareButton";
@@ -20,15 +20,24 @@ import { Check, DailyGrid, JumuahTimes } from "./Times";
 
 const KIND = { khutbah: "khutbah", start: "starts", iqama: "iqama" };
 
+/** Goes where the shown times are prayed: the Jumu‘ah venue when its times are the ones shown. */
 export function Directions({
   masjid,
+  schedule,
+  view,
   prominent = false,
   compact = false,
 }: {
   masjid: Masjid;
+  schedule: Schedule;
+  view: View;
   prominent?: boolean;
   compact?: boolean;
 }) {
+  const venue =
+    shownFor(masjid, schedule, view).times === "jumuah"
+      ? schedule.jumuah?.venue
+      : undefined;
   return (
     <a
       className={cn(
@@ -41,14 +50,14 @@ export function Directions({
         // Wider on the right so the Pin icon does not read as part of Directions.
         compact && "pr-2 pl-1",
       )}
-      href={directionsUrl(masjid)}
+      href={directionsUrl(venue ?? masjid)}
       target="_blank"
       rel="noopener"
     >
       <NavigationIcon aria-hidden="true" />
       <span>
         Directions
-        <span className="sr-only"> to {masjid.name}</span>
+        <span className="sr-only"> to {venue?.name ?? masjid.name}</span>
       </span>
     </a>
   );

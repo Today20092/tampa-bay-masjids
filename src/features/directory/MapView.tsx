@@ -167,7 +167,7 @@ export default function MapView({
             </div>
             <MapTimes row={active} view={view} now={now} />
             <div className="flex flex-wrap gap-1">
-              <Directions masjid={active.masjid} prominent />
+              <Directions {...active} view={view} prominent />
               <PinButton
                 masjid={active.masjid}
                 pinned={pins.includes(active.masjid.id)}

@@ -4,6 +4,11 @@ import { nowInTampa, toMinutes } from "./time";
 const text = z.string().trim().min(1);
 const httpsUrl = z.url({ protocol: /^https$/ });
 const date = z.iso.date();
+/** An owner-confirmed Google Maps place ID */
+const placeId = z
+  .string()
+  .regex(/^[A-Za-z0-9_-]+$/)
+  .optional();
 const clock = z
   .string()
   .regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Use 24-hour HH:MM, for example 13:15");
@@ -57,7 +62,9 @@ const jumuah = z.strictObject({
   /** What the source says `times` are; leave out when it does not say */
   timeIs: z.enum(["khutbah", "start", "iqama"]).optional(),
   /** Where Jumu‘ah is held, when that is not the masjid's own address */
-  venue: z.strictObject({ name: text, address: text }).optional(),
+  venue: z
+    .strictObject({ name: text, address: text, mapsPlaceId: placeId })
+    .optional(),
   ...confirmed,
 });
 
@@ -95,10 +102,7 @@ export const masjidSchema = z
       .regex(/^[a-z0-9-]+$/)
       .optional(),
     /** The owner-confirmed Google Maps place, used for Directions instead of the address */
-    mapsPlaceId: z
-      .string()
-      .regex(/^[A-Za-z0-9_-]+$/)
-      .optional(),
+    mapsPlaceId: placeId,
     website: httpsUrl.optional(),
     whatsapp: whatsapp.optional(),
     jumuahOnly: z.boolean().default(false),
