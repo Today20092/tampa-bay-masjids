@@ -91,6 +91,9 @@ const TEXT_PAIRS: [string, string][] = [
   ["sky-foreground", "sky"],
   ["sky-sun", "sky"],
   ["sky-muted", "sky"],
+  ["sky-foreground", "sky-night"],
+  ["sky-sun", "sky-night"],
+  ["sky-muted", "sky-night"],
   ["destructive", "card"],
   ["secondary-foreground", "secondary"],
   ["accent-foreground", "accent"],
@@ -102,6 +105,8 @@ const TEXT_PAIRS: [string, string][] = [
 // Non-text pairs need 3:1.
 const NON_TEXT_PAIRS: [string, string][] = [
   ["gold", "brand"],
+  ["night-past", "sky-night"],
+  ["moon", "sky-night"],
   ["ring", "background"],
   ["ring", "card"],
   ["input", "card"],

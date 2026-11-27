@@ -31,6 +31,12 @@ colors:
   sky-foreground: "#ffffff"
   sky-sun: "#ffd88d"
   sky-muted: "#d5e0ee"
+  sky-night: "#0f1830"
+  night-line: "#aebdf0"
+  night-past: "#dbe3ff"
+  night-third: "#d9c4ff"
+  moon: "#f3ecd2"
+  dusk: "#ff9a5c"
 typography:
   title:
     fontFamily: "Georgia, serif"
@@ -142,6 +148,7 @@ Rules for dark mode: feature code uses tokens only, never `dark:` classes or `.d
 ### Sun
 
 - **Sun** (`sun-core`, `sun-ring`, `sun-ray`): the sun glyph on the sun chart. Same values in both themes.
+- **Night** (`sky-night`, `night-line`, `night-past`, `night-third`, `moon`, `dusk`): the sun panel from Maghrib to Fajr: deeper sky, the night arc ahead and travelled, the last third, the crescent and the orange glow during the flip. Same values in both themes.
 
 ### Secondary
 
@@ -192,7 +199,7 @@ khutbah"), or in one muted caption under the table's. Say nothing when the sourc
 label each tile. An opened row or card reads Jumu‘ah, name and address, the masjid's own links and Share,
 then a source footnote with "Report a wrong time", which appears only beside shown times.
 Directions are visible in every row. The area map loads on request after the timetable.
-The sun panel sits under the pinned masjids and above search. It always shows the next calculated prayer start with its countdown, the start that just passed (so it never reads as a rival to a masjid's next iqama), and the solar chart, whose live sun uses a ray symbol. Tapping it opens the location button and the list of calculated starts in place. The header is a centered masthead on the page background, not a navigation bar: the arch mark and the name in Georgia bold (mark beside the name below 40rem, above it from 40rem), a quiet "Join our Facebook group" link, and a double rule. The footer carries the community call to action and, last on the page, the Theme switch.
+The sun panel sits under the pinned masjids and above search. It always shows the next calculated prayer start with its countdown, the start that just passed (so it never reads as a rival to a masjid's next iqama), and the solar chart, whose live sun uses a ray symbol. Tapping it opens the location button and the list of calculated starts in place. From Maghrib until Fajr the panel shows the night: the chart is the sun's depth below the horizon mirrored into an arc, with Isha, the last third, Fajr and sunrise marked, the night's length inside it, and a crescent that marks the time (not the moon's position or phase). The list then shows the night's times, including Islamic midnight. The day curve folds into the horizon and the night curve springs out of it as the sun is carved into the crescent; a night visit plays this once when the panel scrolls into view, Fajr reverses it, and reduced motion only crossfades. Where the night cannot be calculated the day chart stays. The header is a centered masthead on the page background, not a navigation bar: the arch mark and the name in Georgia bold (mark beside the name below 40rem, above it from 40rem), a quiet "Join our Facebook group" link, and a double rule. The footer carries the community call to action and, last on the page, the Theme switch.
 
 ## Elevation & Depth
 
