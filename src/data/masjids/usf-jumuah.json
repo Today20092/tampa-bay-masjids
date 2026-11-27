@@ -3,5 +3,11 @@
   "name": "USF Jumu‘ah",
   "jumuahOnly": true,
   "area": "USF Marshall Center",
-  "address": "Marshall Student Center Amphitheater, 4103 USF Cedar Cir, Tampa, FL 33620"
+  "address": "Marshall Student Center Amphitheater, 4103 USF Cedar Cir, Tampa, FL 33620",
+  "location": {
+    "address": "Marshall Student Center Amphitheater, 4103 USF Cedar Cir, Tampa, FL 33620",
+    "lng": -82.412408,
+    "lat": 28.065619
+  },
+  "logo": "tmc"
 }

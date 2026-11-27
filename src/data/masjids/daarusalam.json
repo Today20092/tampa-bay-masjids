@@ -10,6 +10,12 @@
   ],
   "area": "Thonotosassa",
   "address": "15830 Morris Bridge Road, Thonotosassa, FL 33592",
+  "location": {
+    "address": "15830 Morris Bridge Road, Thonotosassa, FL 33592",
+    "lng": -82.279909,
+    "lat": 28.147347
+  },
+  "logo": "daarusalam",
   "mapsUrl": "https://maps.app.goo.gl/FgEgfaYgupRAdQ9k7",
   "nameSource": "https://www.newtampamasjid.org/",
   "website": "https://www.newtampamasjid.org/",

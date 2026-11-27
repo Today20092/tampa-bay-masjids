@@ -70,6 +70,13 @@ const whatsapp = z.strictObject({
   approvedOn: date,
 });
 
+// US Census Geocoder match of `address`; interpolation is approximate.
+const location = z.strictObject({
+  address: text,
+  lng: z.number().min(-180).max(180),
+  lat: z.number().min(-90).max(90),
+});
+
 export const masjidSchema = z
   .strictObject({
     order: z.int().positive(),
@@ -80,6 +87,13 @@ export const masjidSchema = z
     aliases: z.array(text).default([]),
     area: text.optional(),
     address: text,
+    /** Map point; shown on the map only when present */
+    location: location.optional(),
+    /** File name in public/masjid-logos/ without .png */
+    logo: z
+      .string()
+      .regex(/^[a-z0-9-]+$/)
+      .optional(),
     /** The owner-confirmed Google Maps place, used for Directions instead of the address */
     mapsUrl: z
       .url({ protocol: /^https$/, hostname: /^maps\.app\.goo\.gl$/ })
@@ -103,6 +117,11 @@ export const masjidSchema = z
   .refine((m) => !(m.jumuahOnly && m.iqama), {
     message: "A Jumu‘ah-only masjid has no daily iqama times",
     path: ["iqama"],
+  })
+  .refine((m) => !m.location || m.location.address === m.address, {
+    message:
+      "location was geocoded from a different address; geocode the new address",
+    path: ["location", "address"],
   });
 
 export type Masjid = z.infer<typeof masjidSchema> & { id: string };
