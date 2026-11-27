@@ -95,8 +95,9 @@ export const masjidSchema = z
       .regex(/^[a-z0-9-]+$/)
       .optional(),
     /** The owner-confirmed Google Maps place, used for Directions instead of the address */
-    mapsUrl: z
-      .url({ protocol: /^https$/, hostname: /^maps\.app\.goo\.gl$/ })
+    mapsPlaceId: z
+      .string()
+      .regex(/^[A-Za-z0-9_-]+$/)
       .optional(),
     website: httpsUrl.optional(),
     whatsapp: whatsapp.optional(),

@@ -61,7 +61,7 @@ checks or the deploy fail, report that. This does not apply to Grok Bot.
   at the next clock change.
 
 Each record requires `order`, `name`, and `address`; do not infer a city or ZIP. Arabic names need
-`nameSource`. `mapsUrl` must be owner-confirmed; `website` must be the masjid's own resolving HTTPS
+`nameSource`. `mapsPlaceId` (the Google Maps place ID) must be owner-confirmed; `website` must be the masjid's own resolving HTTPS
 site. `jumuahOnly: true` cannot include `iqama`. `comingSoon: true` (a masjid that has not started formal prayers) cannot include any times. `jumuah.venue` (`name`, `address`) is for Jumu‘ah held away from the masjid's address. `jumuah.timeIs` (`khutbah`, `start` or `iqama`) is what the source calls the listed times; omit it when the source does not say. Times use 24-hour Tampa wall-clock text, except
 Maghrib may use the masjid's stated sunset wording. `location` (`address`, `lng`, `lat`) is the map point;
 it must be a US Census Geocoder match of the exact `address`, so geocode again whenever the address

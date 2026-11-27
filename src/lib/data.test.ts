@@ -53,15 +53,18 @@ describe("links", () => {
   it("keeps the address for maps and adds only the state when it is missing", () => {
     expect(
       decodeURIComponent(directionsUrl({ address: "5905 East 130th Avenue" })),
-    ).toMatch(/destination=5905 East 130th Avenue, FL$/);
+    ).toMatch(/destination=5905 East 130th Avenue, FL&dir_action=navigate$/);
     expect(directionsUrl({ address: "1 A St, Tampa, FL 33617" })).not.toContain(
       "FL%2033617%2C%20FL",
     );
   });
 
-  it("prefers the confirmed maps place over the address", () => {
-    const mapsUrl = "https://maps.app.goo.gl/abc";
-    expect(directionsUrl({ address: "1 A St", mapsUrl })).toBe(mapsUrl);
+  it("navigates to the confirmed maps place when there is one", () => {
+    const url = new URL(
+      directionsUrl({ address: "1 A St", mapsPlaceId: "ChIJabc" }),
+    );
+    expect(url.searchParams.get("destination_place_id")).toBe("ChIJabc");
+    expect(url.searchParams.get("dir_action")).toBe("navigate");
   });
 
   it("names the masjid in the report subject", () => {
