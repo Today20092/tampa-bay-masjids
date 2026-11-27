@@ -168,3 +168,114 @@ describe("Friday", () => {
     expect(scheduleFor(campus, thursday("11:00")).jumuahStates).toEqual([""]);
   });
 });
+
+describe("dated periods", () => {
+  const sheet = (
+    from: string,
+    to: string,
+    fajr: string,
+    checked = "2026-11-27",
+  ) => ({
+    from,
+    to,
+    fajr,
+    dhuhr: "13:00",
+    asr: "16:00",
+    maghrib: "sunset+10",
+    isha: "19:30",
+    source,
+    checked,
+  });
+  const scheduled = withTimes("2026-11-24", {
+    iqamaPeriods: [
+      sheet("2026-12-07", "2026-12-13", "06:20"),
+      sheet("2026-12-14", "2026-12-31", "06:30"),
+    ],
+  });
+  const on = (date: string) =>
+    scheduleFor(scheduled, makeNow(date, toMinutes("14:10")));
+
+  it("uses the period on its first day, its last day, and the day the next one starts", () => {
+    expect(on("2026-12-07").iqama).toMatchObject({ fajr: "06:20" });
+    expect(on("2026-12-07").iqamaSpan).toEqual({
+      from: "2026-12-07",
+      to: "2026-12-13",
+    });
+    expect(on("2026-12-13").iqama).toMatchObject({ fajr: "06:20" });
+    expect(on("2026-12-14").iqama).toMatchObject({ fajr: "06:30" });
+  });
+
+  it("falls back outside a period, and drops that fallback when it expires", () => {
+    // Checked Nov 24: fresh on Dec 1 and Dec 6, gone on Dec 8.
+    const early = withTimes("2026-11-24", {
+      iqamaPeriods: [sheet("2026-12-03", "2026-12-05", "06:20")],
+    });
+    const day = (date: string) =>
+      scheduleFor(early, makeNow(date, toMinutes("14:10")));
+    expect(day("2026-12-01").iqama).toMatchObject({ fajr: "06:10" });
+    expect(day("2026-12-01").iqamaSpan).toBeUndefined();
+    expect(day("2026-12-05").iqama).toMatchObject({ fajr: "06:20" });
+    expect(day("2026-12-06").iqama).toMatchObject({ fajr: "06:10" });
+    expect(day("2026-12-08").iqama).toBeUndefined();
+  });
+
+  it("keeps a period that is older than 14 days, then stops the day after", () => {
+    const aged = withTimes("2026-11-01", {
+      iqamaPeriods: [sheet("2026-12-01", "2026-12-10", "06:25", "2026-11-01")],
+    });
+    expect(
+      scheduleFor(aged, makeNow("2026-12-10", toMinutes("10:00"))).iqama,
+    ).toMatchObject({ fajr: "06:25" });
+    expect(
+      scheduleFor(aged, makeNow("2026-12-11", toMinutes("10:00"))).iqama,
+    ).toBeUndefined();
+  });
+
+  it("uses tomorrow's period for Fajr, and stops when nothing covers that day", () => {
+    const inside = scheduleFor(
+      scheduled,
+      makeNow("2026-12-12", toMinutes("21:30")),
+    );
+    expect(inside.next).toEqual({
+      kind: "tomorrow",
+      prayer: "Fajr",
+      time: "06:20",
+    });
+    const handoff = scheduleFor(
+      scheduled,
+      makeNow("2026-12-13", toMinutes("21:30")),
+    );
+    expect(handoff.next).toEqual({
+      kind: "tomorrow",
+      prayer: "Fajr",
+      time: "06:30",
+    });
+    const done = scheduleFor(
+      scheduled,
+      makeNow("2026-12-31", toMinutes("21:30")),
+    );
+    expect(done.next).toEqual({ kind: "unconfirmed", what: "tomorrow" });
+  });
+
+  it("uses a Jumu‘ah period on the Friday it covers", () => {
+    const fridayMasjid = withTimes("2026-11-01", {
+      jumuahPeriods: [
+        {
+          from: "2026-12-04",
+          to: "2026-12-04",
+          times: ["13:00"],
+          source,
+          checked: "2026-11-27",
+        },
+      ],
+    });
+    // 2026-12-04 is a Friday. The standing Jumu‘ah block checked Nov 1 is stale.
+    const s = scheduleFor(
+      fridayMasjid,
+      makeNow("2026-12-04", toMinutes("12:00")),
+    );
+    expect(s.jumuah).toMatchObject({ times: ["13:00"] });
+    expect(s.jumuahSpan).toEqual({ from: "2026-12-04", to: "2026-12-04" });
+    expect(s.next).toEqual({ kind: "jumuah", time: "13:00" });
+  });
+});

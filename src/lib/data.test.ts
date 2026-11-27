@@ -15,6 +15,19 @@ const iqama = {
   checked: "2026-11-24",
 };
 const jumuah = { times: ["13:15"], source, checked: "2026-11-24" };
+const period = (from: string, to: string, extra: object = {}) => ({
+  ...iqama,
+  from,
+  to,
+  checked: "2026-11-27",
+  ...extra,
+});
+const jumuahPeriod = (from: string, to: string) => ({
+  ...jumuah,
+  from,
+  to,
+  checked: "2026-11-27",
+});
 const accepts = (extra: object) =>
   masjidSchema.safeParse({ ...good, ...extra }).success;
 const without = (set: object, key: string) =>
@@ -44,8 +57,72 @@ describe("masjid schema", () => {
     ],
     ["script URL", { website: "javascript:alert(1)" }],
     ["daily times on Jumu‘ah only", { jumuahOnly: true, iqama }],
+    [
+      "a period that ends before it starts",
+      { iqamaPeriods: [period("2026-12-14", "2026-12-07")] },
+    ],
+    [
+      "a period longer than 62 days",
+      { iqamaPeriods: [period("2026-11-27", "2027-01-29")] },
+    ],
+    [
+      "a period across the clock change",
+      { iqamaPeriods: [period("2026-10-25", "2026-11-07")] },
+    ],
+    [
+      "overlapping iqama periods",
+      {
+        iqamaPeriods: [
+          period("2026-12-07", "2026-12-13"),
+          period("2026-12-13", "2026-12-31"),
+        ],
+      },
+    ],
+    [
+      "overlapping Jumu‘ah periods",
+      {
+        jumuahPeriods: [
+          jumuahPeriod("2026-12-01", "2026-12-15"),
+          jumuahPeriod("2026-12-10", "2026-12-20"),
+        ],
+      },
+    ],
+    [
+      "iqama periods on a Jumu‘ah-only masjid",
+      { jumuahOnly: true, iqamaPeriods: [period("2026-12-07", "2026-12-13")] },
+    ],
+    [
+      "periods on a coming-soon masjid",
+      {
+        comingSoon: true,
+        jumuahPeriods: [jumuahPeriod("2026-12-07", "2026-12-13")],
+      },
+    ],
+    ["an empty period list", { iqamaPeriods: [] }],
   ])("rejects %s", (_, extra) => {
     expect(accepts(extra)).toBe(false);
+  });
+
+  it("accepts adjacent periods that end on the 62nd day", () => {
+    expect(
+      accepts({
+        iqamaPeriods: [
+          period("2026-12-07", "2026-12-13"),
+          period("2026-12-14", "2026-12-31", { fajr: "06:30" }),
+        ],
+      }),
+    ).toBe(true);
+    expect(
+      accepts({
+        iqamaPeriods: [period("2026-11-27", "2027-01-28")],
+      }),
+    ).toBe(true);
+    expect(
+      accepts({
+        jumuahOnly: true,
+        jumuahPeriods: [jumuahPeriod("2026-12-07", "2026-12-13")],
+      }),
+    ).toBe(true);
   });
 });
 
@@ -92,5 +169,42 @@ describe("public files", () => {
     expect(text).toContain("checked 2026-11-24; valid through 2026-12-07");
     expect(text).toContain("Jumu‘ah: check with the masjid");
     expect(text).toContain("Never present a time after its validThrough date");
+  });
+
+  it("lists every dated period through its last day", () => {
+    const dated: Masjid = {
+      id: "sample",
+      ...masjidSchema.parse({
+        ...good,
+        iqama,
+        iqamaPeriods: [
+          period("2026-12-07", "2026-12-13", { fajr: "06:20" }),
+          period("2026-12-14", "2026-12-31", { fajr: "06:30" }),
+        ],
+      }),
+    };
+    const [entry] = publicData([dated]).masjids;
+    expect(entry.iqamaPeriods).toMatchObject([
+      {
+        from: "2026-12-07",
+        to: "2026-12-13",
+        validThrough: "2026-12-13",
+        fajr: "06:20",
+      },
+      {
+        from: "2026-12-14",
+        to: "2026-12-31",
+        validThrough: "2026-12-31",
+        fajr: "06:30",
+      },
+    ]);
+    expect(entry.iqama).toMatchObject({ checked: "2026-11-24" });
+    const text = llmsText([dated]);
+    expect(text).toContain("Iqama periods (use the one covering today)");
+    expect(text).toContain(
+      "2026-12-07 to 2026-12-13: Fajr 06:20, Dhuhr 13:30, Asr 16:15, Maghrib 17:45, Isha 19:30",
+    );
+    expect(text).toContain("valid through 2026-12-31");
+    expect(text).toContain("pick the period whose from and to cover today");
   });
 });

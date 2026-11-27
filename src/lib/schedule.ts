@@ -25,10 +25,32 @@ export interface Schedule {
   /** Confirmed, fresh sets only. Anything absent must read "Check with the masjid". */
   iqama?: Masjid["iqama"];
   jumuah?: Masjid["jumuah"];
+  /** Set when today's iqama comes from a dated period. */
+  iqamaSpan?: { from: string; to: string };
+  /** Set when today's Jumu‘ah comes from a dated period. */
+  jumuahSpan?: { from: string; to: string };
   /** Five cells when `iqama` is set. `time` is null where Jumu‘ah replaces Dhuhr. */
   daily: { time: string | null; state: State }[];
   jumuahStates: State[];
   next: Next;
+}
+
+type Span = { from: string; to: string };
+
+const covers = (span: Span, date: string) =>
+  span.from <= date && date <= span.to;
+
+/** The period covering `date`, or the standing block while it is still fresh. */
+function select<T extends { checked: string }>(
+  periods: (T & Span)[] | undefined,
+  fallback: T | undefined,
+  date: string,
+): { value: T; span?: Span } | undefined {
+  const period = periods?.find((p) => covers(p, date));
+  if (period)
+    return { value: period, span: { from: period.from, to: period.to } };
+  if (fallback && isFresh(fallback.checked, date)) return { value: fallback };
+  return undefined;
 }
 
 /** What a masjid's Jumu‘ah times are, shown with them. */
@@ -51,13 +73,15 @@ export function jumuahTimeKind(
 export function scheduleFor(masjid: Masjid, now: Now | null): Schedule {
   if (!now) return { daily: [], jumuahStates: [], next: { kind: "none" } };
 
-  const fresh = <T extends { checked: string }>(set: T | undefined) =>
-    set && isFresh(set.checked, now.date) ? set : undefined;
-  const iqama = fresh(masjid.iqama);
-  const jumuah = fresh(masjid.jumuah);
+  const tomorrow = addDays(now.date, 1);
+  const dailyPick = select(masjid.iqamaPeriods, masjid.iqama, now.date);
+  const jumuahPick = select(masjid.jumuahPeriods, masjid.jumuah, now.date);
+  const iqama = dailyPick?.value;
+  const jumuah = jumuahPick?.value;
   const upcoming = (time: string) => minutesOn(time, now.date) >= now.minutes;
   // Friday: a masjid that holds Jumu‘ah has no Dhuhr, even while its Jumu‘ah time is unconfirmed.
-  const replacesDhuhr = now.friday && Boolean(masjid.jumuah);
+  const replacesDhuhr =
+    now.friday && Boolean(masjid.jumuah || masjid.jumuahPeriods?.length);
   const beforeFajr = Boolean(iqama && upcoming(iqama.fajr));
 
   const nextJumuah =
@@ -84,10 +108,11 @@ export function scheduleFor(masjid: Masjid, now: Now | null): Schedule {
       time: times[nextDaily],
     };
   } else if (iqama) {
-    // Tomorrow may be past the freshness limit or across a clock change.
-    if (isFresh(iqama.checked, addDays(now.date, 1))) {
-      highlighted = FAJR;
-      next = { kind: "tomorrow", prayer: "Fajr", time: iqama.fajr };
+    // Tomorrow may be a later period, or past the freshness limit or a clock change.
+    const nextPick = select(masjid.iqamaPeriods, masjid.iqama, tomorrow);
+    if (nextPick) {
+      if (nextPick.value.fajr === iqama.fajr) highlighted = FAJR;
+      next = { kind: "tomorrow", prayer: "Fajr", time: nextPick.value.fajr };
     } else {
       next = { kind: "unconfirmed", what: "tomorrow" };
     }
@@ -108,5 +133,13 @@ export function scheduleFor(masjid: Masjid, now: Now | null): Schedule {
     return now.friday && !upcoming(t) ? "past" : "";
   });
 
-  return { iqama, jumuah, daily, jumuahStates, next };
+  return {
+    iqama,
+    jumuah,
+    iqamaSpan: dailyPick?.span,
+    jumuahSpan: jumuahPick?.span,
+    daily,
+    jumuahStates,
+    next,
+  };
 }

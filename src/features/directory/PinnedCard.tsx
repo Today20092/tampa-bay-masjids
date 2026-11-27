@@ -7,8 +7,8 @@ import {
 } from "@/components/ui/collapsible";
 import type { Masjid } from "@/lib/masjid-schema";
 import type { Schedule } from "@/lib/schedule";
-import { dateToMark, shownFor, type View } from "@/lib/shown";
-import { formatDate, type Now } from "@/lib/time";
+import { checkedMarker, shownFor, type View } from "@/lib/shown";
+import type { Now } from "@/lib/time";
 import {
   ArabicName,
   Directions,
@@ -37,7 +37,12 @@ export function PinnedCard({
   onPin: () => void;
 }) {
   const shown = shownFor(masjid, schedule, view);
-  const marked = dateToMark(now.date, shown.checked, shown.next?.checked);
+  const marker = checkedMarker(
+    now.date,
+    shown,
+    shown.checked,
+    shown.next?.checked,
+  );
   const headingId = `pinned-${masjid.id}`;
 
   return (
@@ -80,9 +85,7 @@ export function PinnedCard({
             <Check masjid={masjid} />
           </p>
         )}
-        {marked && (
-          <p className="text-xs text-attention">Checked {formatDate(marked)}</p>
-        )}
+        {marker && <p className="text-xs text-attention">{marker}</p>}
       </div>
       <div>
         <div className="flex flex-wrap gap-1">

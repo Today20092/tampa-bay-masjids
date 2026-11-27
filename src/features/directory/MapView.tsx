@@ -8,8 +8,8 @@ import {
   MarkerContent,
 } from "@/components/ui/map";
 import { Button } from "@/components/ui/button";
-import { dateToMark, shownFor, type View } from "@/lib/shown";
-import { formatDate, type Now } from "@/lib/time";
+import { checkedMarker, shownFor, type View } from "@/lib/shown";
+import type { Now } from "@/lib/time";
 import { Directions, JumuahLine, PinButton } from "./MasjidDetail";
 import type { Row } from "./MasjidTable";
 import { MAP_HELP } from "@/lib/wording";
@@ -34,9 +34,10 @@ function MapTimes({
   now: Now | null;
 }) {
   const shown = shownFor(masjid, schedule, view);
-  const marked = now
-    ? dateToMark(
+  const marker = now
+    ? checkedMarker(
         now.date,
+        shown,
         shown.times === "jumuah"
           ? shown.checked
           : (shown.next?.checked ?? shown.checked),
@@ -58,9 +59,7 @@ function MapTimes({
           )}
         </>
       )}
-      {marked && (
-        <p className="text-xs text-attention">Checked {formatDate(marked)}</p>
-      )}
+      {marker && <p className="text-xs text-attention">{marker}</p>}
     </div>
   );
 }
