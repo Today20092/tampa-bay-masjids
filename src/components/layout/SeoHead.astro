@@ -10,7 +10,7 @@ interface Props {
 const { title, description, noindex } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 // Link previews cache the image by URL: raise `v` when the PNG changes.
-const shareImage = new URL("/social-preview.png?v=2", canonical);
+const shareImage = new URL("/social-preview.png?v=3", canonical);
 const shareImageAlt =
   "Iqama times for Tampa Bay masjids, with masjid logos, the five daily prayers, Jumu‘ah, and directions";
 ---

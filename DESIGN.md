@@ -39,19 +39,19 @@ colors:
   dusk: "#ff9a5c"
 typography:
   title:
-    fontFamily: "Georgia, serif"
+    fontFamily: "Source Serif 4 Variable, Georgia, serif"
     fontSize: "1.5rem"
-    fontWeight: 700
+    fontWeight: 600
   masjid-name:
-    fontFamily: "Manrope Variable, system-ui, sans-serif"
+    fontFamily: "Source Serif 4 Variable, Georgia, serif"
     fontSize: "1.125rem"
     fontWeight: 700
   body:
-    fontFamily: "Manrope Variable, system-ui, sans-serif"
+    fontFamily: "Source Sans 3 Variable, system-ui, sans-serif"
     fontSize: "0.875rem"
     lineHeight: 1.35
   label:
-    fontFamily: "Manrope Variable, system-ui, sans-serif"
+    fontFamily: "Source Sans 3 Variable, system-ui, sans-serif"
     fontSize: "0.8125rem"
     lineHeight: 1.35
   arabic-name:
@@ -107,12 +107,16 @@ quiet so nine masjids and five times can be compared at a glance. The site follo
 
 ## Brand assets
 
-- Use the pointed arch in [the favicon](public/favicon.svg) as the brand mark. Keep the gold silhouette on masjid green and give it clear space. Pair it with the full name “Tampa Bay Masjids” where space allows.
-- Use masjid green and parchment as the main pair. Lamp gold can frame the mark and divide text on branded graphics. On the site, follow the control and status colors below.
-- Use Georgia bold for the name on branded graphics and system sans-serif for supporting text and the interface. Use “Iqama, Jumu‘ah, and directions” when a short description helps identify the directory.
-- The [share card source](docs/social-preview.svg) shows what the directory offers: a serif headline, masjid logos, the five prayer names, then Jumu‘ah and directions. Show no times, because link previews outlive them. Keep the top-right corner clear for Facebook's info button, and keep text large enough to read on a phone.
-- The logos are embedded in the SVG as base64 copies of [the masjid logos](public/masjid-logos/). Update the card when a listed logo changes.
-- Edit the SVG and screenshot it at 1200 × 630, 1× scale, in a headless browser (Edge or Chrome, on Windows for Georgia and Segoe UI) as [the share PNG](public/social-preview.png). The shared page head uses that PNG for Open Graph and X cards; raise its `?v=` number there whenever the PNG changes.
+- **Mark: the doorway of light** ([logo-mark.svg](public/logo-mark.svg)): three stepped pointed arches in deep gold, lamp gold and warm cream, a door open inward and light spilling out. Light leaves only through the gap beside the door. Keep clear space around it and pair it with the full name “Tampa Bay Masjids” where space allows.
+- **Small sizes** ([favicon.svg](public/favicon.svg)): one gold arch, the cream opening and a wider door, with no steps or floor light.
+- **App icons:** render [app-icon.svg](docs/app-icon.svg) to `apple-touch-icon.png` (180px), `icon-192.png` and `icon-512.png` in `public/`. It is full bleed and keeps the art inside the maskable safe circle.
+- **Mark colors** belong to the artwork only: `#174c40` tile, `#b48f3e`, `#e8c766`, `#fff6d6`, `#0f342b` door and an `#e9d184` beam that fades out. They do not change in dark mode and are not interface tokens.
+- **Lockups:** mark beside the name below 40rem; mark centered above the name from 40rem and on the share card. The name is Source Serif 4 semibold. Do not stack “Tampa Bay” over “Masjids”.
+- Use “Iqama, Jumu‘ah, and directions” when a short description helps identify the directory, but not in the site header.
+- **Star lattice** ([lattice.svg](public/lattice.svg)): a faint eight-point star pattern, strongest at the edges and gone behind the middle. Only in the header and on the share card, never behind prayer times. It relates this site to its sister site, which keeps its own colors and mark; no personal name or photo is part of this brand.
+- The [share card source](docs/social-preview.svg) shows what the directory offers: the mark, a serif headline, masjid logos, the five prayer names, then Jumu‘ah and directions. Show no times, because link previews outlive them. Keep the top-right corner clear for Facebook's info button, and keep text large enough to read on a phone.
+- The logos and both fonts are embedded in the SVG as base64. Update the card when a listed logo changes; logo copies come from [the masjid logos](public/masjid-logos/).
+- Edit the SVG and screenshot it at 1200 × 630, 1× scale, in headless Edge or Chrome as [the share PNG](public/social-preview.png). The shared page head uses that PNG for Open Graph and X cards; raise its `?v=` number there whenever the PNG changes.
 
 ## Colors
 
@@ -175,11 +179,11 @@ Rules for dark mode: feature code uses tokens only, never `dark:` classes or `.d
 
 ## Typography
 
-**Body and headings:** Manrope, with the system UI font as fallback. Arabic names use Noto Naskh Arabic, with a serif fallback. Both fonts are self-hosted.
+**Headings** (`h1` to `h3`, including the site name and pinned masjid names): Source Serif 4, with Georgia as fallback. **Everything else:** Source Sans 3, with the system UI font as fallback. Arabic names use Noto Naskh Arabic, with a serif fallback. All fonts are self-hosted. `body` sets `font-size-adjust: 0.52` because both Source faces look small at their nominal size.
 
 ### Hierarchy
 
-- **Title** (Georgia bold, 1.5rem on mobile and 2.5rem from 40rem): site name.
+- **Title** (Source Serif 4 semibold, 1.5rem on mobile and 2.5rem from 40rem): site name.
 - **Masjid name** (700, 1.125rem): pinned card heading and Arabic name.
 - **Body** (400, 0.875rem): general text; the search field is 1rem.
 - **Label** (0.8125rem): table, tiles, sources. This is the smallest size on the site.
@@ -199,7 +203,7 @@ khutbah"), or in one muted caption under the table's. Say nothing when the sourc
 label each tile. An opened row or card reads Jumu‘ah, name and address, the masjid's own links and Share,
 then a source footnote with "Report a wrong time", which appears only beside shown times.
 Directions are visible in every row. The area map loads on request after the timetable.
-The sun panel sits under the pinned masjids and above search. It always shows the next calculated prayer start with its countdown, the start that just passed (so it never reads as a rival to a masjid's next iqama), and the solar chart, whose live sun uses a ray symbol. Tapping it opens the location button and the list of calculated starts in place. From Maghrib until Fajr the panel shows the night: the chart is the sun's depth below the horizon mirrored into an arc, with Isha, the last third, Fajr and sunrise marked, the night's length inside it, and a crescent that marks the time (not the moon's position or phase). The list then shows the night's times, including Islamic midnight. The day curve folds into the horizon and the night curve springs out of it as the sun is carved into the crescent; the flip plays only when Maghrib arrives on an open page (or on returning to it), and Fajr reverses it. A fresh load opens straight in day or night, and the sun or moon eases along that arc from its start to now. Reduced motion places it without gliding and only crossfades the flip. Where the night cannot be calculated the day chart stays. The header is a centered masthead on the page background, not a navigation bar: the arch mark and the name in Georgia bold (mark beside the name below 40rem, above it from 40rem), a quiet "Join our Facebook group" link, and a double rule. The footer carries the community call to action and, last on the page, the Theme switch.
+The sun panel sits under the pinned masjids and above search. It always shows the next calculated prayer start with its countdown, the start that just passed (so it never reads as a rival to a masjid's next iqama), and the solar chart, whose live sun uses a ray symbol. Tapping it opens the location button and the list of calculated starts in place. From Maghrib until Fajr the panel shows the night: the chart is the sun's depth below the horizon mirrored into an arc, with Isha, the last third, Fajr and sunrise marked, the night's length inside it, and a crescent that marks the time (not the moon's position or phase). The list then shows the night's times, including Islamic midnight. The day curve folds into the horizon and the night curve springs out of it as the sun is carved into the crescent; the flip plays only when Maghrib arrives on an open page (or on returning to it), and Fajr reverses it. A fresh load opens straight in day or night, and the sun or moon eases along that arc from its start to now. Reduced motion places it without gliding and only crossfades the flip. Where the night cannot be calculated the day chart stays. The header is a centered masthead on the page background, not a navigation bar: the doorway mark and the name in Source Serif 4 semibold (mark beside the name below 40rem, above it from 40rem), a quiet "Join our Facebook group" link, and a double rule, over the faint star lattice. The footer carries the community call to action and, last on the page, the Theme switch.
 
 ## Elevation & Depth
 

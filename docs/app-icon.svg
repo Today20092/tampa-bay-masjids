@@ -1,0 +1,15 @@
+<!-- Source of the app icons: full bleed, with the art inside the maskable safe circle. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="40 40 360 360">
+  <rect x="40" y="40" width="360" height="360" fill="#174c40"/>
+  <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#e9d184"/>
+    <stop offset="1" stop-color="#e9d184" stop-opacity="0"/>
+  </linearGradient>
+  <g transform="translate(220 220) scale(0.8) translate(-220 -225)">
+    <path d="M198 305H272L330 368H174Z" fill="url(#beam)"/>
+    <path d="M120 305V205C120 150 176 126 220 82C264 126 320 150 320 205V305Z" fill="#b48f3e"/>
+    <path d="M144 305V216C144 171 187 152 220 116C253 152 296 171 296 216V305Z" fill="#e8c766"/>
+    <path d="M168 305L197 291.5V176L198 175.2C205.2 168.1 212.9 160.7 220 152C243 180 272 195 272 230V305Z" fill="#fff6d6"/>
+    <path d="M168 305V230C168 205.8 181.8 191.2 198 175.2V291Z" fill="#0f342b"/>
+  </g>
+</svg>
