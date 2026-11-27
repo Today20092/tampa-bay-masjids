@@ -8,12 +8,11 @@ import {
   MarkerContent,
 } from "@/components/ui/map";
 import { Button } from "@/components/ui/button";
-import { needsDateMarker } from "@/lib/freshness";
+import { dateToMark, shownFor, type View } from "@/lib/shown";
 import { formatDate, type Now } from "@/lib/time";
 import { Directions, JumuahLine, PinButton } from "./MasjidDetail";
 import type { Row } from "./MasjidTable";
 import { Check } from "./Times";
-import { nextLine, type View } from "./text";
 
 export type MapViewProps = {
   rows: Row[];
@@ -33,25 +32,33 @@ function MapTimes({
   view: View;
   now: Now | null;
 }) {
-  const friday = view === "jumuah" || masjid.jumuahOnly;
-  const set = friday ? schedule.jumuah : schedule.iqama;
-  if (!set)
-    return (
-      <p className="text-sm">
-        <Check masjid={masjid} />
-      </p>
-    );
+  const shown = shownFor(masjid, schedule, view);
+  const marked = now
+    ? dateToMark(
+        now.date,
+        shown.times === "jumuah"
+          ? shown.checked
+          : (shown.next?.checked ?? shown.checked),
+      )
+    : null;
   return (
     <div>
-      {friday ? (
+      {shown.times === "jumuah" ? (
         <JumuahLine masjid={masjid} schedule={schedule} />
       ) : (
-        <p className="text-sm font-bold text-primary">{nextLine(schedule)}</p>
+        <>
+          {shown.next && (
+            <p className="text-sm font-bold text-primary">{shown.next.line}</p>
+          )}
+          {shown.times === "unconfirmed" && (
+            <p className="text-sm">
+              <Check masjid={masjid} />
+            </p>
+          )}
+        </>
       )}
-      {now && needsDateMarker(set.checked, now.date) && (
-        <p className="text-xs text-attention">
-          Checked {formatDate(set.checked)}
-        </p>
+      {marked && (
+        <p className="text-xs text-attention">Checked {formatDate(marked)}</p>
       )}
     </div>
   );
