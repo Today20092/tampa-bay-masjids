@@ -74,6 +74,7 @@ function Cells({
 function RowDetail({ masjid, schedule, view }: Row & { view: View }) {
   return (
     <div className="flex flex-col gap-2 text-sm">
+      <OtherSchedule masjid={masjid} schedule={schedule} view={view} />
       <div>
         {masjid.arabicName && (
           <p>
@@ -82,7 +83,6 @@ function RowDetail({ masjid, schedule, view }: Row & { view: View }) {
         )}
         <p className="text-muted-foreground">{masjid.address}</p>
       </div>
-      <OtherSchedule masjid={masjid} schedule={schedule} view={view} />
       <SourceAndActions masjid={masjid} schedule={schedule} />
     </div>
   );

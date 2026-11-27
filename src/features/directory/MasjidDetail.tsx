@@ -5,6 +5,7 @@ import {
   PinIcon,
   PinOffIcon,
 } from "lucide-react";
+import { Fragment } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { directionsUrl, reportUrl } from "@/lib/links";
 import type { Masjid } from "@/lib/masjid-schema";
@@ -14,7 +15,7 @@ import { formatDate } from "@/lib/time";
 import { cn } from "@/lib/utils";
 import { Check, DailyGrid, JumuahTimes } from "./Times";
 
-const textLink = "inline-flex min-h-11 items-center font-semibold text-primary";
+const KIND = { khutbah: "khutbah", start: "starts", iqama: "iqama" };
 
 export function Directions({
   masjid,
@@ -67,11 +68,19 @@ export function JumuahLine({
   schedule: Schedule;
 }) {
   if (!schedule.jumuah && !masjid.jumuah) return null;
+  const timeIs = schedule.jumuah?.timeIs;
   return (
     <p className="text-sm">
-      {masjid.jumuahOnly ? "Jumu‘ah only · " : "Jumu‘ah "}
+      {masjid.jumuahOnly
+        ? "Jumu‘ah only · "
+        : `Jumu‘ah ${timeIs ? `${KIND[timeIs]} ` : ""}`}
       {schedule.jumuah ? (
-        <JumuahTimes {...schedule.jumuah} states={schedule.jumuahStates} />
+        <JumuahTimes
+          {...schedule.jumuah}
+          states={schedule.jumuahStates}
+          // The label above already says what the times are.
+          caption={masjid.jumuahOnly}
+        />
       ) : (
         <Check masjid={masjid} />
       )}
@@ -98,39 +107,70 @@ export function OtherSchedule({
   return null;
 }
 
-function Sources({ schedule }: { schedule: Schedule }) {
+/** Where the shown times came from, when they were checked, and how to dispute them. */
+function TimesFootnote({
+  masjid,
+  schedule,
+}: {
+  masjid: Masjid;
+  schedule: Schedule;
+}) {
   const { iqama, jumuah } = schedule;
   const sets = [
-    ...(iqama ? [{ label: "Daily source", ...iqama }] : []),
-    ...(jumuah ? [{ label: "Jumu‘ah source", ...jumuah }] : []),
+    ...(iqama ? [{ name: "daily", ...iqama }] : []),
+    ...(jumuah ? [{ name: "Jumu‘ah", ...jumuah }] : []),
   ];
   if (!sets.length) return null;
-  const same =
-    sets.length === 2 &&
-    sets[0].checked === sets[1].checked &&
-    sets[0].source.label === sets[1].source.label &&
-    sets[0].source.url === sets[1].source.url;
-  const shown = same || sets.length === 1 ? [sets[0]] : sets;
+  const [first, second] = sets;
+  const sameDate = !second || first.checked === second.checked;
+  const single =
+    !second ||
+    (sameDate &&
+      first.source.label === second.source.label &&
+      first.source.url === second.source.url);
+  // Inline padding widens the tap area without breaking the line apart.
+  const link = (url: string, children: React.ReactNode) => (
+    <a
+      className="py-1.5 font-semibold text-primary underline"
+      href={url}
+      target="_blank"
+      rel="noopener"
+    >
+      {children}
+    </a>
+  );
   return (
     <div className="text-xs text-muted-foreground">
-      {shown.map(({ label, source, checked }) => (
-        <p key={label}>
-          {shown.length > 1 ? label : "Source"}:{" "}
-          {source.url ? (
-            <a
-              className={cn(textLink, "underline")}
-              href={source.url}
-              target="_blank"
-              rel="noopener"
-            >
-              {source.label}
-            </a>
-          ) : (
-            source.label
-          )}{" "}
-          · checked {formatDate(checked)}
-        </p>
-      ))}
+      <p>
+        {sameDate && `Checked ${formatDate(first.checked)} · `}
+        {single ? "Source: " : "Sources: "}
+        {single
+          ? first.source.url
+            ? link(first.source.url, first.source.label)
+            : first.source.label
+          : sets.map(({ name, source, checked }, k) => (
+              <Fragment key={name}>
+                {k > 0 && ", "}
+                {source.url
+                  ? link(
+                      source.url,
+                      <>
+                        {name}
+                        <span className="sr-only">: {source.label}</span>
+                      </>,
+                    )
+                  : `${name} from ${source.label}`}
+                {!sameDate && ` checked ${formatDate(checked)}`}
+              </Fragment>
+            ))}
+      </p>
+      <a
+        className="inline-flex min-h-11 items-center text-sm font-semibold text-primary underline"
+        href={reportUrl(masjid)}
+      >
+        Report a wrong time
+        <span className="sr-only"> for {masjid.name}</span>
+      </a>
     </div>
   );
 }
@@ -168,45 +208,37 @@ export function PinButton({
   );
 }
 
-function Actions({ masjid }: { masjid: Masjid }) {
+function ExternalLinks({ masjid }: { masjid: Masjid }) {
   const external = [
     { label: "WhatsApp", href: masjid.whatsapp?.url, Icon: MessageCircleIcon },
     { label: "Website", href: masjid.website, Icon: GlobeIcon },
-  ];
+  ].filter((link) => link.href);
+  if (!external.length) return null;
   return (
-    <div>
-      <div className="flex flex-wrap gap-1.5">
-        {external.map(
-          ({ label, href, Icon }) =>
-            href && (
-              <a
-                key={label}
-                className={cn(
-                  buttonVariants({ variant: "outline", size: "touch" }),
-                  "min-w-fit flex-[1_1_3.5rem] border-input bg-card font-semibold",
-                )}
-                href={href}
-                target="_blank"
-                rel="noopener"
-              >
-                <Icon aria-hidden="true" />
-                <span>
-                  {label}
-                  <span className="sr-only"> for {masjid.name}</span>
-                </span>
-              </a>
-            ),
-        )}
-      </div>
-      <a className={cn(textLink, "underline")} href={reportUrl(masjid)}>
-        Report a wrong time
-        <span className="sr-only"> for {masjid.name}</span>
-      </a>
+    <div className="flex flex-wrap gap-1.5">
+      {external.map(({ label, href, Icon }) => (
+        <a
+          key={label}
+          className={cn(
+            buttonVariants({ variant: "outline", size: "touch" }),
+            "border-input bg-card font-semibold",
+          )}
+          href={href}
+          target="_blank"
+          rel="noopener"
+        >
+          <Icon aria-hidden="true" />
+          <span>
+            {label}
+            <span className="sr-only"> for {masjid.name}</span>
+          </span>
+        </a>
+      ))}
     </div>
   );
 }
 
-/** What follows a masjid's times: source, checked date and actions. */
+/** What follows a masjid's times and address: its own links, then the footnote. */
 export function SourceAndActions({
   schedule,
   masjid,
@@ -216,8 +248,8 @@ export function SourceAndActions({
 }) {
   return (
     <>
-      <Sources schedule={schedule} />
-      <Actions masjid={masjid} />
+      <ExternalLinks masjid={masjid} />
+      <TimesFootnote masjid={masjid} schedule={schedule} />
     </>
   );
 }

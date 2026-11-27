@@ -84,7 +84,8 @@ export function JumuahTimes({
   states,
   venue,
   timeIs,
-}: NonNullable<Masjid["jumuah"]> & { states: State[] }) {
+  caption = true,
+}: NonNullable<Masjid["jumuah"]> & { states: State[]; caption?: boolean }) {
   return (
     <>
       <span className="inline-flex flex-wrap justify-center gap-1 text-center tabular-nums">
@@ -102,9 +103,11 @@ export function JumuahTimes({
           </span>
         ))}
       </span>
-      <span className="block pt-1 text-xs font-normal text-muted-foreground">
-        {jumuahTimeKind(timeIs)}
-      </span>
+      {caption && timeIs && (
+        <span className="block pt-1 text-xs font-normal text-muted-foreground">
+          {jumuahTimeKind(timeIs)}
+        </span>
+      )}
       {venue && (
         <a
           className="block py-2 text-sm font-normal text-primary underline"
