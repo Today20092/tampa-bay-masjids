@@ -4,6 +4,12 @@
   "aliases": ["The Muslim Connection"],
   "area": "Temple Terrace area",
   "address": "8080 N 56th St, Tampa, FL 33617",
+  "location": {
+    "address": "8080 N 56th St, Tampa, FL 33617",
+    "lng": -82.393509,
+    "lat": 28.022622
+  },
+  "logo": "tmc",
   "nameSource": "https://tmcflorida.org/",
   "website": "https://tmcflorida.org/",
   "iqama": {

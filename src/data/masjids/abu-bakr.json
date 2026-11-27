@@ -3,6 +3,11 @@
   "name": "Abu Bakr",
   "area": "North 30th St",
   "address": "11010 North 30th Street, Tampa, FL 33612",
+  "location": {
+    "address": "11010 North 30th Street, Tampa, FL 33612",
+    "lng": -82.426246,
+    "lat": 28.048283
+  },
   "iqama": {
     "fajr": "06:15",
     "dhuhr": "13:00",
