@@ -19,6 +19,7 @@ import {
   Directions,
   OtherSchedule,
   PinButton,
+  placeLine,
   SourceAndActions,
 } from "./MasjidDetail";
 import { MasjidMark } from "./MasjidMark";
@@ -27,6 +28,8 @@ import { Check, DailyGrid, JumuahTimes, Replaced } from "./Times";
 export interface Row {
   masjid: Masjid;
   schedule: Schedule;
+  /** Straight-line miles from the visitor, only while sorted by distance */
+  miles?: number;
 }
 
 function Cells({
@@ -121,6 +124,7 @@ export function MasjidTable({
           const shown = shownFor(masjid, schedule, view);
           const marked = now ? dateToMark(now.date, shown.checked) : null;
           const pinned = pins.includes(masjid.id);
+          const place = placeLine(row, view);
           return (
             <li key={masjid.id} className="space-y-3 px-3 py-4">
               <div className="flex flex-wrap items-center justify-between gap-x-2">
@@ -128,6 +132,7 @@ export function MasjidTable({
                   type="button"
                   className="group/row flex min-h-11 flex-1 items-center gap-2 text-left font-semibold"
                   aria-expanded={open}
+                  data-key={`row-${masjid.id}`}
                   aria-controls={
                     open ? `detail-mobile-${masjid.id}` : undefined
                   }
@@ -136,9 +141,9 @@ export function MasjidTable({
                   <MasjidMark masjid={masjid} />
                   <span>
                     {masjid.name}
-                    {masjid.area && (
+                    {place && (
                       <span className="block text-xs font-normal text-muted-foreground">
-                        {masjid.area}
+                        {place}
                       </span>
                     )}
                   </span>
@@ -235,6 +240,7 @@ export function MasjidTable({
             const shown = shownFor(masjid, row.schedule, view);
             const marked = now ? dateToMark(now.date, shown.checked) : null;
             const pinned = pins.includes(masjid.id);
+            const place = placeLine(row, view);
             return (
               <Fragment key={masjid.id}>
                 <TableRow className="border-row hover:bg-transparent has-aria-expanded:bg-transparent">
@@ -246,6 +252,7 @@ export function MasjidTable({
                       type="button"
                       className="group/row flex min-h-12 w-full min-w-22 cursor-pointer items-center gap-1 py-1.5 pr-2 pl-2 text-left text-xs font-semibold hover:bg-muted aria-expanded:bg-muted sm:min-h-14 sm:gap-2 sm:pl-4 sm:text-sm -outline-offset-3!"
                       aria-expanded={open}
+                      data-key={`row-${masjid.id}`}
                       aria-controls={open ? `detail-${masjid.id}` : undefined}
                       onClick={() => onToggle(masjid.id)}
                     >
@@ -256,9 +263,9 @@ export function MasjidTable({
                       <MasjidMark masjid={masjid} />
                       <span>
                         {masjid.name}
-                        {masjid.area && (
+                        {place && (
                           <span className="block font-normal text-muted-foreground">
-                            {masjid.area}
+                            {place}
                           </span>
                         )}
                         {marked && (

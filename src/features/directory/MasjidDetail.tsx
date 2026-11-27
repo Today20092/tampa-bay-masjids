@@ -7,12 +7,15 @@ import {
 } from "lucide-react";
 import { Fragment } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { directionsUrl, reportUrl } from "@/lib/links";
+import { SITE } from "@/data/site";
+import { formatMiles } from "@/lib/distance";
+import { directionsUrl, masjidUrl, reportUrl } from "@/lib/links";
 import type { Masjid } from "@/lib/masjid-schema";
 import type { Schedule } from "@/lib/schedule";
 import type { View } from "@/lib/shown";
 import { formatDate } from "@/lib/time";
 import { cn } from "@/lib/utils";
+import { ShareButton } from "./ShareButton";
 import { Check, DailyGrid, JumuahTimes } from "./Times";
 
 const KIND = { khutbah: "khutbah", start: "starts", iqama: "iqama" };
@@ -49,6 +52,22 @@ export function Directions({
       </span>
     </a>
   );
+}
+
+/** The line under a masjid's name: its area, and its distance when sorted by it. */
+export function placeLine(
+  {
+    masjid,
+    schedule,
+    miles,
+  }: { masjid: Masjid; schedule: Schedule; miles?: number },
+  view: View,
+) {
+  // Distance is to the masjid's map point, which is not where an off-site Jumu‘ah meets.
+  const to = view === "jumuah" && schedule.jumuah?.venue ? " to masjid" : "";
+  return [masjid.area, miles !== undefined && `${formatMiles(miles)}${to}`]
+    .filter(Boolean)
+    .join(" · ");
 }
 
 export function ArabicName({ masjid }: { masjid: Masjid }) {
@@ -208,14 +227,14 @@ export function PinButton({
   );
 }
 
+/** The masjid's own links, then a link to share it. */
 function ExternalLinks({ masjid }: { masjid: Masjid }) {
   const external = [
     { label: "WhatsApp", href: masjid.whatsapp?.url, Icon: MessageCircleIcon },
     { label: "Website", href: masjid.website, Icon: GlobeIcon },
   ].filter((link) => link.href);
-  if (!external.length) return null;
   return (
-    <div className="flex flex-wrap gap-1.5">
+    <div className="flex flex-wrap items-start gap-1.5">
       {external.map(({ label, href, Icon }) => (
         <a
           key={label}
@@ -234,6 +253,17 @@ function ExternalLinks({ masjid }: { masjid: Masjid }) {
           </span>
         </a>
       ))}
+      <ShareButton
+        shared={{
+          title: `${masjid.name} · ${SITE.name}`,
+          text: `${masjid.name} prayer times and directions`,
+          url: masjidUrl(masjid),
+        }}
+      >
+        <span>
+          Share<span className="sr-only"> {masjid.name}</span>
+        </span>
+      </ShareButton>
     </div>
   );
 }
