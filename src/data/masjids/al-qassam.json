@@ -15,16 +15,15 @@
   "nameSource": "https://ictampa.org/",
   "website": "https://ictampa.org/",
   "iqama": {
-    "fajr": "06:10",
+    "fajr": "06:20",
     "dhuhr": "13:00",
     "asr": "16:00",
-    "maghrib": "sunset",
+    "maghrib": "sunset+10",
     "isha": "19:30",
     "source": {
-      "label": "ICT prayer timetable",
-      "url": "https://timing.athanplus.com/masjid/widgets/monthly?masjid_id=0aAegzKj&theme=2"
+      "label": "Al-Qassam December 2026 schedule (WhatsApp from masjid administrator)"
     },
-    "checked": "2026-11-26"
+    "checked": "2026-11-27"
   },
   "jumuah": {
     "times": ["13:15", "14:30"],
