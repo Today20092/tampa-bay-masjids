@@ -130,7 +130,7 @@ export function MasjidTable({
           const set = shownSet(row, view);
           const pinned = pins.includes(masjid.id);
           return (
-            <li key={masjid.id} className="space-y-2 p-3">
+            <li key={masjid.id} className="space-y-3 px-3 py-4">
               <div className="flex flex-wrap items-center justify-between gap-x-2">
                 <button
                   type="button"
