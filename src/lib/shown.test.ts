@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Masjid } from "./masjid-schema";
 import { scheduleFor } from "./schedule";
-import { checkedRange, dateToMark, shownFor } from "./shown";
+import { checkedMarker, checkedRange, dateToMark, shownFor } from "./shown";
 import { makeNow, toMinutes } from "./time";
 
 const source = { label: "Masjid website" };
@@ -84,6 +84,50 @@ describe("shownFor", () => {
       checked: "2026-11-24",
       next: { line: "Next: Asr 4:15", checked: "2026-11-24" },
     });
+  });
+});
+
+describe("dated period marker", () => {
+  const periodMasjid: Masjid = {
+    ...base,
+    iqama,
+    iqamaPeriods: [
+      {
+        from: "2026-12-07",
+        to: "2026-12-13",
+        ...iqama,
+        fajr: "06:20",
+        checked: "2026-11-27",
+      },
+      {
+        from: "2026-11-30",
+        to: "2026-12-06",
+        ...iqama,
+        checked: "2026-11-27",
+      },
+    ],
+  };
+
+  it("names the period once its check is old enough to mark", () => {
+    const shown = shownFor(
+      periodMasjid,
+      scheduleFor(periodMasjid, makeNow("2026-12-07", toMinutes("12:00"))),
+      "daily",
+    );
+    expect(shown.period).toBe("Dec 7–13 schedule");
+    expect(checkedMarker("2026-12-07", shown, shown.checked)).toBe(
+      "Dec 7–13 schedule",
+    );
+    expect(checkedMarker("2026-11-30", shown, shown.checked)).toBeNull();
+  });
+
+  it("names a period that crosses a month", () => {
+    const shown = shownFor(
+      periodMasjid,
+      scheduleFor(periodMasjid, makeNow("2026-12-01", toMinutes("12:00"))),
+      "daily",
+    );
+    expect(shown.period).toBe("Nov 30–Dec 6 schedule");
   });
 });
 

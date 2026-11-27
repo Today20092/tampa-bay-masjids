@@ -9,7 +9,21 @@ export interface Shown {
   /** Which confirmed set is shown: daily iqama, Jumu‘ah, or neither (then "Check with the masjid"). */
   times: "daily" | "jumuah" | "unconfirmed";
   checked?: string;
+  /** "Dec 7–13 schedule" when the shown times come from a dated period. */
+  period?: string;
   next: { line: string; checked?: string } | null;
+}
+
+/** "Dec 7–13 schedule", or "Nov 30–Dec 6 schedule" across months. */
+function periodName(span: { from: string; to: string }): string {
+  const start = formatDate(span.from);
+  const end = formatDate(span.to);
+  if (start === end) return `${start} schedule`;
+  const [month, day] = end.split(" ");
+  const range = start.startsWith(`${month} `)
+    ? `${start}–${day}`
+    : `${start}–${end}`;
+  return `${range} schedule`;
 }
 
 /** The one line under a pinned masjid's name; null when there is nothing to say. */
@@ -54,6 +68,9 @@ export function shownFor(
     return {
       times: jumuah ? "jumuah" : "unconfirmed",
       checked: jumuah?.checked,
+      ...(jumuah && schedule.jumuahSpan
+        ? { period: periodName(schedule.jumuahSpan) }
+        : {}),
       next: null,
     };
   }
@@ -61,6 +78,9 @@ export function shownFor(
   return {
     times: schedule.iqama ? "daily" : "unconfirmed",
     checked: schedule.iqama?.checked,
+    ...(schedule.iqama && schedule.iqamaSpan
+      ? { period: periodName(schedule.iqamaSpan) }
+      : {}),
     next: line
       ? {
           line,
@@ -71,6 +91,21 @@ export function shownFor(
         }
       : null,
   };
+}
+
+/**
+ * The attention line under a schedule. A dated period names itself
+ * ("Dec 7–13 schedule") once its check is old enough to mark.
+ */
+export function checkedMarker(
+  today: string,
+  shown: Shown,
+  ...dates: (string | undefined)[]
+): string | null {
+  if (shown.period && shown.checked && needsDateMarker(shown.checked, today))
+    return shown.period;
+  const marked = dateToMark(today, ...dates);
+  return marked ? `Checked ${formatDate(marked)}` : null;
 }
 
 /** The oldest of the given dates that needs a "Checked" marker, or null. */

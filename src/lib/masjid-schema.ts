@@ -1,5 +1,6 @@
 import { z } from "astro/zod";
-import { nowInTampa, toMinutes } from "./time";
+import { spansClockChange } from "./freshness";
+import { addDays, nowInTampa, toMinutes } from "./time";
 
 const text = z.string().trim().min(1);
 const httpsUrl = z.url({ protocol: /^https$/ });
@@ -27,23 +28,65 @@ const maghrib = z.union([
   z.string().regex(/^sunset(\+([1-9]|[1-5]\d))?$/),
 ]);
 
+const IQAMA_ORDER =
+  "Iqama times must run in order: Fajr before noon, then Dhuhr, Asr, Maghrib, Isha";
+
 // shortcut: all five iqama times or none; allow gaps when a masjid needs it.
-const iqama = z
-  .strictObject({
-    fajr: clock,
-    dhuhr: clock,
-    asr: clock,
-    maghrib,
-    isha: clock,
-    ...confirmed,
-  })
-  .refine((t) => {
-    const [f, d, a, i] = [t.fajr, t.dhuhr, t.asr, t.isha].map(toMinutes);
-    // A sunset-based Maghrib moves daily, so only a fixed one is order-checked.
-    const m = t.maghrib.startsWith("sunset") ? null : toMinutes(t.maghrib);
-    const evening = m === null ? a < i : a < m && m <= i;
-    return f < 720 && d >= 720 && d < a && evening;
-  }, "Iqama times must run in order: Fajr before noon, then Dhuhr, Asr, Maghrib, Isha");
+function iqamaInOrder(t: {
+  fajr: string;
+  dhuhr: string;
+  asr: string;
+  maghrib: string;
+  isha: string;
+}) {
+  const [f, d, a, i] = [t.fajr, t.dhuhr, t.asr, t.isha].map(toMinutes);
+  // A sunset-based Maghrib moves daily, so only a fixed one is order-checked.
+  const m = t.maghrib.startsWith("sunset") ? null : toMinutes(t.maghrib);
+  const evening = m === null ? a < i : a < m && m <= i;
+  return f < 720 && d >= 720 && d < a && evening;
+}
+
+const iqamaObject = z.strictObject({
+  fajr: clock,
+  dhuhr: clock,
+  asr: clock,
+  maghrib,
+  isha: clock,
+  ...confirmed,
+});
+
+const iqama = iqamaObject.refine(iqamaInOrder, IQAMA_ORDER);
+
+/** Last day of a period is at most this many days after it was checked. */
+const PERIOD_DAYS = 62;
+
+const periodShape = {
+  /** First day these times apply, inclusive (America/New_York). */
+  from: date,
+  /** Last day these times apply, inclusive. */
+  to: date,
+};
+
+function periodLimits<T extends { from: string; to: string; checked: string }>(
+  schema: z.ZodType<T>,
+) {
+  return schema
+    .refine((p) => p.from <= p.to, "Period from is after to")
+    .refine(
+      (p) => p.to <= addDays(p.checked, PERIOD_DAYS),
+      `Period ends more than ${PERIOD_DAYS} days after it was checked`,
+    )
+    .refine(
+      (p) => !spansClockChange(p.from, p.to),
+      "A period cannot include a US clock change",
+    );
+}
+
+function periodsOverlap(periods: { from: string; to: string }[] | undefined) {
+  if (!periods) return false;
+  const sorted = [...periods].sort((a, b) => a.from.localeCompare(b.from));
+  return sorted.some((period, i) => i > 0 && period.from <= sorted[i - 1].to);
+}
 
 const jumuah = z.strictObject({
   times: z
@@ -67,6 +110,11 @@ const jumuah = z.strictObject({
     .optional(),
   ...confirmed,
 });
+
+const iqamaPeriod = periodLimits(
+  iqamaObject.extend(periodShape).refine(iqamaInOrder, IQAMA_ORDER),
+);
+const jumuahPeriod = periodLimits(jumuah.extend(periodShape));
 
 const whatsapp = z.strictObject({
   url: z.url({
@@ -110,6 +158,10 @@ export const masjidSchema = z
     comingSoon: z.boolean().optional(),
     iqama: iqama.optional(),
     jumuah: jumuah.optional(),
+    /** Dated iqama schedules. The period covering today replaces `iqama`. */
+    iqamaPeriods: z.array(iqamaPeriod).min(1).optional(),
+    /** Dated Jumu‘ah schedules. The period covering today replaces `jumuah`. */
+    jumuahPeriods: z.array(jumuahPeriod).min(1).optional(),
   })
   .refine((m) => !m.arabicName || m.nameSource, {
     message: "arabicName needs nameSource, the masjid's own page that shows it",
@@ -119,9 +171,25 @@ export const masjidSchema = z
     message: "A coming-soon masjid has no prayer times yet",
     path: ["comingSoon"],
   })
+  .refine((m) => !(m.comingSoon && (m.iqamaPeriods || m.jumuahPeriods)), {
+    message: "A coming-soon masjid has no prayer times yet",
+    path: ["comingSoon"],
+  })
   .refine((m) => !(m.jumuahOnly && m.iqama), {
     message: "A Jumu‘ah-only masjid has no daily iqama times",
     path: ["iqama"],
+  })
+  .refine((m) => !(m.jumuahOnly && m.iqamaPeriods), {
+    message: "A Jumu‘ah-only masjid has no daily iqama times",
+    path: ["iqamaPeriods"],
+  })
+  .refine((m) => !periodsOverlap(m.iqamaPeriods), {
+    message: "Iqama periods overlap",
+    path: ["iqamaPeriods"],
+  })
+  .refine((m) => !periodsOverlap(m.jumuahPeriods), {
+    message: "Jumu‘ah periods overlap",
+    path: ["jumuahPeriods"],
   })
   .refine((m) => !m.location || m.location.address === m.address, {
     message:

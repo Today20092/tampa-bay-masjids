@@ -23,6 +23,21 @@ export function isFresh(checked: string, today: string): boolean {
 export const needsDateMarker = (checked: string, today: string) =>
   daysBetween(checked, today) > MARK_AFTER_DAYS;
 
+/**
+ * True when Tampa's wall clock changes somewhere in the inclusive span.
+ * Changes are months apart, so a 30-day step cannot skip over two of them.
+ */
+export function spansClockChange(from: string, to: string): boolean {
+  const start = tampaNoonOffset(from);
+  let cursor = from;
+  while (cursor < to) {
+    const next = addDays(cursor, Math.min(30, daysBetween(cursor, to)));
+    if (tampaNoonOffset(next) !== start) return true;
+    cursor = next;
+  }
+  return false;
+}
+
 /** Last date on which a time checked on `checked` may still be shown. */
 export function validThrough(checked: string): string {
   let last = checked;
