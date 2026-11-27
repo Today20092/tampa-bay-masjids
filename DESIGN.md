@@ -222,7 +222,7 @@ starts, service starts or iqama: in the label beside a card's or opened row's ti
 khutbah"), or in one muted caption under the table's. Say nothing when the source does not. Never
 label each tile. An opened row or card reads Jumu‘ah, name and address, the masjid's own links and Share,
 then a source footnote with "Report a wrong time", which appears only beside shown times.
-Directions are visible in every row. In the narrow list each row opens with the arrow, mark and name, with Directions and Pin as two square icon buttons at the top right; the place line sits below them at full width, then the times. With enlarged text (a list under 17rem wide) the two buttons move below the place line. Controls and rows keep their size when a button is tapped or the list is sorted: progress and success show inside the control, only a failure adds a line, and the place line stays one line, cutting the area short and never the distance. The area map loads on request after the timetable.
+Directions are visible in every row. In the narrow list each row opens with the arrow, mark and name, with Directions and Pin as two square icon buttons at the top right; the place line sits below them at full width, then the times. With enlarged text (a list under 17rem wide) the two buttons move below the place line. Pinned cards open the same way, with Directions filled and Unpin beside it; the arrow and name open the card's details, and their buttons move down below 18rem. Controls and rows keep their size when a button is tapped or the list is sorted: progress and success show inside the control, only a failure adds a line, and the place line stays one line, cutting the area short and never the distance. The area map loads on request after the timetable.
 The sun panel sits under the pinned masjids and above search. It always shows the next calculated prayer start with its countdown, the start that just passed (so it never reads as a rival to a masjid's next iqama), and the solar chart, whose live sun uses a ray symbol. Tapping it opens the location button and the list of calculated starts in place. From Maghrib until Fajr the panel shows the night: the chart is the sun's depth below the horizon mirrored into an arc, with Isha, the last third, Fajr and sunrise marked, the night's length inside it, and a crescent that marks the time (not the moon's position or phase). The list then shows the night's times, including Islamic midnight. The day curve folds into the horizon and the night curve springs out of it as the sun is carved into the crescent; the flip plays only when Maghrib arrives on an open page (or on returning to it), and Fajr reverses it. A fresh load opens straight in day or night, and the sun or moon eases along that arc from its start to now. Reduced motion places it without gliding and only crossfades the flip. Where the night cannot be calculated the day chart stays. The header is a slim one-row bar on the card fill with a single line below, not sticky: the doorway mark and the name in Source Serif 4 semibold on the left, and a quiet outlined pill to the Facebook group on the right ("Join" below 30rem, "Join our Facebook group" above, and the full phrase to screen readers at every width). It is 64px tall on phones and 72px from 40rem; with enlarged text the pill wraps below the name. The footer carries the community call to action in a lifted brand-fill box (navy with a paper button in light, ink blue with a gold button in dark) and, last on the page, the Theme switch.
 
 ## Elevation & Depth
@@ -232,8 +232,8 @@ Three levels, set as tokens in [global.css](src/styles/global.css) with their ow
 | Level | Utility | Used by |
 | --- | --- | --- |
 | Soft lift | `shadow-lift` | Pinned card, sun panel, masjid list and table, map popup, footer community box, no-JavaScript cards |
-| Button lift | `shadow-button` (filled), `shadow-button-outline` (outline), `shadow-brand-action` (footer Join) | Pressable filled and outline buttons: pinned Directions, narrow-row Directions and Pin, Search, Show map, Nearest, Share, footer Join |
-| Flat | none | Time tiles, next-time pill, tabs, table row actions, Details, header link |
+| Button lift | `shadow-button` (filled), `shadow-button-outline` (outline), `shadow-brand-action` (footer Join) | Pressable filled and outline buttons: pinned Directions, Unpin, narrow-row Directions and Pin, Search, Show map, Nearest, Share, footer Join |
+| Flat | none | Time tiles, next-time pill, tabs, table row actions, header link |
 
 A raised button sinks 1px and takes `shadow-pressed` while pressed; a switched-on Nearest stays sunk. Keyboard focus keeps the lift and adds the outline. Surfaces keep a border, so they still separate in high contrast mode, where shadows disappear.
 
@@ -250,7 +250,7 @@ shadcn on Base UI lives in `src/components/ui/`.
 - **ToggleGroup** `size="touch"`: when selected, Daily uses `primary` and Jumu‘ah uses `friday`.
   The footer Theme switch (Auto, Light, Dark) uses the same `primary` underline. Auto saves nothing.
 - **Input**: search, 44px, 16px text.
-- **Collapsible**: pinned masjid with an inline Details disclosure.
+- **Collapsible**: pinned masjid whose arrow and name open its details in place.
 - **Table**: row header is a disclosure button; `containerProps` names the scrolling region.
 - **Empty**: no search results.
 
@@ -263,10 +263,10 @@ shadcn on Base UI lives in `src/components/ui/`.
 - Use underlined text links for supporting sources, jump links, and reporting a wrong time. Keep
   them recognizable before hover, keyboard accessible, and large enough to use on touch screens.
 - Keep Directions prominent on pinned cards and quiet in the comparison list, where a filled
-  control in every row would compete with the times. Table-row Directions and Pin and the pinned
-  card's Unpin are `muted-foreground` at regular weight, with icons and 44px targets. Narrow-row
-  Directions and Pin are 44px outline buttons showing a `primary` icon, with their names for screen
-  readers.
+  control in every row would compete with the times. Table-row Directions and Pin are
+  `muted-foreground` at regular weight, with icons and 44px targets. Narrow-row Directions and Pin
+  and the pinned card's Unpin are 44px outline buttons showing a `primary` icon; pinned Directions
+  is the same square, filled. All four keep their names for screen readers.
 - Outline buttons use the card fill, the soft `border` line and the outline lift. The no-JavaScript list uses text links for
   its destinations so the fallback remains simple and readable.
 

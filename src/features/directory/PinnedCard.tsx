@@ -1,5 +1,4 @@
 import { ChevronDownIcon, Clock3Icon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
@@ -48,15 +47,27 @@ export function PinnedCard({
   return (
     <Collapsible
       render={<section aria-labelledby={headingId} />}
-      className="group/card grid gap-3 rounded-xl border bg-card px-3 py-4 shadow-lift md:row-span-3 md:grid-rows-subgrid"
+      className="group/card grid gap-3 rounded-xl border bg-card px-3 py-4 shadow-lift md:row-span-2 md:grid-rows-subgrid"
     >
-      <div className="flex flex-wrap items-start justify-between gap-x-2">
-        <div className="flex min-w-0 flex-1 items-start gap-3">
-          <MasjidMark masjid={masjid} />
-          <div className="flex min-w-0 flex-col items-start font-bold">
-            <h3 id={headingId} className="text-lg">
-              {masjid.name}
-            </h3>
+      {/* Laid out like a narrow list row, so each action keeps one spot. */}
+      <div className="@container/head">
+        <div className="relative">
+          <h3 id={headingId} className="text-lg font-bold">
+            <CollapsibleTrigger
+              data-key={`row-${masjid.id}`}
+              className="group/details flex min-h-11 w-full items-center gap-2 pr-26 text-left @max-[18rem]/head:flex-wrap @max-[18rem]/head:pr-0"
+            >
+              <ChevronDownIcon
+                aria-hidden="true"
+                className="size-4 shrink-0 group-aria-expanded/details:rotate-180"
+              />
+              <MasjidMark masjid={masjid} />
+              <span className="min-w-0 flex-1 @max-[18rem]/head:min-w-24">
+                {masjid.name}
+              </span>
+            </CollapsibleTrigger>
+          </h3>
+          <div className="mt-1 flex flex-col items-start font-bold">
             <PlaceLine
               masjid={masjid}
               schedule={schedule}
@@ -66,8 +77,18 @@ export function PinnedCard({
             />
             <ArabicName masjid={masjid} />
           </div>
+          {/* With enlarged text there is no room beside the name. */}
+          <div className="absolute top-0 right-0 flex gap-1.5 @max-[18rem]/head:static @max-[18rem]/head:mt-2">
+            <Directions
+              masjid={masjid}
+              schedule={schedule}
+              view={view}
+              prominent
+              iconOnly
+            />
+            <PinButton masjid={masjid} pinned onPin={onPin} iconOnly />
+          </div>
         </div>
-        <PinButton masjid={masjid} pinned onPin={onPin} />
       </div>
       <div className="flex flex-col gap-2">
         {shown.next && (
@@ -86,31 +107,7 @@ export function PinnedCard({
           </p>
         )}
         {marker && <p className="text-xs text-attention">{marker}</p>}
-      </div>
-      <div>
-        <div className="flex flex-wrap gap-1">
-          <Directions
-            masjid={masjid}
-            schedule={schedule}
-            view={view}
-            prominent
-          />
-          <CollapsibleTrigger
-            data-key={`row-${masjid.id}`}
-            render={<Button variant="ghost" size="touch" />}
-            className="group/details rounded-full text-muted-foreground font-semibold"
-          >
-            <span>
-              Details<span className="sr-only"> for {masjid.name}</span>
-            </span>
-            <ChevronDownIcon
-              data-icon="inline-end"
-              aria-hidden="true"
-              className="group-aria-expanded/details:rotate-180"
-            />
-          </CollapsibleTrigger>
-        </div>
-        <CollapsibleContent className="mt-2 flex flex-col gap-2 border-t pt-2">
+        <CollapsibleContent className="mt-1 flex flex-col gap-2 border-t pt-2">
           <OtherSchedule
             masjid={masjid}
             schedule={schedule}
