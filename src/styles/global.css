@@ -222,6 +222,41 @@
   outline-color: var(--sky-sun);
 }
 
+/* High contrast drops the night-blue fill but keeps SVG colours, so give the panel system colours. */
+@media (forced-colors: active) {
+  .sky-panel {
+    --sky: Canvas;
+    --sky-foreground: CanvasText;
+    --sky-sun: CanvasText;
+    --sky-muted: CanvasText;
+    --sun-core: Canvas;
+    --sun-ring: CanvasText;
+    --sun-ray: CanvasText;
+  }
+}
+
+/* "hidden" still lets focus on an off-map marker scroll the map's contents out of place. */
+.maplibregl-map {
+  overflow: clip !important;
+}
+
+/* The map stays light in both themes, so marker focus uses the constant brand green. */
+.maplibregl-marker :focus-visible {
+  outline-color: var(--brand);
+}
+
+/* MapLibre swaps the outline for a faint ring. Outline the box, inside its own background:
+   dark mode inverts the button, and the dark ring colour is faint on the light map. */
+.maplibregl-ctrl-attrib:has(> .maplibregl-ctrl-attrib-button:focus-visible) {
+  outline: 3px solid var(--ring);
+  outline-offset: -3px;
+}
+.maplibregl-ctrl-attrib
+  > .maplibregl-ctrl-attrib-button:focus-visible:focus-visible {
+  box-shadow: none;
+  outline: none;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .sky-marker {
     transition: transform 350ms ease-out;

@@ -139,7 +139,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
           <ToggleGroupItem
             key={value}
             value={value}
-            className={`flex-1 rounded-none! border-b-2 border-transparent px-3 font-semibold text-muted-foreground hover:bg-transparent aria-pressed:bg-transparent ${value === "daily" ? "aria-pressed:border-primary aria-pressed:text-primary" : "aria-pressed:border-friday aria-pressed:text-friday"}`}
+            className={`flex-1 rounded-none! border-b-2 border-transparent px-3 font-semibold text-muted-foreground hover:bg-transparent aria-pressed:bg-transparent forced-colors:border-b-0 forced-colors:aria-pressed:border-b-4 ${value === "daily" ? "aria-pressed:border-primary aria-pressed:text-primary" : "aria-pressed:border-friday aria-pressed:text-friday"}`}
           >
             {label}
           </ToggleGroupItem>
