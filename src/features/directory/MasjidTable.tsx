@@ -126,62 +126,60 @@ export function MasjidTable({
           const pinned = pins.includes(masjid.id);
           return (
             <li key={masjid.id} className="space-y-2 px-3 py-3">
-              <button
-                type="button"
-                className="group/row flex min-h-11 w-full items-center gap-2 text-left font-semibold"
-                aria-expanded={open}
-                data-key={`row-${masjid.id}`}
-                aria-controls={open ? `detail-mobile-${masjid.id}` : undefined}
-                onClick={() => onToggle(masjid.id)}
-              >
-                <MasjidMark masjid={masjid} />
-                <span className="min-w-0 flex-1">
-                  {masjid.name}
+              {/* The icons overlay the button's first line, so the location keeps the full width. */}
+              <div className="relative">
+                <button
+                  type="button"
+                  className="group/row flex w-full flex-col items-stretch gap-1 text-left font-semibold"
+                  aria-expanded={open}
+                  data-key={`row-${masjid.id}`}
+                  aria-controls={
+                    open ? `detail-mobile-${masjid.id}` : undefined
+                  }
+                  onClick={() => onToggle(masjid.id)}
+                >
+                  <span className="flex min-h-11 items-center gap-2 pr-26 @max-[17rem]/directory:flex-wrap @max-[17rem]/directory:pr-0">
+                    <ChevronDownIcon
+                      aria-hidden="true"
+                      className="size-4 shrink-0 group-aria-expanded/row:rotate-180"
+                    />
+                    <MasjidMark masjid={masjid} />
+                    <span className="min-w-0 flex-1 @max-[17rem]/directory:min-w-24">
+                      {masjid.name}
+                    </span>
+                  </span>
                   <PlaceLine
                     {...row}
                     view={view}
                     areaClassName="group-aria-expanded/row:whitespace-normal"
                   />
-                </span>
-                <ChevronDownIcon
-                  aria-hidden="true"
-                  className="size-4 shrink-0 group-aria-expanded/row:rotate-180"
-                />
-              </button>
-              {/* Actions sit beside the times where they fit, else on their own line. */}
-              <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-3">
-                {shown.times === "daily" ? (
-                  <div className="w-full">
-                    <DailyGrid daily={schedule.daily} />
-                  </div>
-                ) : (
-                  <p
-                    className={cn(
-                      "text-sm",
-                      shown.times !== "jumuah" && "py-1.5",
-                    )}
-                  >
-                    {view === "daily" && masjid.jumuahOnly && "Jumu‘ah only · "}
-                    {shown.times === "jumuah" && schedule.jumuah ? (
-                      <JumuahTimes
-                        {...schedule.jumuah}
-                        states={schedule.jumuahStates}
-                      />
-                    ) : (
-                      <Check masjid={masjid} />
-                    )}
-                  </p>
-                )}
-                <div className="-my-1.5 ml-auto flex items-center">
-                  <Directions {...row} view={view} compact />
+                </button>
+                {/* With enlarged text there is no room beside the name. */}
+                <div className="absolute top-0 right-0 flex gap-1.5 @max-[17rem]/directory:static @max-[17rem]/directory:mt-2">
+                  <Directions {...row} view={view} iconOnly />
                   <PinButton
                     masjid={masjid}
                     pinned={pinned}
                     onPin={() => onPin(masjid.id)}
-                    compact
+                    iconOnly
                   />
                 </div>
               </div>
+              {shown.times === "daily" ? (
+                <DailyGrid daily={schedule.daily} />
+              ) : (
+                <p className="text-sm">
+                  {view === "daily" && masjid.jumuahOnly && "Jumu‘ah only · "}
+                  {shown.times === "jumuah" && schedule.jumuah ? (
+                    <JumuahTimes
+                      {...schedule.jumuah}
+                      states={schedule.jumuahStates}
+                    />
+                  ) : (
+                    <Check masjid={masjid} />
+                  )}
+                </p>
+              )}
               {marked && (
                 <p className="text-xs text-attention">
                   Checked {formatDate(marked)}

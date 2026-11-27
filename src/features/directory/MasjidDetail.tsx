@@ -20,19 +20,22 @@ import { Check, DailyGrid, JumuahTimes } from "./Times";
 
 const KIND = { khutbah: "khutbah", start: "starts", iqama: "iqama" };
 
+/** A narrow row's square action: the icon shows, the label stays for screen readers. */
+const ICON_ONLY = "size-11 px-0 text-primary";
+
 /** Goes where the shown times are prayed: the Jumu‘ah venue when its times are the ones shown. */
 export function Directions({
   masjid,
   schedule,
   view,
   prominent = false,
-  compact = false,
+  iconOnly = false,
 }: {
   masjid: Masjid;
   schedule: Schedule;
   view: View;
   prominent?: boolean;
-  compact?: boolean;
+  iconOnly?: boolean;
 }) {
   const venue =
     shownFor(masjid, schedule, view).times === "jumuah"
@@ -42,20 +45,22 @@ export function Directions({
     <a
       className={cn(
         buttonVariants({
-          variant: prominent ? "default" : "ghost",
+          variant: prominent ? "default" : iconOnly ? "outline" : "ghost",
           size: "touch",
         }),
-        "w-fit rounded-full",
-        !prominent && "font-normal text-muted-foreground",
-        // Wider on the right so the Pin icon does not read as part of Directions.
-        compact && "pr-2 pl-1",
+        iconOnly
+          ? ICON_ONLY
+          : [
+              "w-fit rounded-full",
+              !prominent && "font-normal text-muted-foreground",
+            ],
       )}
       href={directionsUrl(venue ?? masjid)}
       target="_blank"
       rel="noopener"
     >
-      <NavigationIcon aria-hidden="true" />
-      <span>
+      <NavigationIcon aria-hidden="true" className={cn(iconOnly && "size-5")} />
+      <span className={cn(iconOnly && "sr-only")}>
         Directions
         <span className="sr-only"> to {venue?.name ?? masjid.name}</span>
       </span>
@@ -235,12 +240,14 @@ export function PinButton({
   pinned,
   onPin,
   compact = false,
+  iconOnly = false,
   focusKey = `pin-${masjid.id}`,
 }: {
   masjid: Masjid;
   pinned: boolean;
   onPin: () => void;
   compact?: boolean;
+  iconOnly?: boolean;
   focusKey?: string;
 }) {
   const label = pinned ? "Unpin" : "Pin";
@@ -248,17 +255,17 @@ export function PinButton({
   return (
     <Button
       type="button"
-      variant="ghost"
+      variant={iconOnly ? "outline" : "ghost"}
       size="touch"
       className={cn(
-        "rounded-full font-normal text-muted-foreground",
+        iconOnly ? ICON_ONLY : "rounded-full font-normal text-muted-foreground",
         compact && "px-0",
       )}
       onClick={onPin}
       data-key={focusKey}
     >
-      <Icon aria-hidden="true" />
-      <span>
+      <Icon aria-hidden="true" className={cn(iconOnly && "size-5")} />
+      <span className={cn(iconOnly && "sr-only")}>
         {label}
         <span className="sr-only"> {masjid.name}</span>
       </span>
