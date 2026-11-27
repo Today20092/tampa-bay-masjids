@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/table";
 import type { Masjid } from "@/lib/masjid-schema";
 import { PRAYERS, type Schedule } from "@/lib/schedule";
-import { dateToMark, shownFor, type Shown, type View } from "@/lib/shown";
-import { formatDate, formatTime, type Now } from "@/lib/time";
+import { checkedMarker, shownFor, type Shown, type View } from "@/lib/shown";
+import { formatTime, type Now } from "@/lib/time";
 import { cn } from "@/lib/utils";
 import {
   ArabicName,
@@ -122,7 +122,9 @@ export function MasjidTable({
           const { masjid, schedule } = row;
           const open = openId === masjid.id;
           const shown = shownFor(masjid, schedule, view);
-          const marked = now ? dateToMark(now.date, shown.checked) : null;
+          const marker = now
+            ? checkedMarker(now.date, shown, shown.checked)
+            : null;
           const pinned = pins.includes(masjid.id);
           const place = placeLine(row, view);
           return (
@@ -177,11 +179,7 @@ export function MasjidTable({
                   )}
                 </p>
               )}
-              {marked && (
-                <p className="text-xs text-attention">
-                  Checked {formatDate(marked)}
-                </p>
-              )}
+              {marker && <p className="text-xs text-attention">{marker}</p>}
               {open && (
                 <div
                   id={`detail-mobile-${masjid.id}`}
@@ -238,7 +236,9 @@ export function MasjidTable({
             const { masjid } = row;
             const open = openId === masjid.id;
             const shown = shownFor(masjid, row.schedule, view);
-            const marked = now ? dateToMark(now.date, shown.checked) : null;
+            const marker = now
+              ? checkedMarker(now.date, shown, shown.checked)
+              : null;
             const pinned = pins.includes(masjid.id);
             const place = placeLine(row, view);
             return (
@@ -268,9 +268,9 @@ export function MasjidTable({
                             {place}
                           </span>
                         )}
-                        {marked && (
+                        {marker && (
                           <span className="block font-normal text-attention">
-                            Checked {formatDate(marked)}
+                            {marker}
                           </span>
                         )}
                       </span>

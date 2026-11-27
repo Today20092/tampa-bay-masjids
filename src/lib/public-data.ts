@@ -12,10 +12,16 @@ const FRESHNESS_RULE =
   `US clock change. Show the checked date when it is more than ${MARK_AFTER_DAYS} days old. ` +
   `Where there is no usable time, say "${CHECK}", except a masjid with comingSoon true, which has not started formal prayers yet and should be described as "${COMING_SOON}". ` +
   `Maghrib may be "sunset" (shortly after the sunset adhan) or "sunset+N" (N minutes after it). ` +
-  `jumuah.timeIs says what the Jumu‘ah times are: "khutbah", "start" (the service start) or "iqama". When it is absent the source did not say, so do not call them either khutbah or iqama.`;
+  `jumuah.timeIs says what the Jumu‘ah times are: "khutbah", "start" (the service start) or "iqama". When it is absent the source did not say, so do not call them either khutbah or iqama. ` +
+  `If iqamaPeriods or jumuahPeriods is present, pick the period whose from and to cover today ` +
+  `(inclusive, ${TIME_ZONE}); its validThrough is its to date, and the ${STALE_AFTER_DAYS}-day limit does not apply. ` +
+  `If no period covers today, use iqama or jumuah.`;
 
 const dated = <T extends { checked: string }>(set: T | undefined) =>
   set ? { ...set, validThrough: validThrough(set.checked) } : null;
+
+const datedPeriods = <T extends { to: string }>(periods: T[] | undefined) =>
+  periods?.map((period) => ({ ...period, validThrough: period.to })) ?? null;
 
 export function publicData(masjids: Masjid[]) {
   return {
@@ -35,7 +41,9 @@ export function publicData(masjids: Masjid[]) {
       jumuahOnly: m.jumuahOnly,
       comingSoon: m.comingSoon ?? false,
       iqama: dated(m.iqama),
+      iqamaPeriods: datedPeriods(m.iqamaPeriods),
       jumuah: dated(m.jumuah),
+      jumuahPeriods: datedPeriods(m.jumuahPeriods),
     })),
   };
 }
@@ -49,6 +57,17 @@ type Dated = {
 const from = ({ source, checked, validThrough }: Dated) =>
   `source: ${[source.label, source.url].filter(Boolean).join(" ")}; checked ${checked}; valid through ${validThrough}`;
 
+type IqamaSet = Dated & {
+  fajr: string;
+  dhuhr: string;
+  asr: string;
+  maghrib: string;
+  isha: string;
+};
+
+const iqamaText = (set: IqamaSet) =>
+  `Fajr ${set.fajr}, Dhuhr ${set.dhuhr}, Asr ${set.asr}, Maghrib ${set.maghrib}, Isha ${set.isha} (${from(set)})`;
+
 export function llmsText(masjids: Masjid[]): string {
   const entries = publicData(masjids).masjids.map((m) => {
     const lines = [
@@ -61,18 +80,31 @@ export function llmsText(masjids: Masjid[]): string {
     if (m.whatsapp) lines.push(`- WhatsApp: ${m.whatsapp}`);
     if (m.comingSoon) lines.push(`- ${COMING_SOON}`);
     else if (m.jumuahOnly) lines.push("- Jumu‘ah only");
-    else if (m.iqama) {
-      const { fajr, dhuhr, asr, maghrib, isha } = m.iqama;
+    else if (m.iqama) lines.push(`- Iqama: ${iqamaText(m.iqama)}`);
+    else if (!m.iqamaPeriods?.length)
+      lines.push(`- Iqama: ${CHECK.toLowerCase()}`);
+    if (m.iqamaPeriods?.length) {
+      lines.push("- Iqama periods (use the one covering today):");
+      for (const period of m.iqamaPeriods)
+        lines.push(`  - ${period.from} to ${period.to}: ${iqamaText(period)}`);
+    }
+    if (!m.comingSoon && m.jumuah)
       lines.push(
-        `- Iqama: Fajr ${fajr}, Dhuhr ${dhuhr}, Asr ${asr}, Maghrib ${maghrib}, Isha ${isha} (${from(m.iqama)})`,
+        `- Jumu‘ah (${jumuahTimeKind(m.jumuah.timeIs).toLowerCase()}): ${m.jumuah.times.join(", ")}${m.jumuah.venue ? ` at ${m.jumuah.venue.name}, ${m.jumuah.venue.address}` : ""} (${from(m.jumuah)})`,
       );
-    } else lines.push(`- Iqama: ${CHECK.toLowerCase()}`);
-    if (!m.comingSoon)
-      lines.push(
-        m.jumuah
-          ? `- Jumu‘ah (${jumuahTimeKind(m.jumuah.timeIs).toLowerCase()}): ${m.jumuah.times.join(", ")}${m.jumuah.venue ? ` at ${m.jumuah.venue.name}, ${m.jumuah.venue.address}` : ""} (${from(m.jumuah)})`
-          : `- Jumu‘ah: ${CHECK.toLowerCase()}`,
-      );
+    else if (!m.comingSoon && !m.jumuahPeriods?.length)
+      lines.push(`- Jumu‘ah: ${CHECK.toLowerCase()}`);
+    if (!m.comingSoon && m.jumuahPeriods?.length) {
+      lines.push("- Jumu‘ah periods (use the one covering today):");
+      for (const period of m.jumuahPeriods) {
+        const at = period.venue
+          ? ` at ${period.venue.name}, ${period.venue.address}`
+          : "";
+        lines.push(
+          `  - ${period.from} to ${period.to}: ${jumuahTimeKind(period.timeIs).toLowerCase()}: ${period.times.join(", ")}${at} (${from(period)})`,
+        );
+      }
+    }
     return lines.join("\n");
   });
   return [

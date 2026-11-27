@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { isFresh, needsDateMarker, validThrough } from "./freshness";
+import {
+  isFresh,
+  needsDateMarker,
+  spansClockChange,
+  validThrough,
+} from "./freshness";
 
 describe("freshness", () => {
   it("expires on the 14th day", () => {
@@ -31,5 +36,14 @@ describe("freshness", () => {
   it("states the last day a time may be shown", () => {
     expect(validThrough("2026-11-10")).toBe("2026-11-23");
     expect(validThrough("2026-10-25")).toBe("2026-10-31");
+  });
+
+  it("sees a clock change inside a span, including one that ends on the same offset", () => {
+    expect(spansClockChange("2026-10-25", "2026-11-07")).toBe(true);
+    expect(spansClockChange("2026-11-01", "2026-11-20")).toBe(false);
+    expect(spansClockChange("2027-03-01", "2027-03-20")).toBe(true);
+    expect(spansClockChange("2027-03-14", "2027-04-14")).toBe(false);
+    // October and the following April are both on daylight time, with two changes between them.
+    expect(spansClockChange("2026-10-01", "2027-04-01")).toBe(true);
   });
 });

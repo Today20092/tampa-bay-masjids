@@ -68,4 +68,75 @@ describe("expiry warning", () => {
     expect(result.status).toBe(1);
     expect(result.stderr).toContain("B iqama: disappears after 2026-12-09");
   });
+
+  it("waits until the last period when a later period or a fresh fallback continues", () => {
+    const continued = writeFixture([
+      record("c", "C", {
+        iqama: {
+          fajr: "06:10",
+          dhuhr: "13:30",
+          asr: "16:15",
+          maghrib: "17:45",
+          isha: "19:30",
+          source,
+          checked: "2026-11-26",
+        },
+        iqamaPeriods: [
+          {
+            from: "2026-12-07",
+            to: "2026-12-13",
+            fajr: "06:20",
+            dhuhr: "13:00",
+            asr: "16:00",
+            maghrib: "sunset+10",
+            isha: "19:30",
+            source: { label: "December sheet" },
+            checked: "2026-11-27",
+          },
+          {
+            from: "2026-12-14",
+            to: "2026-12-31",
+            fajr: "06:30",
+            dhuhr: "13:00",
+            asr: "16:00",
+            maghrib: "sunset+10",
+            isha: "19:30",
+            source: { label: "December sheet" },
+            checked: "2026-11-27",
+          },
+        ],
+      }),
+    ]);
+    // The standing block would disappear after Dec 9, and the first period after Dec 13.
+    expect(run(continued, "2026-12-07").status).toBe(0);
+    expect(run(continued, "2026-12-11").status).toBe(0);
+    const last = run(continued, "2026-12-29");
+    expect(last.status).toBe(1);
+    expect(last.stderr).toContain("C iqama: disappears after 2026-12-31");
+    expect(last.stderr).toContain("December sheet");
+  });
+
+  it("warns when a period ends and nothing fresh follows it", () => {
+    const ending = writeFixture([
+      record("d", "D", {
+        iqamaPeriods: [
+          {
+            from: "2026-12-01",
+            to: "2026-12-10",
+            fajr: "06:20",
+            dhuhr: "13:00",
+            asr: "16:00",
+            maghrib: "sunset+10",
+            isha: "19:30",
+            source,
+            checked: "2026-11-27",
+          },
+        ],
+      }),
+    ]);
+    expect(run(ending, "2026-12-07").status).toBe(0);
+    const due = run(ending, "2026-12-08");
+    expect(due.status).toBe(1);
+    expect(due.stderr).toContain("D iqama: disappears after 2026-12-10");
+  });
 });
