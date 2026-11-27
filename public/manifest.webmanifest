@@ -3,8 +3,8 @@
   "short_name": "TB Masjids",
   "start_url": "/",
   "display": "browser",
-  "background_color": "#174c40",
-  "theme_color": "#174c40",
+  "background_color": "#1f3461",
+  "theme_color": "#1f3461",
   "icons": [
     { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },

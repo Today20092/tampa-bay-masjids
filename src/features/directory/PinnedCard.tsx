@@ -44,7 +44,7 @@ export function PinnedCard({
   return (
     <Collapsible
       render={<section aria-labelledby={headingId} />}
-      className="grid gap-3 rounded-xl border bg-card px-3 py-4 md:row-span-3 md:grid-rows-subgrid"
+      className="grid gap-3 rounded-xl border bg-card px-3 py-4 shadow-lift md:row-span-3 md:grid-rows-subgrid"
     >
       <div className="flex flex-wrap items-start justify-between gap-x-2">
         <div className="flex min-w-0 flex-1 items-start gap-3">

@@ -19,7 +19,7 @@ export function MasjidMark({ masjid }: { masjid: Masjid }) {
       alt=""
       width={44}
       height={44}
-      className="size-11 shrink-0 rounded-sm bg-logo-tile object-contain"
+      className="size-11 shrink-0 rounded-sm bg-logo-tile object-contain brightness-(--logo-brightness)"
     />
   );
 }

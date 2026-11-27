@@ -37,7 +37,7 @@ export function Directions({
           size: "touch",
         }),
         "w-fit rounded-full",
-        !prominent && "text-primary",
+        !prominent && "font-normal text-muted-foreground",
         // Wider on the right so the Pin icon does not read as part of Directions.
         compact && "pr-2 pl-1",
       )}
@@ -214,7 +214,10 @@ export function PinButton({
       type="button"
       variant="ghost"
       size="touch"
-      className={cn("rounded-full text-primary", compact && "px-0")}
+      className={cn(
+        "rounded-full font-normal text-muted-foreground",
+        compact && "px-0",
+      )}
       onClick={onPin}
       data-key={focusKey}
     >
@@ -240,7 +243,7 @@ function ExternalLinks({ masjid }: { masjid: Masjid }) {
           key={label}
           className={cn(
             buttonVariants({ variant: "outline", size: "touch" }),
-            "border-input bg-card font-semibold",
+            "font-semibold",
           )}
           href={href}
           target="_blank"

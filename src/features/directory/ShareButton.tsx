@@ -50,7 +50,7 @@ export function ShareButton({
       <Button
         variant="outline"
         size="touch"
-        className={cn("border-input bg-card font-semibold", className)}
+        className={cn("font-semibold", className)}
         onClick={() => void share()}
       >
         {status === "copied" ? (

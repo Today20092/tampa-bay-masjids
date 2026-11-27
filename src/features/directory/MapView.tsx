@@ -146,7 +146,7 @@ export default function MapView({
         {active && (
           <div
             aria-live="polite"
-            className="absolute inset-x-2 bottom-10 z-10 flex max-w-sm flex-col gap-1 rounded-lg border bg-card p-3 shadow-md"
+            className="absolute inset-x-2 bottom-10 z-10 flex max-w-sm flex-col gap-1 rounded-lg border bg-card p-3 shadow-lift"
           >
             <div className="flex items-start justify-between gap-2">
               <div>

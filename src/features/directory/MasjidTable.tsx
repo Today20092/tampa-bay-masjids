@@ -116,7 +116,7 @@ export function MasjidTable({
     <div className="@container/directory">
       <ul
         aria-label={caption}
-        className="divide-y rounded-xl border bg-card @min-[42rem]/directory:hidden"
+        className="divide-y rounded-xl border bg-card shadow-lift @min-[42rem]/directory:hidden"
       >
         {rows.map((row) => {
           const { masjid, schedule } = row;
@@ -201,7 +201,7 @@ export function MasjidTable({
           "aria-label": `${caption} table`,
           tabIndex: 0,
           className:
-            "hidden rounded-xl border bg-card [container-type:inline-size] @min-[42rem]/directory:block",
+            "hidden rounded-xl border bg-card shadow-lift [container-type:inline-size] @min-[42rem]/directory:block",
         }}
       >
         <TableCaption className="sr-only">{caption}</TableCaption>

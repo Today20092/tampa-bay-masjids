@@ -111,7 +111,7 @@ export function SolarClock() {
   return (
     <Collapsible
       render={<section aria-labelledby="solar-heading" />}
-      className="sky-panel rounded-xl p-1"
+      className="sky-panel rounded-xl p-1 shadow-lift"
       data-night={data?.isNight || undefined}
       data-live={changed || undefined}
       data-flipping={motion?.kind === "flip" || undefined}
