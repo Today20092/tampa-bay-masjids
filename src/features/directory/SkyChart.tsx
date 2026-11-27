@@ -1,12 +1,12 @@
+import { type CSSProperties, useLayoutEffect, useRef, useState } from "react";
 import {
-  type CSSProperties,
-  type Ref,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
-import { FLIP_MS, flipPoint, HORIZON, type solarDay } from "@/lib/solar-day";
+  FLIP_MS,
+  flipPoint,
+  GLIDE_MS,
+  glidePoint,
+  HORIZON,
+  type solarDay,
+} from "@/lib/solar-day";
 
 type SolarData = ReturnType<typeof solarDay>;
 
@@ -28,56 +28,41 @@ const stars = [
   [372, 64, 0.9],
 ];
 
-/**
- * When the chart shows night, and how far a day/night flip has run. A night visit starts in the
- * day pose and flips once the chart is on screen; later changes flip as they happen.
- */
-export function useNightFlip(isNight: boolean) {
-  const chart = useRef<SVGSVGElement>(null);
-  const [seen, setSeen] = useState(false);
-  const [flipMs, setFlipMs] = useState<number | null>(null);
-  const shownNight = isNight && seen;
-  const wasNight = useRef(false);
+type Motion = { kind: "glide" | "flip"; ms: number };
 
-  useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        observer.disconnect();
-        // A beat in the day pose, so the sunset can be seen.
-        timer = setTimeout(() => setSeen(true), 600);
-      },
-      { threshold: 0.6 },
-    );
-    if (chart.current) observer.observe(chart.current);
-    return () => {
-      observer.disconnect();
-      clearTimeout(timer);
-    };
-  }, []);
+/**
+ * The marker's animation: a glide to now when the page first knows the time, then a flip at each
+ * day/night change. `changed` stays false until the first flip, so a fresh page never fades in.
+ */
+export function useSkyMotion(isNight: boolean | undefined) {
+  const [motion, setMotion] = useState<Motion | null>(null);
+  const [changed, setChanged] = useState(false);
+  const wasNight = useRef<boolean>(undefined);
 
   useLayoutEffect(() => {
-    if (wasNight.current === shownNight) return;
-    wasNight.current = shownNight;
+    if (isNight === undefined) return;
+    const kind = wasNight.current === undefined ? "glide" : "flip";
+    wasNight.current = isNight;
+    if (kind === "flip") setChanged(true);
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setFlipMs(null);
+      setMotion(null);
       return;
     }
+    const duration = kind === "flip" ? FLIP_MS : GLIDE_MS;
     let start: number | undefined;
     let frame = 0;
     const step = (now: number) => {
       start ??= now;
       const ms = now - start;
-      setFlipMs(ms < FLIP_MS ? ms : null);
-      if (ms < FLIP_MS) frame = requestAnimationFrame(step);
+      setMotion(ms < duration ? { kind, ms } : null);
+      if (ms < duration) frame = requestAnimationFrame(step);
     };
-    setFlipMs(0);
+    setMotion({ kind, ms: 0 });
     frame = requestAnimationFrame(step);
     return () => cancelAnimationFrame(frame);
-  }, [shownNight]);
+  }, [isNight]);
 
-  return { chart, shownNight, flipMs };
+  return { motion, changed };
 }
 
 function Marks({
@@ -129,33 +114,25 @@ function Marks({
 
 /** The day's sun path and the night's, one folded into the horizon while the other shows. */
 export function SkyChart({
-  ref,
   data,
-  shownNight,
-  flipMs,
-  markerKey,
+  motion,
 }: {
-  ref: Ref<SVGSVGElement>;
   data: SolarData | null;
-  shownNight: boolean;
-  flipMs: number | null;
-  markerKey: string;
+  motion: Motion | null;
 }) {
   const night = data?.night;
-  // A night visit waits at the day chart's sunset until the flip runs.
   const resting =
+    data && (data.isNight && night ? night.point(data.instant) : data.sun);
+  const moving =
     data &&
-    (shownNight && night
-      ? night.point(data.instant)
-      : data.isNight
-        ? data.events.find(({ key }) => key === "maghrib")
-        : data.sun);
-  const marker =
-    (data && flipMs !== null && flipPoint(data, shownNight, flipMs)) || resting;
+    motion &&
+    (motion.kind === "flip"
+      ? flipPoint(data, motion.ms)
+      : glidePoint(data, motion.ms / GLIDE_MS));
+  const marker = resting && (moving ?? resting);
 
   return (
     <svg
-      ref={ref}
       viewBox="0 -20 480 160"
       className="max-h-44 w-full overflow-visible"
       aria-hidden="true"
@@ -189,7 +166,7 @@ export function SkyChart({
                 x="-20"
                 y="-40"
                 height="200"
-                width={shownNight && marker ? Math.max(0, marker.x + 20) : 0}
+                width={data.isNight && marker ? Math.max(0, marker.x + 20) : 0}
               />
             </clipPath>
           </defs>
@@ -277,7 +254,6 @@ export function SkyChart({
           )}
           {marker && (
             <g
-              key={markerKey}
               className="sky-marker"
               style={{ transform: `translate(${marker.x}px, ${marker.y}px)` }}
             >

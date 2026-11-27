@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { FLIP_MS, flipPoint, solarDay, TAMPA_SKY } from "./solar-day";
+import {
+  FLIP_MS,
+  flipPoint,
+  glidePoint,
+  solarDay,
+  TAMPA_SKY,
+} from "./solar-day";
 
 describe("Tampa solar chart", () => {
   it("places the afternoon sun on the descending arc with Asr next", () => {
@@ -59,11 +65,22 @@ describe("Tampa solar chart", () => {
 
   it("ends each flip on the current point of the new arc", () => {
     const night = solarDay(new Date("2026-11-27T03:00:00Z"), TAMPA_SKY);
-    expect(flipPoint(night, true, FLIP_MS)).toEqual(
+    expect(flipPoint(night, FLIP_MS)).toEqual(
       night.night?.point(night.instant),
     );
     const morning = solarDay(new Date("2026-11-27T11:00:00Z"), TAMPA_SKY);
-    expect(flipPoint(morning, false, FLIP_MS)).toEqual(morning.sun);
+    expect(flipPoint(morning, FLIP_MS)).toEqual(morning.sun);
+  });
+
+  it("glides from the start of the current arc to now", () => {
+    const night = solarDay(new Date("2026-11-27T03:00:00Z"), TAMPA_SKY);
+    expect(glidePoint(night, 0)).toEqual(
+      night.night?.point(night.night.maghrib),
+    );
+    expect(glidePoint(night, 1)).toEqual(night.night?.point(night.instant));
+    const afternoon = solarDay(new Date("2026-11-26T18:00:00Z"), TAMPA_SKY);
+    expect(glidePoint(afternoon, 0)?.x).toBeCloseTo(afternoon.events[0].x);
+    expect(glidePoint(afternoon, 1)).toEqual(afternoon.sun);
   });
 
   it("keeps the day chart where the night cannot be calculated", () => {

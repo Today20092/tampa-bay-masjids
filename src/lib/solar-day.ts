@@ -205,6 +205,7 @@ export function solarDay(instant: Date, location: SkyLocation) {
 }
 
 export const FLIP_MS = 2000;
+export const GLIDE_MS = 1600;
 
 const ease = (k: number) => (k < 0.5 ? 4 * k ** 3 : 1 - (-2 * k + 2) ** 3 / 2);
 
@@ -213,26 +214,34 @@ const between = (a: Point, b: Point, k: number) => ({
   y: a.y + (b.y - a.y) * ease(k),
 });
 
+/** The marker `progress` (0 to 1) of the way along the current arc: Maghrib or Fajr to now. */
+export function glidePoint(
+  { night, isNight, point, events, instant }: ReturnType<typeof solarDay>,
+  progress: number,
+): Point | null {
+  const nightNow = isNight ? night : null;
+  const start =
+    nightNow?.maghrib ?? events.find(({ key }) => key === "fajr")?.time;
+  if (!start) return null;
+  const travelled =
+    (instant.getTime() - start.getTime()) * ease(Math.min(1, progress));
+  return (nightNow?.point ?? point)(new Date(start.getTime() + travelled));
+}
+
 /** Where the marker is `ms` into a flip: to the horizon, across it, then along the new arc to now. */
 export function flipPoint(
-  { night, point, events, instant }: ReturnType<typeof solarDay>,
-  toNight: boolean,
+  data: ReturnType<typeof solarDay>,
   ms: number,
 ): Point | null {
-  const dayStart = events.find(
-    ({ key }) => key === (toNight ? "maghrib" : "fajr"),
+  const { night, isNight, point, events } = data;
+  const dayEnd = events.find(
+    ({ key }) => key === (isNight ? "maghrib" : "fajr"),
   )?.time;
-  if (!night || !dayStart) return null;
-  const from = toNight ? point(dayStart) : night.point(night.fajr);
-  const startTime = toNight ? night.maghrib : dayStart;
-  const arc = toNight ? night.point : point;
+  const arcStart = glidePoint(data, 0);
+  if (!night || !dayEnd || !arcStart) return null;
+  const from = isNight ? point(dayEnd) : night.point(night.fajr);
   const horizon = { x: from.x, y: HORIZON };
   if (ms < 450) return between(from, horizon, ms / 450);
-  if (ms < 1000) return between(horizon, arc(startTime), (ms - 450) / 550);
-  const ride = ease(Math.min(1, (ms - 1000) / (FLIP_MS - 1000)));
-  return arc(
-    new Date(
-      startTime.getTime() + (instant.getTime() - startTime.getTime()) * ride,
-    ),
-  );
+  if (ms < 1000) return between(horizon, arcStart, (ms - 450) / 550);
+  return glidePoint(data, (ms - 1000) / (FLIP_MS - 1000));
 }

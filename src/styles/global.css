@@ -251,6 +251,9 @@
    the sun is carved into a crescent and the sky darkens. Removing data-night runs it back. */
 .sky-panel {
   --sky-spring: cubic-bezier(0.3, 1.35, 0.5, 1);
+}
+/* Set at the first day/night change, so a page that loads at night starts night blue. */
+.sky-panel[data-live] {
   transition: background-color 1.4s ease;
 }
 .sky-panel[data-night] {
@@ -388,13 +391,9 @@
     opacity: 0.75;
   }
 }
-/* The flip moves the marker frame by frame; a transition would drag behind it. */
-.sky-panel[data-flipping] .sky-marker {
-  transition: none;
-}
 /* Reduced motion: nothing moves, day and night only crossfade. */
 @media (prefers-reduced-motion: reduce) {
-  .sky-panel,
+  .sky-panel[data-live],
   .sky-panel svg * {
     transition-property: opacity, fill, background-color !important;
     transition-duration: 0.4s !important;
@@ -428,10 +427,4 @@
   > .maplibregl-ctrl-attrib-button:focus-visible:focus-visible {
   box-shadow: none;
   outline: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .sky-marker {
-    transition: transform 350ms ease-out;
-  }
 }
