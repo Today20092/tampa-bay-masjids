@@ -19,7 +19,7 @@ import {
   Directions,
   OtherSchedule,
   PinButton,
-  placeLine,
+  PlaceLine,
   SourceAndActions,
 } from "./MasjidDetail";
 import { MasjidMark } from "./MasjidMark";
@@ -124,35 +124,55 @@ export function MasjidTable({
           const shown = shownFor(masjid, schedule, view);
           const marked = now ? dateToMark(now.date, shown.checked) : null;
           const pinned = pins.includes(masjid.id);
-          const place = placeLine(row, view);
           return (
-            <li key={masjid.id} className="space-y-3 px-3 py-4">
-              <div className="flex flex-wrap items-center justify-between gap-x-2">
-                <button
-                  type="button"
-                  className="group/row flex min-h-11 flex-1 items-center gap-2 text-left font-semibold"
-                  aria-expanded={open}
-                  data-key={`row-${masjid.id}`}
-                  aria-controls={
-                    open ? `detail-mobile-${masjid.id}` : undefined
-                  }
-                  onClick={() => onToggle(masjid.id)}
-                >
-                  <MasjidMark masjid={masjid} />
-                  <span>
-                    {masjid.name}
-                    {place && (
-                      <span className="block text-xs font-normal text-muted-foreground">
-                        {place}
-                      </span>
-                    )}
-                  </span>
-                  <ChevronDownIcon
-                    aria-hidden="true"
-                    className="size-4 shrink-0 group-aria-expanded/row:rotate-180"
+            <li key={masjid.id} className="space-y-2 px-3 py-3">
+              <button
+                type="button"
+                className="group/row flex min-h-11 w-full items-center gap-2 text-left font-semibold"
+                aria-expanded={open}
+                data-key={`row-${masjid.id}`}
+                aria-controls={open ? `detail-mobile-${masjid.id}` : undefined}
+                onClick={() => onToggle(masjid.id)}
+              >
+                <MasjidMark masjid={masjid} />
+                <span className="min-w-0 flex-1">
+                  {masjid.name}
+                  <PlaceLine
+                    {...row}
+                    view={view}
+                    areaClassName="group-aria-expanded/row:whitespace-normal"
                   />
-                </button>
-                <div className="flex items-center">
+                </span>
+                <ChevronDownIcon
+                  aria-hidden="true"
+                  className="size-4 shrink-0 group-aria-expanded/row:rotate-180"
+                />
+              </button>
+              {/* Actions sit beside the times where they fit, else on their own line. */}
+              <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-3">
+                {shown.times === "daily" ? (
+                  <div className="w-full">
+                    <DailyGrid daily={schedule.daily} />
+                  </div>
+                ) : (
+                  <p
+                    className={cn(
+                      "text-sm",
+                      shown.times !== "jumuah" && "py-1.5",
+                    )}
+                  >
+                    {view === "daily" && masjid.jumuahOnly && "Jumu‘ah only · "}
+                    {shown.times === "jumuah" && schedule.jumuah ? (
+                      <JumuahTimes
+                        {...schedule.jumuah}
+                        states={schedule.jumuahStates}
+                      />
+                    ) : (
+                      <Check masjid={masjid} />
+                    )}
+                  </p>
+                )}
+                <div className="-my-1.5 ml-auto flex items-center">
                   <Directions {...row} view={view} compact />
                   <PinButton
                     masjid={masjid}
@@ -162,21 +182,6 @@ export function MasjidTable({
                   />
                 </div>
               </div>
-              {shown.times === "daily" ? (
-                <DailyGrid daily={schedule.daily} />
-              ) : (
-                <p className="text-sm">
-                  {view === "daily" && masjid.jumuahOnly && "Jumu‘ah only · "}
-                  {shown.times === "jumuah" && schedule.jumuah ? (
-                    <JumuahTimes
-                      {...schedule.jumuah}
-                      states={schedule.jumuahStates}
-                    />
-                  ) : (
-                    <Check masjid={masjid} />
-                  )}
-                </p>
-              )}
               {marked && (
                 <p className="text-xs text-attention">
                   Checked {formatDate(marked)}
@@ -240,7 +245,6 @@ export function MasjidTable({
             const shown = shownFor(masjid, row.schedule, view);
             const marked = now ? dateToMark(now.date, shown.checked) : null;
             const pinned = pins.includes(masjid.id);
-            const place = placeLine(row, view);
             return (
               <Fragment key={masjid.id}>
                 <TableRow className="border-row hover:bg-transparent has-aria-expanded:bg-transparent">
@@ -263,11 +267,12 @@ export function MasjidTable({
                       <MasjidMark masjid={masjid} />
                       <span>
                         {masjid.name}
-                        {place && (
-                          <span className="block font-normal text-muted-foreground">
-                            {place}
-                          </span>
-                        )}
+                        <PlaceLine
+                          {...row}
+                          view={view}
+                          className="block sm:text-sm"
+                          areaClassName="whitespace-normal"
+                        />
                         {marked && (
                           <span className="block font-normal text-attention">
                             Checked {formatDate(marked)}

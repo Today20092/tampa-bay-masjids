@@ -53,6 +53,8 @@ export function useNearest() {
     toggle,
     message,
     on: state.step === "on",
+    finding: state.step === "finding",
+    failed: state.step === "failed",
     here: state.step === "on" ? state.here : null,
   };
 }

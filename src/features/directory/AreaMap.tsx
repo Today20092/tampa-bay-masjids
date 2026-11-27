@@ -1,9 +1,23 @@
 import { MapIcon } from "lucide-react";
 import { Component, lazy, Suspense, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import { MAP_HELP } from "@/lib/wording";
 import type { MapViewProps } from "./MapView";
 
 const MapView = lazy(() => import("./MapView"));
+
+/** Takes the loaded map's height: its help text, map and masjid picker. */
+function MapLoading() {
+  return (
+    <div className="space-y-3">
+      <p className="text-sm text-muted-foreground">{MAP_HELP}</p>
+      <div className="grid h-80 place-items-center rounded-lg border">
+        <p role="status">Loading map…</p>
+      </div>
+      <div className="h-17" />
+    </div>
+  );
+}
 
 class MapError extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
@@ -45,7 +59,7 @@ export function AreaMap({
       <div id="area-map" hidden={!open}>
         {open && (
           <MapError>
-            <Suspense fallback={<p role="status">Loading map…</p>}>
+            <Suspense fallback={<MapLoading />}>
               <MapView {...map} />
             </Suspense>
           </MapError>

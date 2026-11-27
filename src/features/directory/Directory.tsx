@@ -1,4 +1,9 @@
-import { LocateFixedIcon, SearchIcon, XIcon } from "lucide-react";
+import {
+  LoaderCircleIcon,
+  LocateFixedIcon,
+  SearchIcon,
+  XIcon,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyContent, EmptyDescription } from "@/components/ui/empty";
@@ -277,13 +282,25 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
                 className="font-semibold aria-pressed:border-primary aria-pressed:bg-muted aria-pressed:text-primary aria-pressed:shadow-pressed forced-colors:aria-pressed:border-4"
                 onClick={nearest.toggle}
               >
-                <LocateFixedIcon aria-hidden="true" />
+                {nearest.finding ? (
+                  <LoaderCircleIcon
+                    aria-hidden="true"
+                    className="animate-spin motion-reduce:animate-none"
+                  />
+                ) : (
+                  <LocateFixedIcon aria-hidden="true" />
+                )}
                 Nearest
               </Button>
             </div>
+            {/* Only a failure is shown: the button and the miles show the rest. */}
             <p
               role="status"
-              className="text-xs text-muted-foreground not-empty:pt-2"
+              className={
+                nearest.failed
+                  ? "pt-2 text-xs text-muted-foreground"
+                  : "sr-only"
+              }
             >
               {nearest.message}
             </p>

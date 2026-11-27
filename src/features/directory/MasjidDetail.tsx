@@ -63,20 +63,47 @@ export function Directions({
   );
 }
 
-/** The line under a masjid's name: its area, and its distance when sorted by it. */
-export function placeLine(
-  {
-    masjid,
-    schedule,
-    miles,
-  }: { masjid: Masjid; schedule: Schedule; miles?: number },
-  view: View,
-) {
+/**
+ * The line under a masjid's name: its area, and its distance when sorted by it.
+ * It stays one line, so sorting does not change a row's height: the area is cut
+ * short (until `areaClassName` lets it wrap), never the distance.
+ */
+export function PlaceLine({
+  masjid,
+  schedule,
+  miles,
+  view,
+  className,
+  areaClassName,
+}: {
+  masjid: Masjid;
+  schedule: Schedule;
+  miles?: number;
+  view: View;
+  className?: string;
+  areaClassName?: string;
+}) {
+  if (!masjid.area && miles === undefined) return null;
   // Distance is to the masjid's map point, which is not where an off-site Jumu‘ah meets.
   const to = view === "jumuah" && schedule.jumuah?.venue ? " to masjid" : "";
-  return [masjid.area, miles !== undefined && `${formatMiles(miles)}${to}`]
-    .filter(Boolean)
-    .join(" · ");
+  return (
+    <span
+      className={cn(
+        "flex max-w-full text-xs font-normal text-muted-foreground",
+        className,
+      )}
+    >
+      {masjid.area && (
+        <span className={cn("truncate", areaClassName)}>{masjid.area}</span>
+      )}
+      {miles !== undefined && (
+        <span className="shrink-0 whitespace-pre">
+          {masjid.area && " · "}
+          {formatMiles(miles) + to}
+        </span>
+      )}
+    </span>
+  );
 }
 
 export function ArabicName({ masjid }: { masjid: Masjid }) {

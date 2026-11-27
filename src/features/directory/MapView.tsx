@@ -12,6 +12,7 @@ import { dateToMark, shownFor, type View } from "@/lib/shown";
 import { formatDate, type Now } from "@/lib/time";
 import { Directions, JumuahLine, PinButton } from "./MasjidDetail";
 import type { Row } from "./MasjidTable";
+import { MAP_HELP } from "@/lib/wording";
 import { Check } from "./Times";
 
 export type MapViewProps = {
@@ -88,11 +89,7 @@ export default function MapView({
   }
   return (
     <div className="space-y-3">
-      <p className="text-sm text-muted-foreground">
-        Choose a marker or a masjid below. Use two fingers to move the map on a
-        phone. Map locations are approximate; use directions for the
-        destination.
-      </p>
+      <p className="text-sm text-muted-foreground">{MAP_HELP}</p>
       <div className="relative h-80 overflow-clip rounded-lg border">
         <Map
           ref={mapRef}

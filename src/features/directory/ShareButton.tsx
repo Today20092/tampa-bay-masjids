@@ -53,14 +53,32 @@ export function ShareButton({
         className={cn("font-semibold", className)}
         onClick={() => void share()}
       >
-        {status === "copied" ? (
-          <CheckIcon aria-hidden="true" />
-        ) : (
-          <Share2Icon aria-hidden="true" />
-        )}
-        {children}
+        {/* Both labels share one cell, so the button keeps its width. */}
+        <span className="grid justify-items-center">
+          <span
+            className={cn(
+              "col-start-1 row-start-1 flex items-center gap-1.5",
+              status === "copied" && "invisible",
+            )}
+          >
+            <Share2Icon aria-hidden="true" />
+            {children}
+          </span>
+          <span
+            className={cn(
+              "col-start-1 row-start-1 flex items-center gap-1.5",
+              status !== "copied" && "invisible",
+            )}
+          >
+            <CheckIcon aria-hidden="true" />
+            Link copied
+          </span>
+        </span>
       </Button>
-      <p role="status" className="text-sm break-all not-empty:pt-2">
+      <p
+        role="status"
+        className={status === "failed" ? "pt-2 text-sm break-all" : "sr-only"}
+      >
         {status === "copied" && "Link copied"}
         {status === "failed" && `Could not copy. The link is ${shared.url}`}
       </p>
