@@ -157,7 +157,7 @@ export function MasjidTable({
                   />
                 </button>
                 <div className="flex items-center">
-                  <Directions masjid={masjid} />
+                  <Directions masjid={masjid} compact />
                   <PinButton
                     masjid={masjid}
                     pinned={pinned}

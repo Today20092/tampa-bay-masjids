@@ -18,9 +18,11 @@ const textLink = "inline-flex min-h-11 items-center font-semibold text-primary";
 export function Directions({
   masjid,
   prominent = false,
+  compact = false,
 }: {
   masjid: Masjid;
   prominent?: boolean;
+  compact?: boolean;
 }) {
   return (
     <a
@@ -31,6 +33,7 @@ export function Directions({
         }),
         "w-fit rounded-full",
         !prominent && "text-primary",
+        compact && "px-1",
       )}
       href={directionsUrl(masjid)}
       target="_blank"
