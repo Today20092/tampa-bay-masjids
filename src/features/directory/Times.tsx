@@ -46,8 +46,10 @@ export function DailyGrid({
       <dl
         className={cn(
           "grid grid-cols-[repeat(auto-fit,minmax(3.15rem,1fr))] gap-1 text-center tabular-nums",
-          // A wider Maghrib tile keeps sunset wording on one line. Pinned text is too big for it.
-          !pinned && "@min-[16rem]:grid-cols-[1fr_1fr_1fr_1.7fr_1fr]",
+          // A wider Maghrib tile keeps sunset wording on one line; bigger pinned text needs more.
+          pinned
+            ? "@min-[18rem]:grid-cols-[1fr_1fr_1fr_2fr_1fr]"
+            : "@min-[16rem]:grid-cols-[1fr_1fr_1fr_1.7fr_1fr]",
         )}
       >
         {daily.map(({ time, state }, k) => (
