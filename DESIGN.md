@@ -183,6 +183,8 @@ Times use tabular numerals. Passed times drop to regular weight.
 Header, directory and footer share a fluid 64rem shell. The schedule selector applies to pinned
 masjids and the directory. Pinned masjids use two columns from 48rem. The directory switches to
 a labeled list below 42rem of available width. Daily time tiles wrap with `auto-fit` from 3.15rem;
+from 16rem of their own width, unpinned tiles stay in one line with Maghrib 1.7 times as wide, so
+sunset wording does not wrap;
 Jumu‘ah times use tiles at a fixed 4rem, with one muted caption under each masjid's set saying
 whether they are khutbah starts, service starts, iqama or not stated. Never label each tile.
 Directions are visible in every row. The area map loads on request after the timetable.
