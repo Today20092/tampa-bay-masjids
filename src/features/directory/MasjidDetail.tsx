@@ -33,7 +33,8 @@ export function Directions({
         }),
         "w-fit rounded-full",
         !prominent && "text-primary",
-        compact && "px-1",
+        // Wider on the right so the Pin icon does not read as part of Directions.
+        compact && "pr-2 pl-1",
       )}
       href={directionsUrl(masjid)}
       target="_blank"
