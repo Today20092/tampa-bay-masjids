@@ -79,7 +79,7 @@ components:
   card-pinned:
     backgroundColor: "{colors.card}"
     rounded: "{rounded.xl}"
-    padding: "12px"
+    padding: "16px 12px"
 ---
 
 # Design System: Tampa Bay Masjids
