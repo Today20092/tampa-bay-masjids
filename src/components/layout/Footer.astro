@@ -1,5 +1,6 @@
 ---
 import FacebookLink from "./FacebookLink.astro";
+import ThemeSwitch from "./ThemeSwitch";
 import { SITE } from "@/data/site";
 import { addMasjidUrl, feedbackUrl } from "@/lib/links";
 
@@ -56,4 +57,5 @@ const emailLinks = [
       {SITE.url}/llms.txt
     </a>
   </p>
+  <ThemeSwitch client:only="react" />
 </footer>
