@@ -5,8 +5,21 @@
 @import "@fontsource/noto-naskh-arabic/arabic-400.css";
 @import "@fontsource/noto-naskh-arabic/arabic-700.css";
 
-/* Dark mode follows the phone's setting; the tokens below carry both themes. */
-@custom-variant dark (@media (prefers-color-scheme: dark));
+/* Dark when the visitor picked Dark, or the phone is dark and they did not pick Light.
+   The footer switch sets data-theme on <html>; without it the phone decides. */
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    &:where(
+      :root:not([data-theme="light"]),
+      :root:not([data-theme="light"]) *
+    ) {
+      @slot;
+    }
+  }
+  &:where(:root[data-theme="dark"], :root[data-theme="dark"] *) {
+    @slot;
+  }
+}
 
 /* Every token is defined once here: the palette in :root, its Tailwind names below. */
 @theme inline {
@@ -102,9 +115,16 @@
   --sun-ray: #e89140;
 }
 
-/* Dark palette: the phone's setting. Brand, gold and sun tokens keep their light values. */
-@media (prefers-color-scheme: dark) {
-  :root {
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* Dark palette. Brand, gold and sun tokens keep their light values. */
+:root {
+  @variant dark {
     --background: #0f1714;
     --foreground: #e6eee9;
     --card: #17221e;

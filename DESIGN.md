@@ -91,7 +91,7 @@ The directory palette and controls are defined in `src/styles/global.css` and th
 **Creative North Star: "The masjid notice board" (inferred)**
 
 A phone-first timetable with a wider comparison layout on desktop. Deep green carries identity, the next time and the Facebook group link; amber marks anything the visitor should verify. Everything else is
-quiet so nine masjids and five times can be compared at a glance. The site follows the phone's light or dark setting (`prefers-color-scheme`); there is no theme toggle and no saved preference.
+quiet so nine masjids and five times can be compared at a glance. The site follows the phone's light or dark setting unless the visitor picks Light or Dark in the footer.
 
 **Key Characteristics:**
 
@@ -117,7 +117,7 @@ quiet so nine masjids and five times can be compared at a glance. The site follo
 
 ### Dark theme
 
-Set in the `prefers-color-scheme: dark` block of [global.css](src/styles/global.css). Brand, gold, sun and sky tokens keep their light values.
+Set in the `@variant dark` block of [global.css](src/styles/global.css). Brand, gold, sun and sky tokens keep their light values.
 
 | Token | Light | Dark |
 | --- | --- | --- |
@@ -186,7 +186,7 @@ a labeled list below 42rem of available width. Daily time tiles wrap with `auto-
 Jumu‘ah times use tiles at a fixed 4rem, with one muted caption under each masjid's set saying
 whether they are khutbah starts, service starts, iqama or not stated. Never label each tile.
 Directions are visible in every row. The area map loads on request after the timetable.
-The sun panel sits under the pinned masjids and above search. It always shows the next calculated prayer start with its countdown, the start that just passed (so it never reads as a rival to a masjid's next iqama), and the solar chart, whose live sun uses a ray symbol. Tapping it opens the location button and the list of calculated starts in place. The header is a centered masthead on the page background, not a navigation bar: the arch mark and the name in Georgia bold (mark beside the name below 40rem, above it from 40rem), a quiet "Join our Facebook group" link, and a double rule. The footer carries the community call to action.
+The sun panel sits under the pinned masjids and above search. It always shows the next calculated prayer start with its countdown, the start that just passed (so it never reads as a rival to a masjid's next iqama), and the solar chart, whose live sun uses a ray symbol. Tapping it opens the location button and the list of calculated starts in place. The header is a centered masthead on the page background, not a navigation bar: the arch mark and the name in Georgia bold (mark beside the name below 40rem, above it from 40rem), a quiet "Join our Facebook group" link, and a double rule. The footer carries the community call to action and, last on the page, the Theme switch.
 
 ## Elevation & Depth
 
@@ -202,7 +202,8 @@ shadcn on Base UI lives in `src/components/ui/`.
 
 - **Button** `size="touch"`: at least 44px both ways, label may wrap. Links use `buttonVariants`
   on an `<a>`.
-- **ToggleGroup** `size="touch"`: Daily uses green and Jumu‘ah uses indigo when selected.
+- **ToggleGroup** `size="touch"`: Daily uses green and Jumu‘ah uses indigo when selected. The footer
+  Theme switch (Auto, Light, Dark) uses the same green underline. Auto saves nothing.
 - **Input**: search, 44px, 16px text.
 - **Collapsible**: pinned masjid with an inline Details disclosure.
 - **Table**: row header is a disclosure button; `containerProps` names the scrolling region.

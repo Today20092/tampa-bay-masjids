@@ -59,8 +59,7 @@ const LIGHT = (() => {
 
 // The dark palette: only the values the dark block overrides.
 const DARK_OVERRIDES = (() => {
-  const block =
-    /@media \(prefers-color-scheme: dark\) \{\s*:root \{([^}]*)\}/.exec(css);
+  const block = /@variant dark \{([^}]*)\}/.exec(css);
   if (!block) throw new Error("global.css has no dark :root block");
   return parseBlock(block[1]);
 })();
