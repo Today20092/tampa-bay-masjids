@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/collapsible";
 import { solarDay, TAMPA_SKY } from "@/lib/solar-day";
 import { formatDate } from "@/lib/time";
-import { SkyChart, useNightFlip } from "./SkyChart";
+import { SkyChart, useSkyMotion } from "./SkyChart";
 
 const eventIcons = {
   fajr: SunriseIcon,
@@ -44,8 +44,8 @@ export function SolarClock() {
     () => instant && solarDay(instant, place),
     [instant, place],
   );
-  const { chart, shownNight, flipMs } = useNightFlip(Boolean(data?.isNight));
-  const HeaderIcon = shownNight ? MoonIcon : SunIcon;
+  const { motion, changed } = useSkyMotion(data?.isNight);
+  const HeaderIcon = data?.isNight ? MoonIcon : SunIcon;
   const tonight = data?.isNight ? data.night : null;
   const next = data?.nextPrayer;
   const minutesLeft =
@@ -112,8 +112,9 @@ export function SolarClock() {
     <Collapsible
       render={<section aria-labelledby="solar-heading" />}
       className="sky-panel rounded-xl p-1"
-      data-night={shownNight || undefined}
-      data-flipping={flipMs !== null || undefined}
+      data-night={data?.isNight || undefined}
+      data-live={changed || undefined}
+      data-flipping={motion?.kind === "flip" || undefined}
     >
       <h2 id="solar-heading" className="sr-only">
         Sun and prayer times
@@ -142,13 +143,7 @@ export function SolarClock() {
             className="size-4 shrink-0 group-aria-expanded/sun:rotate-180"
           />
         </span>
-        <SkyChart
-          ref={chart}
-          data={data}
-          shownNight={shownNight}
-          flipMs={flipMs}
-          markerKey={`${data?.date}/${place.latitude}/${place.longitude}`}
-        />
+        <SkyChart data={data} motion={motion} />
       </CollapsibleTrigger>
       <CollapsibleContent className="mt-1 border-t border-sky-muted/25 px-2 pt-2 pb-2 sm:px-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
