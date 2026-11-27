@@ -42,29 +42,38 @@ export function DailyGrid({
   pinned?: boolean;
 }) {
   return (
-    <dl className="grid grid-cols-[repeat(auto-fit,minmax(3.15rem,1fr))] gap-1 text-center tabular-nums">
-      {daily.map(({ time, state }, k) => (
-        <div
-          key={PRAYERS[k]}
-          className={cn(
-            "rounded-md bg-muted py-1.5 text-xs",
-            state === "next" && "bg-primary font-bold text-primary-foreground",
-            state === "past" && "text-past",
-          )}
-        >
-          <dt>{PRAYERS[k]}</dt>
-          <dd
+    <div className="@container">
+      <dl
+        className={cn(
+          "grid grid-cols-[repeat(auto-fit,minmax(3.15rem,1fr))] gap-1 text-center tabular-nums",
+          // A wider Maghrib tile keeps sunset wording on one line. Pinned text is too big for it.
+          !pinned && "@min-[16rem]:grid-cols-[1fr_1fr_1fr_1.7fr_1fr]",
+        )}
+      >
+        {daily.map(({ time, state }, k) => (
+          <div
+            key={PRAYERS[k]}
             className={cn(
-              pinned ? "text-base" : "text-sm",
-              state !== "past" && "font-bold",
+              "rounded-md bg-muted py-1.5 text-xs",
+              state === "next" &&
+                "bg-primary font-bold text-primary-foreground",
+              state === "past" && "text-past",
             )}
           >
-            {time ? formatTime(time) : <Replaced />}
-            {state === "next" && <span className="sr-only"> next</span>}
-          </dd>
-        </div>
-      ))}
-    </dl>
+            <dt>{PRAYERS[k]}</dt>
+            <dd
+              className={cn(
+                pinned ? "text-base" : "text-sm",
+                state !== "past" && "font-bold",
+              )}
+            >
+              {time ? formatTime(time) : <Replaced />}
+              {state === "next" && <span className="sr-only"> next</span>}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
   );
 }
 

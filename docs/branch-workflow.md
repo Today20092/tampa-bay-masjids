@@ -9,13 +9,16 @@ Main-only: one task, one branch, one pull request into `main`. There is no devel
    moves with `t3_worktree_handoff` before editing. T3 runs `pnpm install --frozen-lockfile` in a new
    worktree. Without T3: `git worktree add <path> -b <branch> origin/main`, then that command.
 2. **Commit, never stash.** Every worktree shares the stash list.
-3. **Open a PR.** Every code or data task ends with a commit and a PR to `main`, without being
-   asked. Opening a PR does not publish anything to the live site.
-4. **Get it green.** Run `pnpm verify`, watch the PR's checks and fix failures.
-5. **Merge only when the owner asks**: `gh pr merge <number> --auto --merge`. GitHub merges once
+3. **Verify locally.** Run `pnpm verify`, then let the owner try the change.
+4. **Open a PR only when the owner asks** ("make a PR" or "ship it"), once they consider the work
+   ready. Until then, keep commits local: do not push the branch. A PR does not change the live
+   site, but it creates a public preview. Grok Bot is the exception: it delivers its data changes
+   as PRs.
+5. **Get it green.** Watch the PR's checks and fix failures.
+6. **Merge only when the owner asks**: `gh pr merge <number> --auto --merge`. GitHub merges once
    `verify` passes. Data PRs also follow the rules in `AGENTS.md`. To update a local `main`, use
    `git pull --ff-only`. Never force-push it.
-6. **Clean up.** After the merge, remove the worktree through T3 (or `git worktree remove`) when it
+7. **Clean up.** After the merge, remove the worktree through T3 (or `git worktree remove`) when it
    has no uncommitted or unmerged work. GitHub deletes the remote branch.
 
 ## What runs
