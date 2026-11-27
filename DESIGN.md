@@ -231,8 +231,8 @@ shadcn on Base UI lives in `src/components/ui/`.
 ## Masjid logos
 
 Use the marks published by the organizations below. Keep the visible masjid name beside each mark.
-Use the event organizer’s mark for USF Jumu‘ah. Omar and Abu Bakr show their names while a
-logo is unavailable.
+Use the event organizer’s mark for USF Jumu‘ah. A listing without a logo, such as Omar or Abu
+Bakr, shows a mosque icon in a muted tile of the same size.
 
 | Listing | Source |
 | --- | --- |
