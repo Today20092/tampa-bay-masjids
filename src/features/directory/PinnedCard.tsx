@@ -97,13 +97,13 @@ export function PinnedCard({
           </CollapsibleTrigger>
         </div>
         <CollapsibleContent className="mt-2 flex flex-col gap-2 border-t pt-2">
-          <p className="text-xs text-muted-foreground">{masjid.address}</p>
           <OtherSchedule
             masjid={masjid}
             schedule={schedule}
             view={view}
             pinned
           />
+          <p className="text-xs text-muted-foreground">{masjid.address}</p>
           <SourceAndActions masjid={masjid} schedule={schedule} />
         </CollapsibleContent>
       </div>

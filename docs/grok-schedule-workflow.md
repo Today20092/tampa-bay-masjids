@@ -33,8 +33,8 @@ be verified and reused on later runs.
    chronological order. Record both labels in the evidence when the source also gives a separate
    iqama. Set `jumuah.timeIs` only to what the source says the listed times are: `khutbah`,
    `start` (a service start, such as "Begins") or `iqama`. Omit it when the source only says
-   "Jumu‘ah", or lists the time on an iqama board without labelling that row; the site then says
-   "Khutbah or iqama not stated". If the source meaning or applicable period is unclear, hold
+   "Jumu‘ah", or lists the time on an iqama board without labelling that row; the site then shows
+   plain "Jumu‘ah", and `llms.txt` says "khutbah or iqama not stated". If the source meaning or applicable period is unclear, hold
    that schedule.
 4. If a public website is missing, inaccessible or ambiguous, record why and leave its
    `checked` date alone. Refer any existing schedule whose correctness is now in doubt for a

@@ -185,8 +185,11 @@ masjids and the directory. Pinned masjids use two columns from 48rem. The direct
 a labeled list below 42rem of available width. Daily time tiles wrap with `auto-fit` from 3.15rem;
 from 16rem of their own width (18rem when pinned), tiles stay in one line with Maghrib 1.7 times
 (pinned: twice) as wide, so sunset wording does not wrap;
-Jumu‘ah times use tiles at a fixed 4rem, with one muted caption under each masjid's set saying
-whether they are khutbah starts, service starts, iqama or not stated. Never label each tile.
+Jumu‘ah times use tiles at a fixed 4rem. Say once per masjid's set whether they are khutbah
+starts, service starts or iqama: in the label beside a card's or opened row's tiles ("Jumu‘ah
+khutbah"), or in one muted caption under the table's. Say nothing when the source does not. Never
+label each tile. An opened row or card reads Jumu‘ah, name and address, the masjid's own links,
+then a source footnote with "Report a wrong time", which appears only beside shown times.
 Directions are visible in every row. The area map loads on request after the timetable.
 The sun panel sits under the pinned masjids and above search. It always shows the next calculated prayer start with its countdown, the start that just passed (so it never reads as a rival to a masjid's next iqama), and the solar chart, whose live sun uses a ray symbol. Tapping it opens the location button and the list of calculated starts in place. The header is a centered masthead on the page background, not a navigation bar: the arch mark and the name in Georgia bold (mark beside the name below 40rem, above it from 40rem), a quiet "Join our Facebook group" link, and a double rule. The footer carries the community call to action and, last on the page, the Theme switch.
 
