@@ -29,6 +29,19 @@ export function search(visit: Visit, query: string): Visit {
   return { ...visit, query, openId: null };
 }
 
+/** The masjid a shared link (`#<id>`) names. The hash is untrusted. */
+export const linkedId = (hash: string, known: readonly string[]) =>
+  known.find((id) => `#${id}` === hash) ?? null;
+
+/**
+ * Shows a linked masjid: its row opens and any search that could hide it is
+ * cleared. A pinned masjid is already on screen as a card.
+ */
+export function openLinked(visit: Visit, id: string): Visit {
+  const openId = visit.pins.includes(id) ? null : id;
+  return { ...visit, query: "", searchOpen: false, openId };
+}
+
 export function toggleOpen(visit: Visit, id: string): Visit {
   return { ...visit, openId: visit.openId === id ? null : id };
 }

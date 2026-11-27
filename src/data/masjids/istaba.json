@@ -13,6 +13,10 @@
   "logo": "istaba",
   "nameSource": "https://istaba.org/",
   "website": "https://istaba.org/",
+  "whatsapp": {
+    "url": "https://chat.whatsapp.com/H2M9Wpfe7iHCEPof99kgeI",
+    "approvedOn": "2026-11-26"
+  },
   "iqama": {
     "fajr": "06:10",
     "dhuhr": "12:50",

@@ -11,6 +11,9 @@ export function directionsUrl({
   return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`;
 }
 
+/** Opens the directory at one masjid. */
+export const masjidUrl = ({ id }: Pick<Masjid, "id">) => `${SITE.url}/#${id}`;
+
 export const reportUrl = ({ name }: Pick<Masjid, "name">) =>
   `mailto:${SITE.reportEmail}?subject=${encodeURIComponent(`Wrong time: ${name}`)}&body=${encodeURIComponent(`The prayer time shown for ${name} may be incorrect.\n\nPlease share the correct time and a link to the masjid's official source.`)}`;
 

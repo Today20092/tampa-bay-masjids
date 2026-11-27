@@ -1,17 +1,20 @@
-import { SearchIcon, XIcon } from "lucide-react";
+import { LocateFixedIcon, SearchIcon, XIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyContent, EmptyDescription } from "@/components/ui/empty";
 import { Input } from "@/components/ui/input";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { Masjid } from "@/lib/masjid-schema";
+import { byDistance } from "@/lib/distance";
 import { readPins, writePins } from "@/lib/pins";
 import { scheduleFor } from "@/lib/schedule";
 import { nowInTampa, type Now } from "@/lib/time";
 import {
   closeSearch,
   FIRST_VISIT,
+  linkedId,
   listing,
+  openLinked,
   openSearch,
   pin as pinVisit,
   search as searchVisit,
@@ -25,6 +28,7 @@ import { SolarClock } from "./SolarClock";
 import { PinnedCard } from "./PinnedCard";
 import { ShareButton } from "./ShareButton";
 import { checkedRange, shownFor, type View } from "@/lib/shown";
+import { useNearest } from "./useNearest";
 
 /** Current Tampa time, updated while the page stays open; null during the static render. */
 function useNow() {
@@ -48,37 +52,60 @@ function useNow() {
   return now;
 }
 
+/** The list and the table both render a row; only one of them is on screen. */
+function visibleTarget(key: string) {
+  const targets = document.querySelectorAll<HTMLElement>(`[data-key="${key}"]`);
+  return Array.from(targets).find((target) => target.getClientRects().length);
+}
+
 export default function Directory({ masjids }: { masjids: Masjid[] }) {
   const now = useNow();
   const [visit, setVisit] = useState<Visit>(FIRST_VISIT);
   const { query, searchOpen, openId, pins } = visit;
   const [chosenView, setChosenView] = useState<View | null>(null);
   const [status, setStatus] = useState("");
+  const [linked, setLinked] = useState<string | null>(null);
+  const nearest = useNearest();
   const searchRef = useRef<HTMLInputElement>(null);
   const focusKey = useRef<string | null>(null);
   const announceTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
-    setVisit((v) => ({ ...v, pins: readPins(masjids.map((m) => m.id)) }));
+    const ids = masjids.map((m) => m.id);
+    setVisit((v) => ({ ...v, pins: readPins(ids) }));
+    const arrive = () => {
+      const id = linkedId(window.location.hash, ids);
+      if (!id) return;
+      setVisit((v) => openLinked(v, id));
+      setLinked(id);
+    };
+    arrive();
+    window.addEventListener("hashchange", arrive);
+    return () => window.removeEventListener("hashchange", arrive);
   }, [masjids]);
+
+  // A linked masjid is scrolled to once the pins and the time have placed it.
+  useEffect(() => {
+    if (!linked || !now) return;
+    const target = visibleTarget(`row-${linked}`);
+    target?.focus({ preventScroll: true });
+    target?.closest("li, tr, section")?.scrollIntoView();
+    setLinked(null);
+  }, [linked, now]);
 
   // Pinning moves a masjid between the cards and the table; focus follows it.
   useEffect(() => {
     if (!focusKey.current) return;
-    const targets = document.querySelectorAll<HTMLElement>(
-      `[data-key="${focusKey.current}"]`,
-    );
-    Array.from(targets)
-      .find((target) => target.getClientRects().length)
-      ?.focus();
+    visibleTarget(focusKey.current)?.focus();
     focusKey.current = null;
   });
 
   const view: View = chosenView ?? (now?.friday ? "jumuah" : "daily");
-  const all: Row[] = masjids.map((masjid) => ({
-    masjid,
-    schedule: scheduleFor(masjid, now),
-  }));
+  // Pinned cards keep their pin order; everything else follows this one.
+  const all: Row[] = byDistance(
+    masjids.map((masjid) => ({ masjid, schedule: scheduleFor(masjid, now) })),
+    nearest.here,
+  );
   const { searching, showSearch, pinned, rows } = listing(visit, all);
   const checked = checkedRange(
     rows.flatMap(
@@ -144,11 +171,12 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
             Pinned masjids
           </h2>
           <div className="grid gap-3 md:grid-cols-2">
-            {pinned.map(({ masjid, schedule }) => (
+            {pinned.map(({ masjid, schedule, miles }) => (
               <PinnedCard
                 key={masjid.id}
                 masjid={masjid}
                 schedule={schedule}
+                miles={miles}
                 now={now}
                 view={view}
                 onPin={() => pin(masjid.id)}
@@ -237,15 +265,28 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
         <p className="text-xs text-muted-foreground">Every masjid is pinned.</p>
       ) : (
         <div className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-            <h2 className="text-lg font-semibold tracking-tight">
-              {view === "daily" ? "Daily iqama times" : "Jumu‘ah times"}
-            </h2>
-            {!pins.length && !searching && (
-              <p className="text-xs text-muted-foreground">
-                Open a masjid for its source and pin options.
-              </p>
-            )}
+          <div>
+            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+              <h2 className="text-lg font-semibold tracking-tight">
+                {view === "daily" ? "Daily iqama times" : "Jumu‘ah times"}
+              </h2>
+              <Button
+                variant="outline"
+                size="touch"
+                aria-pressed={nearest.on}
+                className="bg-card font-semibold aria-pressed:border-primary aria-pressed:bg-muted aria-pressed:text-primary forced-colors:aria-pressed:border-4"
+                onClick={nearest.toggle}
+              >
+                <LocateFixedIcon aria-hidden="true" />
+                Nearest
+              </Button>
+            </div>
+            <p
+              role="status"
+              className="text-xs text-muted-foreground not-empty:pt-2"
+            >
+              {nearest.message}
+            </p>
           </div>
           {rows.length ? (
             <MasjidTable
@@ -284,7 +325,9 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
           )}
         </div>
       )}
-      <ShareButton />
+      <div className="py-2">
+        <ShareButton className="w-full sm:w-fit" />
+      </div>
     </div>
   );
 }
