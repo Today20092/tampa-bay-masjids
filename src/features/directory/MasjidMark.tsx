@@ -1,3 +1,4 @@
+import { MosqueIcon } from "lucide-react";
 import type { Masjid } from "@/lib/masjid-schema";
 
 const logos: Record<string, string> = {
@@ -12,7 +13,16 @@ const logos: Record<string, string> = {
 
 export function MasjidMark({ masjid }: { masjid: Masjid }) {
   const logo = logos[masjid.id];
-  if (!logo) return null;
+  if (!logo) {
+    return (
+      <span
+        aria-hidden="true"
+        className="grid size-11 shrink-0 place-items-center rounded-sm bg-muted text-muted-foreground"
+      >
+        <MosqueIcon className="size-6" />
+      </span>
+    );
+  }
 
   return (
     <img
