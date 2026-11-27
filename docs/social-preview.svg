@@ -20,11 +20,12 @@
       <stop offset="0" stop-color="#e9d184"/>
       <stop offset="1" stop-color="#e9d184" stop-opacity="0"/>
     </linearGradient>
-    <path d="M198 305H272L330 368H174Z" fill="url(#beam)"/>
+    <path d="M168 305H272L330 368H110Z" fill="url(#beam)"/>
     <path d="M120 305V205C120 150 176 126 220 82C264 126 320 150 320 205V305Z" fill="#b48f3e"/>
     <path d="M144 305V216C144 171 187 152 220 116C253 152 296 171 296 216V305Z" fill="#e8c766"/>
-    <path d="M168 305L197 291.5V176L198 175.2C205.2 168.1 212.9 160.7 220 152C243 180 272 195 272 230V305Z" fill="#fff6d6"/>
-    <path d="M168 305V230C168 205.8 181.8 191.2 198 175.2V291Z" fill="#0f342b"/>
+    <path d="M168 305L187 283.2V186.2L188 185.4C197.7 174.9 209.5 164.8 220 152C230.5 164.8 242.3 174.9 252 185.4L253 186.2V283.2L272 305Z" fill="#fff6d6"/>
+    <path d="M168 305V230C168 211 176.5 197.9 188 185.4V283Z" fill="#0f342b"/>
+    <path d="M272 305V230C272 211 263.5 197.9 252 185.4V283Z" fill="#0f342b"/>
   </g>
   <text x="600" y="214" text-anchor="middle" font-family="Card Serif" font-size="64" font-weight="600" fill="#f7f5ee">Iqama times for Tampa Bay masjids</text>
   <g transform="translate(0 -13)">

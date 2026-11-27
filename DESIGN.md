@@ -107,8 +107,8 @@ quiet so nine masjids and five times can be compared at a glance. The site follo
 
 ## Brand assets
 
-- **Mark: the doorway of light** ([logo-mark.svg](public/logo-mark.svg)): three stepped pointed arches in deep gold, lamp gold and warm cream, a door open inward and light spilling out. Light leaves only through the gap beside the door. Keep clear space around it and pair it with the full name “Tampa Bay Masjids” where space allows.
-- **Small sizes** ([favicon.svg](public/favicon.svg)): one gold arch, the cream opening and a wider door, with no steps or floor light.
+- **Mark: the doorway of light** ([logo-mark.svg](public/logo-mark.svg)): three stepped pointed arches in deep gold, lamp gold and warm cream, two doors fully open inward and light spilling out. The doors’ lower edges and the floor light follow one perspective. Keep clear space around it and pair it with the full name “Tampa Bay Masjids” where space allows.
+- **Small sizes** ([favicon.svg](public/favicon.svg)): one gold arch, the cream opening and wider doors, with no steps or floor light.
 - **App icons:** render [app-icon.svg](docs/app-icon.svg) to `apple-touch-icon.png` (180px), `icon-192.png` and `icon-512.png` in `public/`. It is full bleed and keeps the art inside the maskable safe circle.
 - **Mark colors** belong to the artwork only: `#174c40` tile, `#b48f3e`, `#e8c766`, `#fff6d6`, `#0f342b` door and an `#e9d184` beam that fades out. They do not change in dark mode and are not interface tokens.
 - **Lockups:** mark beside the name below 40rem; mark centered above the name from 40rem and on the share card. The name is Source Serif 4 semibold. Do not stack “Tampa Bay” over “Masjids”.
