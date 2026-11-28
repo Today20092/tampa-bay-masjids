@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { directionsUrl } from "@/lib/links";
 import type { Masjid } from "@/lib/masjid-schema";
 import {
@@ -90,17 +91,17 @@ export function JumuahTimes({
     <>
       <span className="inline-flex flex-wrap justify-center gap-1 text-center tabular-nums">
         {times.map((time, k) => (
-          <span
+          <Badge
             key={time}
+            size="time"
+            variant={states[k] === "next" ? "default" : "muted"}
             className={cn(
-              "w-16 rounded-md bg-muted py-1.5",
               states[k] === "past" ? "font-normal text-past" : "font-bold",
-              states[k] === "next" && "bg-primary text-primary-foreground",
             )}
           >
             {formatTime(time)}
             {states[k] === "next" && <span className="sr-only"> next</span>}
-          </span>
+          </Badge>
         ))}
       </span>
       {caption && timeIs && (

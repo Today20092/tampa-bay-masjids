@@ -1,5 +1,12 @@
 ---
 import { buttonVariants } from "@/components/ui/button";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import { SITE } from "@/data/site";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
@@ -9,11 +16,19 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
   description={SITE.description}
   noindex
 >
-  <div class="flex flex-col items-center gap-3 py-10 text-center">
-    <h2 class="text-lg font-bold">Page not found</h2>
-    <p>This address has no page. All masjids are on the home page.</p>
-    <a class={buttonVariants({ size: "touch" })} href="/">
-      See all masjids
-    </a>
-  </div>
+  <Empty className="gap-3 px-0 py-10 md:py-10">
+    <EmptyHeader className="gap-3">
+      <EmptyTitle className="text-lg font-bold">
+        <h2>Page not found</h2>
+      </EmptyTitle>
+      <EmptyDescription className="text-foreground">
+        This address has no page. All masjids are on the home page.
+      </EmptyDescription>
+    </EmptyHeader>
+    <EmptyContent>
+      <a class={buttonVariants({ size: "touch" })} href="/">
+        See all masjids
+      </a>
+    </EmptyContent>
+  </Empty>
 </BaseLayout>

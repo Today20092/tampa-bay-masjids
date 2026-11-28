@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Collapsible,
   CollapsibleContent,
@@ -109,9 +111,11 @@ export function SolarClock() {
   }
 
   return (
-    <Collapsible
-      render={<section aria-labelledby="solar-heading" />}
-      className="sky-panel rounded-xl p-1 shadow-lift"
+    <Card
+      render={
+        <Collapsible render={<section aria-labelledby="solar-heading" />} />
+      }
+      className="sky-panel border-0 p-1"
       data-night={data?.isNight || undefined}
       data-live={changed || undefined}
       data-flipping={motion?.kind === "flip" || undefined}
@@ -145,70 +149,84 @@ export function SolarClock() {
         </span>
         <SkyChart data={data} motion={motion} />
       </CollapsibleTrigger>
-      <CollapsibleContent className="mt-1 border-t border-sky-muted/25 px-2 pt-2 pb-2 sm:px-4">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-xs text-sky-muted">
-            {locationState === "local"
-              ? "Your location · device time zone"
-              : "Tampa, Florida"}
-            {data && ` · ${formatDate(data.date)}`}
-          </p>
-          <Button
-            variant="ghost"
-            size="touch"
-            onClick={useLocation}
-            disabled={locationState === "loading"}
-            className="text-sky-foreground hover:bg-sky-foreground/10 hover:text-sky-foreground"
-          >
-            <LocateFixedIcon aria-hidden="true" />
-            {locationState === "local"
-              ? "Use Tampa"
-              : locationState === "loading"
-                ? "Locating…"
-                : "Use my location"}
-          </Button>
-        </div>
-        {locationState === "error" && (
-          <p role="status" className="text-xs text-sky-muted">
-            Location unavailable. Showing Tampa.
-          </p>
-        )}
-        {data && (
-          <>
-            {tonight && (
-              <p className="border-t border-sky-muted/25 py-2 text-xs text-sky-muted">
-                Tonight is {Math.floor(tonight.minutes / 60)}h{" "}
-                {tonight.minutes % 60}m from Maghrib to Fajr. Islamic midnight
-                and the last third are measured across it.
-              </p>
-            )}
-            <dl className="divide-y divide-sky-muted/20 border-t border-sky-muted/25 text-sm tabular-nums">
-              {(tonight ?? data).events.map(({ key, label, time }) => {
-                const Icon = eventIcons[key];
-                return (
-                  <div
-                    key={key}
-                    className="flex items-baseline justify-between gap-3 py-2"
-                  >
-                    <dt className="flex items-center gap-2">
-                      <Icon
-                        aria-hidden="true"
-                        className="size-4 shrink-0 text-sky-sun"
-                      />
-                      {listLabels[key] ?? label}
-                    </dt>
-                    <dd className="font-semibold">{data.clock.format(time)}</dd>
-                  </div>
-                );
-              })}
-            </dl>
-            <p className="pt-2 text-xs text-sky-muted">
-              North America method, standard Asr. See the directory for masjid
-              iqama times.
+      <CollapsibleContent>
+        <div className="mt-1 border-t border-sky-muted/25 px-2 pt-2 pb-2 sm:px-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-xs text-sky-muted">
+              {locationState === "local"
+                ? "Your location · device time zone"
+                : "Tampa, Florida"}
+              {data && ` · ${formatDate(data.date)}`}
             </p>
-          </>
-        )}
+            <Button
+              variant="ghost"
+              size="touch"
+              onClick={useLocation}
+              disabled={locationState === "loading"}
+              className="text-sky-foreground hover:bg-sky-foreground/10 hover:text-sky-foreground"
+            >
+              {locationState === "loading" ? (
+                // The button's own label says what is happening.
+                <Spinner
+                  role={undefined}
+                  aria-label={undefined}
+                  aria-hidden="true"
+                  className="motion-reduce:animate-none"
+                />
+              ) : (
+                <LocateFixedIcon aria-hidden="true" />
+              )}
+              {locationState === "local"
+                ? "Use Tampa"
+                : locationState === "loading"
+                  ? "Locating…"
+                  : "Use my location"}
+            </Button>
+          </div>
+          {locationState === "error" && (
+            <p role="status" className="text-xs text-sky-muted">
+              Location unavailable. Showing Tampa.
+            </p>
+          )}
+          {data && (
+            <>
+              {tonight && (
+                <p className="border-t border-sky-muted/25 py-2 text-xs text-sky-muted">
+                  Tonight is {Math.floor(tonight.minutes / 60)}h{" "}
+                  {tonight.minutes % 60}m from Maghrib to Fajr. Islamic midnight
+                  and the last third are measured across it.
+                </p>
+              )}
+              <dl className="divide-y divide-sky-muted/20 border-t border-sky-muted/25 text-sm tabular-nums">
+                {(tonight ?? data).events.map(({ key, label, time }) => {
+                  const Icon = eventIcons[key];
+                  return (
+                    <div
+                      key={key}
+                      className="flex items-baseline justify-between gap-3 py-2"
+                    >
+                      <dt className="flex items-center gap-2">
+                        <Icon
+                          aria-hidden="true"
+                          className="size-4 shrink-0 text-sky-sun"
+                        />
+                        {listLabels[key] ?? label}
+                      </dt>
+                      <dd className="font-semibold">
+                        {data.clock.format(time)}
+                      </dd>
+                    </div>
+                  );
+                })}
+              </dl>
+              <p className="pt-2 text-xs text-sky-muted">
+                North America method, standard Asr. See the directory for masjid
+                iqama times.
+              </p>
+            </>
+          )}
+        </div>
       </CollapsibleContent>
-    </Collapsible>
+    </Card>
   );
 }

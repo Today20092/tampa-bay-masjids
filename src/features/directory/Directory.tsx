@@ -1,13 +1,13 @@
-import {
-  LoaderCircleIcon,
-  LocateFixedIcon,
-  SearchIcon,
-  XIcon,
-} from "lucide-react";
+import { LocateFixedIcon, SearchIcon, XIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyContent, EmptyDescription } from "@/components/ui/empty";
-import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { Spinner } from "@/components/ui/spinner";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { Masjid } from "@/lib/masjid-schema";
 import { byDistance } from "@/lib/distance";
@@ -150,9 +150,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
         value={[view]}
         // Pressing the active choice again must not leave neither selected.
         onValueChange={([value]) => value && setChosenView(value as View)}
-        variant="default"
         size="touch"
-        spacing={1}
         className="w-full gap-4 rounded-none! border-b sm:w-fit"
       >
         {(
@@ -164,7 +162,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
           <ToggleGroupItem
             key={value}
             value={value}
-            className={`flex-1 rounded-none! border-b-2 border-transparent px-3 font-semibold text-muted-foreground hover:bg-transparent aria-pressed:bg-transparent forced-colors:border-b-0 forced-colors:aria-pressed:border-b-4 ${value === "daily" ? "aria-pressed:border-primary aria-pressed:text-primary" : "aria-pressed:border-friday aria-pressed:text-friday"}`}
+            className={`flex-1 rounded-none! border-0 border-b-2 border-transparent px-3 font-semibold text-muted-foreground hover:bg-transparent data-pressed:bg-transparent forced-colors:border-b-0 forced-colors:data-pressed:border-b-4 ${value === "daily" ? "data-pressed:border-primary data-pressed:text-primary" : "data-pressed:border-friday data-pressed:text-friday"}`}
           >
             {label}
           </ToggleGroupItem>
@@ -204,15 +202,17 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
         <div
           id="directory-search"
           hidden={!showSearch}
-          className="w-full min-w-0"
+          className="min-w-0 flex-1 basis-48"
         >
-          <div className="flex gap-2">
-            <div className="relative min-w-0 flex-1">
-              <SearchIcon
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-y-0 left-4 my-auto size-4 text-muted-foreground"
-              />
-              <Input
+          <div className="flex flex-wrap gap-2">
+            <InputGroup className="min-h-13 flex-1 basis-40 bg-card text-base **:[input]:h-12.5 **:[input]:leading-normal sm:text-base dark:bg-card">
+              <InputGroupAddon>
+                <SearchIcon
+                  aria-hidden="true"
+                  className="size-4 text-muted-foreground"
+                />
+              </InputGroupAddon>
+              <InputGroupInput
                 ref={searchRef}
                 data-key="directory-search-input"
                 type="search"
@@ -222,9 +222,8 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
                 aria-label="Search masjid or area"
                 autoComplete="off"
                 enterKeyHint="search"
-                className="min-h-13 bg-card pl-11"
               />
-            </div>
+            </InputGroup>
             {pins.length > 0 && searchOpen && (
               <Button
                 variant="outline"
@@ -283,9 +282,12 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
                 onClick={nearest.toggle}
               >
                 {nearest.finding ? (
-                  <LoaderCircleIcon
+                  // The status line below speaks the progress.
+                  <Spinner
+                    role={undefined}
+                    aria-label={undefined}
                     aria-hidden="true"
-                    className="animate-spin motion-reduce:animate-none"
+                    className="motion-reduce:animate-none"
                   />
                 ) : (
                   <LocateFixedIcon aria-hidden="true" />
@@ -316,7 +318,7 @@ export default function Directory({ masjids }: { masjids: Masjid[] }) {
               onPin={(id) => pin(id)}
             />
           ) : (
-            <Empty className="p-4">
+            <Empty className="gap-4 p-4 md:py-4">
               <EmptyDescription className="text-foreground">
                 No masjid matches your search.
               </EmptyDescription>
