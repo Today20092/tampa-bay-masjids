@@ -30,7 +30,7 @@ export default function ThemeSwitch() {
   }, []);
 
   return (
-    <div className="mt-3 flex items-center gap-3">
+    <div className="mt-3 flex flex-wrap items-center gap-3">
       <span id="theme-label" className="text-sm text-muted-foreground">
         Theme
       </span>
@@ -44,13 +44,13 @@ export default function ThemeSwitch() {
           setChoice(value as Choice);
         }}
         size="touch"
-        spacing={1}
+        className="flex-wrap gap-1"
       >
         {CHOICES.map(([value, label]) => (
           <ToggleGroupItem
             key={value}
             value={value}
-            className="rounded-none! border-b-2 border-transparent font-semibold text-muted-foreground hover:bg-transparent aria-pressed:border-primary aria-pressed:bg-transparent aria-pressed:text-primary forced-colors:border-b-0 forced-colors:aria-pressed:border-b-4"
+            className="rounded-none! border-0 border-b-2 border-transparent font-semibold text-muted-foreground hover:bg-transparent data-pressed:border-primary data-pressed:bg-transparent data-pressed:text-primary forced-colors:border-b-0 forced-colors:data-pressed:border-b-4"
           >
             {label}
           </ToggleGroupItem>

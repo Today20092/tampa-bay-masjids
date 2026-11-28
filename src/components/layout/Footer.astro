@@ -1,6 +1,7 @@
 ---
 import FacebookLink from "./FacebookLink.astro";
 import ThemeSwitch from "./ThemeSwitch";
+import { Card } from "@/components/ui/card";
 import { SITE } from "@/data/site";
 import { addMasjidUrl, feedbackUrl } from "@/lib/links";
 
@@ -15,7 +16,7 @@ const emailLinks = [
 ---
 
 <footer id="community" class="site-shell pb-6">
-  <div class="on-brand flex flex-wrap items-end justify-between gap-5 rounded-xl bg-brand p-5 text-brand-foreground shadow-lift sm:p-6">
+  <Card className="on-brand flex-row flex-wrap items-end justify-between gap-5 border-0 bg-brand p-5 text-brand-foreground sm:p-6">
     <div class="max-w-lg">
       <p class="text-sm font-semibold">Tampa Bay Muslims on Facebook</p>
       <p class="mt-2 text-xl font-semibold sm:text-2xl">
@@ -26,7 +27,7 @@ const emailLinks = [
       </p>
     </div>
     <FacebookLink emphasized />
-  </div>
+  </Card>
   <div class="mt-3 flex flex-col gap-2 text-sm sm:flex-row sm:flex-wrap sm:gap-x-5">
     {emailLinks.map(({ href, label }) => (
       <a

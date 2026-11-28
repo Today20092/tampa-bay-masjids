@@ -1,5 +1,12 @@
 import { ChevronDownIcon } from "lucide-react";
 import { Fragment } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   Table,
   TableBody,
@@ -48,15 +55,14 @@ function Cells({
           state === "past" && "text-past",
         )}
       >
-        <span
-          className={cn(
-            "inline-block rounded-md px-1 py-0.5",
-            state === "next" && "bg-primary font-bold text-primary-foreground",
-          )}
+        <Badge
+          size="pill"
+          variant={state === "next" ? "default" : "plain"}
+          className={cn(state === "next" && "font-bold")}
         >
           {time ? formatTime(time) : <Replaced />}
           {state === "next" && <span className="sr-only"> next</span>}
-        </span>
+        </Badge>
       </TableCell>
     ));
   const times =
@@ -114,9 +120,9 @@ export function MasjidTable({
 
   return (
     <div className="@container/directory">
-      <ul
-        aria-label={caption}
-        className="divide-y rounded-xl border bg-card shadow-lift @min-[42rem]/directory:hidden"
+      <Card
+        render={<ul aria-label={caption} />}
+        className="divide-y @min-[42rem]/directory:hidden"
       >
         {rows.map((row) => {
           const { masjid, schedule } = row;
@@ -127,18 +133,18 @@ export function MasjidTable({
             : null;
           const pinned = pins.includes(masjid.id);
           return (
-            <li key={masjid.id} className="space-y-2 px-3 py-3">
+            <Collapsible
+              key={masjid.id}
+              open={open}
+              onOpenChange={() => onToggle(masjid.id)}
+              render={<li />}
+              className="flex flex-col gap-2 px-3 py-3"
+            >
               {/* The icons overlay the button's first line, so the location keeps the full width. */}
               <div className="relative">
-                <button
-                  type="button"
+                <CollapsibleTrigger
                   className="group/row flex w-full flex-col items-stretch gap-1 text-left font-semibold"
-                  aria-expanded={open}
                   data-key={`row-${masjid.id}`}
-                  aria-controls={
-                    open ? `detail-mobile-${masjid.id}` : undefined
-                  }
-                  onClick={() => onToggle(masjid.id)}
                 >
                   <span className="flex min-h-11 items-center gap-2 pr-26 @max-[17rem]/directory:flex-wrap @max-[17rem]/directory:pr-0">
                     <ChevronDownIcon
@@ -155,7 +161,7 @@ export function MasjidTable({
                     view={view}
                     areaClassName="group-aria-expanded/row:whitespace-normal"
                   />
-                </button>
+                </CollapsibleTrigger>
                 {/* With enlarged text there is no room beside the name. */}
                 <div className="absolute top-0 right-0 flex gap-1.5 @max-[17rem]/directory:static @max-[17rem]/directory:mt-2">
                   <Directions {...row} view={view} iconOnly />
@@ -183,18 +189,15 @@ export function MasjidTable({
                 </p>
               )}
               {marker && <p className="text-xs text-attention">{marker}</p>}
-              {open && (
-                <div
-                  id={`detail-mobile-${masjid.id}`}
-                  className="rounded-lg bg-detail p-3"
-                >
+              <CollapsibleContent>
+                <div className="rounded-lg bg-detail p-3">
                   <RowDetail {...row} view={view} />
                 </div>
-              )}
-            </li>
+              </CollapsibleContent>
+            </Collapsible>
           );
         })}
-      </ul>
+      </Card>
       <Table
         className="text-xs"
         containerProps={{

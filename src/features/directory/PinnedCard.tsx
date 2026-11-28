@@ -1,4 +1,5 @@
 import { ChevronDownIcon, Clock3Icon } from "lucide-react";
+import { Card } from "@/components/ui/card";
 import {
   Collapsible,
   CollapsibleContent,
@@ -45,9 +46,9 @@ export function PinnedCard({
   const headingId = `pinned-${masjid.id}`;
 
   return (
-    <Collapsible
-      render={<section aria-labelledby={headingId} />}
-      className="group/card grid gap-3 rounded-xl border bg-card px-3 py-4 shadow-lift md:row-span-2 md:grid-rows-subgrid"
+    <Card
+      render={<Collapsible render={<section aria-labelledby={headingId} />} />}
+      className="group/card grid gap-3 px-3 py-4 md:row-span-2 md:grid-rows-subgrid"
     >
       {/* Laid out like a narrow list row, so each action keeps one spot. */}
       <div className="@container/head">
@@ -107,17 +108,19 @@ export function PinnedCard({
           </p>
         )}
         {marker && <p className="text-xs text-attention">{marker}</p>}
-        <CollapsibleContent className="mt-1 flex flex-col gap-2 border-t pt-2">
-          <OtherSchedule
-            masjid={masjid}
-            schedule={schedule}
-            view={view}
-            pinned
-          />
-          <p className="text-xs text-muted-foreground">{masjid.address}</p>
-          <SourceAndActions masjid={masjid} schedule={schedule} />
+        <CollapsibleContent>
+          <div className="mt-1 flex flex-col gap-2 border-t pt-2">
+            <OtherSchedule
+              masjid={masjid}
+              schedule={schedule}
+              view={view}
+              pinned
+            />
+            <p className="text-xs text-muted-foreground">{masjid.address}</p>
+            <SourceAndActions masjid={masjid} schedule={schedule} />
+          </div>
         </CollapsibleContent>
       </div>
-    </Collapsible>
+    </Card>
   );
 }

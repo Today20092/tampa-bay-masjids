@@ -8,6 +8,15 @@ import {
   MarkerContent,
 } from "@/components/ui/map";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import {
+  Select,
+  SelectItem,
+  SelectLabel,
+  SelectPopup,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { checkedMarker, shownFor, type View } from "@/lib/shown";
 import type { Now } from "@/lib/time";
 import { Directions, JumuahLine, PinButton } from "./MasjidDetail";
@@ -140,9 +149,9 @@ export default function MapView({
           })}
         </Map>
         {active && (
-          <div
+          <Card
             aria-live="polite"
-            className="absolute inset-x-2 bottom-10 z-10 flex max-w-sm flex-col gap-1 rounded-lg border bg-card p-3 shadow-lift"
+            className="absolute inset-x-2 bottom-10 z-10 max-w-sm gap-1 p-3"
           >
             <div className="flex items-start justify-between gap-2">
               <div>
@@ -171,28 +180,33 @@ export default function MapView({
                 focusKey={`map-pin-${active.masjid.id}`}
               />
             </div>
-          </div>
+          </Card>
         )}
       </div>
       <div className="flex flex-col gap-1">
-        <label htmlFor="map-masjid" className="text-sm font-semibold">
-          Choose a masjid
-        </label>
-        <select
-          id="map-masjid"
-          value={selected ?? ""}
-          onChange={(event) => {
-            if (event.target.value) select(event.target.value);
-          }}
-          className="min-h-11 w-full rounded-lg border border-input bg-card px-3 text-base sm:max-w-sm"
+        <Select
+          items={located.map((m) => ({ value: m.id, label: m.name }))}
+          value={selected}
+          onValueChange={(id) => id && select(id)}
         >
-          <option value="">Select a masjid</option>
-          {located.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.name}
-            </option>
-          ))}
-        </select>
+          <SelectLabel className="mb-0 text-sm font-semibold sm:text-sm">
+            Choose a masjid
+          </SelectLabel>
+          <SelectTrigger className="min-h-11 min-w-0 bg-card text-base sm:max-w-sm sm:text-base dark:bg-card">
+            <SelectValue placeholder="Select a masjid" />
+          </SelectTrigger>
+          <SelectPopup alignItemWithTrigger={false}>
+            {located.map((m) => (
+              <SelectItem
+                key={m.id}
+                value={m.id}
+                className="min-h-11 text-base sm:min-h-11 sm:text-base"
+              >
+                {m.name}
+              </SelectItem>
+            ))}
+          </SelectPopup>
+        </Select>
       </div>
     </div>
   );

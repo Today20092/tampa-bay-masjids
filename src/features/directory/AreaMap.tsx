@@ -1,6 +1,7 @@
 import { MapIcon } from "lucide-react";
 import { Component, lazy, Suspense, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { MAP_HELP } from "@/lib/wording";
 import type { MapViewProps } from "./MapView";
 
@@ -11,8 +12,11 @@ function MapLoading() {
   return (
     <div className="space-y-3">
       <p className="text-sm text-muted-foreground">{MAP_HELP}</p>
-      <div className="grid h-80 place-items-center rounded-lg border">
-        <p role="status">Loading map…</p>
+      <div className="relative h-80 overflow-clip rounded-lg border">
+        <Skeleton className="size-full motion-reduce:animate-none" />
+        <p role="status" className="absolute inset-0 grid place-items-center">
+          Loading map…
+        </p>
       </div>
       <div className="h-17" />
     </div>
@@ -41,7 +45,11 @@ export function AreaMap({
   const [open, setOpen] = useState(false);
   return (
     <div className="space-y-2">
-      <div className={showSearch ? "flex items-start gap-2" : "flex gap-3"}>
+      <div
+        className={
+          showSearch ? "flex flex-wrap items-start gap-2" : "flex gap-3"
+        }
+      >
         {children}
         <Button
           // Beside the search field it matches its height and keeps one width.

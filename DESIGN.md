@@ -245,16 +245,27 @@ A raised button sinks 1px and takes `shadow-pressed` while pressed; a switched-o
 
 ## Components
 
-shadcn on Base UI lives in `src/components/ui/`.
+[Cnippet](https://ui.cnippet.dev/) components (shadcn registry, Base UI) live in
+`src/components/ui/`; `map.tsx` is separate vendored map code. Add one with
+`pnpm exec shadcn add @cnippet/<name>`. They are adjusted here to this document: project tokens and
+shadows, the global focus outline, `touch` sizes and the browser's search clear button. Compare
+with `--diff` before overwriting one, so those adjustments are not lost.
 
 - **Button** `size="touch"`: at least 44px both ways, label may wrap. Links use `buttonVariants`
   on an `<a>`.
 - **ToggleGroup** `size="touch"`: when selected, Daily uses `primary` and Jumu‘ah uses `friday`.
   The footer Theme switch (Auto, Light, Dark) uses the same `primary` underline. Auto saves nothing.
-- **Input**: search, 44px, 16px text.
-- **Collapsible**: pinned masjid whose arrow and name open its details in place.
+- **InputGroup**: search, with its icon inside the field, at least 44px, 16px text. Close search
+  stays a separate button, which wraps below with enlarged text.
+- **Select**: the map's masjid picker, with 44px options.
+- **Card**: pinned card, sun panel, narrow masjid list, map popup and footer community box.
+- **Badge**: Jumu‘ah time tiles (`time`) and the table's next-time pill (`pill`). Flat.
+- **Spinner**: inside Nearest and Use my location while they work.
+- **Skeleton**: the box behind "Loading map…".
+- **Collapsible**: pinned masjid and narrow-list row whose arrow and name open details in place,
+  and the sun panel. The height eases open; reduced motion skips it.
 - **Table**: row header is a disclosure button; `containerProps` names the scrolling region.
-- **Empty**: no search results.
+- **Empty**: no search results and the missing page.
 
 ### Action hierarchy
 
