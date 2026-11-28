@@ -66,6 +66,8 @@
   --color-brand-action: var(--brand-action);
   --color-brand-action-foreground: var(--brand-action-foreground);
   --color-logo-tile: var(--logo-tile);
+  --color-facebook: var(--facebook);
+  --color-facebook-foreground: var(--facebook-foreground);
   --color-sun-core: var(--sun-core);
   --color-sun-ring: var(--sun-ring);
   --color-sun-ray: var(--sun-ray);
@@ -180,6 +182,9 @@
   --brand-action: var(--paper-50);
   --brand-action-foreground: var(--ink-blue-700);
   --logo-tile: transparent;
+  /* Facebook's logo colours, the same in both themes. */
+  --facebook: #0866ff;
+  --facebook-foreground: var(--white);
   --sun-core: var(--sunlight-100);
   --sun-ring: var(--sunlight-300);
   --sun-ray: var(--sunlight-500);

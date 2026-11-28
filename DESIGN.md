@@ -31,6 +31,7 @@ colors:
   brand-foreground: "#fdf9ef"
   brand-action: "#fdf9ef"
   brand-action-foreground: "#1f3461"
+  facebook: "#0866ff"
   sky: "#192d47"
   sky-foreground: "#ffffff"
   sky-sun: "#ffd88d"
@@ -135,6 +136,7 @@ Light is paper and night-blue ink; dark is night and lamp gold.
 - **Primary** (`primary`): the next time, the main filled action, text links, the site name in the header and selected controls. Night-blue ink in light, lamp gold in dark.
 - **Brand fill** (`brand`, `brand-foreground`): the large community footer box and the map markers. Navy in light, ink blue in dark.
 - **Footer action** (`brand-action`, `brand-action-foreground`): the Join button on the brand fill. Paper in light, lamp gold in dark.
+- **Facebook** (`facebook`, `facebook-foreground`): Facebook's logo only, never other text or controls.
 - **Logo tile** (`logo-tile`): a small tile behind each masjid logo. Transparent in light mode; white in dark mode so dark lettering stays readable. Dark mode also dims the logos to 84% brightness.
 
 ### Dark theme
@@ -223,7 +225,7 @@ khutbah"), or in one muted caption under the table's. Say nothing when the sourc
 label each tile. An opened row or card reads Jumu‘ah, name and address, the masjid's own links and Share,
 then a source footnote with "Report a wrong time", which appears only beside shown times.
 Directions are visible in every row. In the narrow list each row opens with the arrow, mark and name, with Directions and Pin as two square icon buttons at the top right; the place line sits below them at full width, then the times. With enlarged text (a list under 17rem wide) the two buttons move below the place line. Pinned cards open the same way, with Directions filled and Unpin beside it; the arrow and name open the card's details, and their buttons move down below 18rem. Controls and rows keep their size when a button is tapped or the list is sorted: progress and success show inside the control, only a failure adds a line, and the place line stays one line, cutting the area short and never the distance. The area map loads on request after the timetable.
-The sun panel sits under the pinned masjids and above search. It always shows the next calculated prayer start with its countdown, the start that just passed (so it never reads as a rival to a masjid's next iqama), and the solar chart, whose live sun uses a ray symbol. Tapping it opens the location button and the list of calculated starts in place. From Maghrib until Fajr the panel shows the night: the chart is the sun's depth below the horizon mirrored into an arc, with Isha, the last third, Fajr and sunrise marked, the night's length inside it, and a crescent that marks the time (not the moon's position or phase). The list then shows the night's times, including Islamic midnight. The day curve folds into the horizon and the night curve springs out of it as the sun is carved into the crescent; the flip plays only when Maghrib arrives on an open page (or on returning to it), and Fajr reverses it. A fresh load opens straight in day or night, and the sun or moon eases along that arc from its start to now. Reduced motion places it without gliding and only crossfades the flip. Where the night cannot be calculated the day chart stays. The header is a slim one-row bar on the card fill with a single line below, not sticky: the doorway mark and the name in Source Serif 4 semibold on the left, and a quiet outlined pill to the Facebook group on the right ("Join" below 30rem, "Join our Facebook group" above, and the full phrase to screen readers at every width). It is 64px tall on phones and 72px from 40rem; with enlarged text the pill wraps below the name. The footer carries the community call to action in a lifted brand-fill box (navy with a paper button in light, ink blue with a gold button in dark) and, last on the page, the Theme switch.
+The sun panel sits under the pinned masjids and above search. It always shows the next calculated prayer start with its countdown, the start that just passed (so it never reads as a rival to a masjid's next iqama), and the solar chart, whose live sun uses a ray symbol. Tapping it opens the location button and the list of calculated starts in place. From Maghrib until Fajr the panel shows the night: the chart is the sun's depth below the horizon mirrored into an arc, with Isha, the last third, Fajr and sunrise marked, the night's length inside it, and a crescent that marks the time (not the moon's position or phase). The list then shows the night's times, including Islamic midnight. The day curve folds into the horizon and the night curve springs out of it as the sun is carved into the crescent; the flip plays only when Maghrib arrives on an open page (or on returning to it), and Fajr reverses it. A fresh load opens straight in day or night, and the sun or moon eases along that arc from its start to now. Reduced motion places it without gliding and only crossfades the flip. Where the night cannot be calculated the day chart stays. The header is a slim one-row bar on the card fill with a single line below, not sticky: the doorway mark and the name in Source Serif 4 semibold on the left, and an outline button to the Facebook group on the right, led by Facebook's own logo (`facebook` blue with a `facebook-foreground` f, the same in both themes and on the footer button) ("Join" below 30rem, "Join our Facebook group" above, and the full phrase to screen readers at every width). It is 64px tall on phones and 72px from 40rem; with enlarged text the button wraps below the name. The footer carries the community call to action in a lifted brand-fill box (navy with a paper button in light, ink blue with a gold button in dark) and, last on the page, the Theme switch.
 
 ## Elevation & Depth
 
@@ -232,8 +234,8 @@ Three levels, set as tokens in [global.css](src/styles/global.css) with their ow
 | Level | Utility | Used by |
 | --- | --- | --- |
 | Soft lift | `shadow-lift` | Pinned card, sun panel, masjid list and table, map popup, footer community box, no-JavaScript cards |
-| Button lift | `shadow-button` (filled), `shadow-button-outline` (outline), `shadow-brand-action` (footer Join) | Pressable filled and outline buttons: pinned Directions, Unpin, narrow-row Directions and Pin, Search, Show map, Nearest, Share, footer Join |
-| Flat | none | Time tiles, next-time pill, tabs, table row actions, header link |
+| Button lift | `shadow-button` (filled), `shadow-button-outline` (outline), `shadow-brand-action` (footer Join) | Pressable filled and outline buttons: pinned Directions, Unpin, narrow-row Directions and Pin, Search, Show map, Nearest, Share, header and footer Join |
+| Flat | none | Time tiles, next-time pill, tabs, table row actions |
 
 A raised button sinks 1px and takes `shadow-pressed` while pressed; a switched-on Nearest stays sunk. Keyboard focus keeps the lift and adds the outline. Surfaces keep a border, so they still separate in high contrast mode, where shadows disappear.
 
